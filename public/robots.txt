@@ -1,0 +1,5 @@
+# Generated from src/seo/siteConfig.js (SITE_HOST=YOUR_DOMAIN_HERE) — do not edit by hand
+User-agent: *
+Allow: /
+
+Sitemap: https://YOUR_DOMAIN_HERE/sitemap.xml

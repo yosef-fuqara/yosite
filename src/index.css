@@ -1,0 +1,173 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-heading: "Sora", sans-serif;
+
+  --color-charcoal-50: #f5f5f6;
+  --color-charcoal-100: #e7e7e9;
+  --color-charcoal-200: #cfcfd2;
+  --color-charcoal-300: #a7a7ac;
+  --color-charcoal-400: #787880;
+  --color-charcoal-500: #5a5a60;
+  --color-charcoal-600: #48484d;
+  --color-charcoal-700: #3b3b3f;
+  --color-charcoal-800: #1c1c1e;
+  --color-charcoal-900: #0b0b0c;
+  --color-charcoal-950: #020203;
+
+  --color-accent-violet: #8b5cf6;
+  --color-accent-violet-glow: rgba(139, 92, 246, 0.15);
+  --color-accent-cyan: #06b6d4;
+  --color-accent-cyan-glow: rgba(6, 182, 212, 0.15);
+  --color-accent-pink: #ec4899;
+}
+
+/* Custom global styles & utility classes */
+body {
+  background-color: #000000;
+  color: #d1d5db;
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Premium Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #020203;
+}
+::-webkit-scrollbar-thumb {
+  background: #1c1c1e;
+  border-radius: 9999px;
+  border: 2px solid #020203;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3b3b3f;
+}
+
+/* Cinema background elements */
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: "";
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 50;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: center top;
+  pointer-events: none;
+}
+
+.grid-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse 120% 80% at 50% 45%, transparent 35%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+/* Galaxy nebula — full-viewport base layer */
+.galaxy-nebula-base {
+  background:
+    radial-gradient(ellipse 90% 55% at 18% 8%, rgba(88, 28, 135, 0.22) 0%, transparent 58%),
+    radial-gradient(ellipse 70% 50% at 82% 22%, rgba(76, 29, 149, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse 65% 45% at 12% 55%, rgba(59, 7, 100, 0.16) 0%, transparent 52%),
+    radial-gradient(ellipse 75% 50% at 88% 68%, rgba(91, 33, 182, 0.12) 0%, transparent 54%),
+    radial-gradient(ellipse 80% 55% at 45% 92%, rgba(49, 10, 101, 0.18) 0%, transparent 56%),
+    #000000;
+}
+
+.galaxy-vignette {
+  background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 42%, rgba(0, 0, 0, 0.35) 100%);
+}
+
+/* Glassmorphism base rules */
+.glass-panel {
+  background: rgba(8, 8, 12, 0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.glass-panel-hover:hover {
+  background: rgba(28, 28, 30, 0.7);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8), 0 0 50px -10px rgba(139, 92, 246, 0.15);
+}
+
+/* 3D Depth Utilities */
+.perspective-container {
+  perspective: 1200px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* Custom subtle animation for glows */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.03);
+  }
+}
+
+.glow-animation-slow {
+  animation: float 12s ease-in-out infinite;
+}
+
+.glow-animation-slower {
+  animation: float 18s ease-in-out infinite;
+}
+
+/* Star twinkling animations */
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.15;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.25);
+  }
+}
+
+.animate-twinkle {
+  animation: twinkle 4s ease-in-out infinite;
+}
+

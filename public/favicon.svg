@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <rect width="32" height="32" rx="7" fill="#0c0c0f"/>
+  <text
+    x="5"
+    y="23.5"
+    font-family="Sora, ui-sans-serif, system-ui, sans-serif"
+    font-size="22"
+    font-weight="700"
+    fill="#f4f4f5"
+  >y</text>
+  <circle cx="21.2" cy="23.8" r="3" fill="#a78bfa"/>
+</svg>
