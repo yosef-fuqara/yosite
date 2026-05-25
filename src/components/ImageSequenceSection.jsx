@@ -125,7 +125,6 @@ export default function ImageSequenceSection() {
 
               <ul className="space-y-4 w-full min-w-0">
                 {STEP_KEYS.map((key, index) => {
-                  const stepNum = String(index + 1).padStart(2, "0");
                   return (
                     <motion.li
                       key={key}
@@ -157,9 +156,6 @@ export default function ImageSequenceSection() {
                         />
 
                         <div className="relative z-10 min-w-0">
-                          <p className="text-[10px] font-bold tracking-[0.14em] text-violet-400/90 uppercase mb-2">
-                            {t("process.cardPrefix")} {stepNum}
-                          </p>
                           <h3 className="text-base md:text-lg font-bold text-white font-heading mb-1.5">
                             {t(`process.steps.${key}.title`)}
                           </h3>

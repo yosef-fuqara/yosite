@@ -69,9 +69,6 @@ export default function Services() {
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div className="max-w-2xl">
             <TextReveal>
-              <span className="text-xs font-bold tracking-widest text-violet-400 uppercase mb-3 block">
-                {t("services.eyebrow")}
-              </span>
               <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight font-heading">
                 {t("services.title")}
               </h2>

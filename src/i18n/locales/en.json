@@ -9,17 +9,16 @@
   "hero": {
     "taglineBefore": "Your idea",
     "taglineAfter": "live on the web",
-    "title": "A modern website for your business",
-    "description": "Premium websites, stores, and web apps for businesses that want to look serious online.",
+    "title": "Let's build a modern website for your business",
+    "description": "Premium websites for stores, businesses, portfolios, bookings, and service providers — built to look serious and convert.",
     "primaryButton": "Start a Project",
     "secondaryButton": "View Services",
     "scrollHint": "Scroll to explore",
     "scrollDownAria": "Scroll down"
   },
   "services": {
-    "eyebrow": "What we build",
     "title": "What we build",
-    "subtitle": "Websites, stores, apps, and interfaces — built to convert.",
+    "subtitle": "Premium websites for stores, businesses, portfolios, bookings, and service providers — built to look serious and convert.",
     "benefitsHeading": "Why YoSite",
     "tickerItems": [
       "Online Stores",
@@ -107,7 +106,9 @@
       "dashboards": "Dashboards",
       "ecommerce": "E-commerce",
       "ui": "UI Design",
-      "productCard": "Product Card"
+      "productCard": "Studio Pro Kit",
+      "productBadge": "New",
+      "inStock": "In stock"
     }
   },
   "footer": {

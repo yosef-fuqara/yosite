@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { ArrowUpRight, ArrowDown, Lightbulb } from "lucide-react";
+import { ArrowDown, Lightbulb } from "lucide-react";
 import { motion } from "framer-motion";
 import { useI18n } from "../i18n/I18nContext";
 
@@ -161,42 +161,10 @@ export default function Hero() {
 
           <motion.p
             variants={item}
-            className="text-sm md:text-base text-gray-400 font-light leading-relaxed mb-8 max-w-xl mx-auto"
+            className="text-sm md:text-base text-gray-400 font-light leading-relaxed max-w-xl mx-auto"
           >
             {t("hero.description")}
           </motion.p>
-
-          <motion.div variants={item} className="flex flex-wrap items-center justify-center gap-3 w-full">
-            <a
-              href="#cta"
-              className="group inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-wider text-white
-                         bg-gradient-to-r from-violet-600 via-violet-500 to-cyan-600
-                         hover:from-violet-500 hover:via-violet-400 hover:to-cyan-500
-                         rounded-full ps-6 pe-2 py-2
-                         border border-violet-400/25
-                         shadow-[0_0_28px_rgba(139,92,246,0.35)]
-                         hover:shadow-[0_0_44px_rgba(139,92,246,0.55)]
-                         transition-all duration-300"
-            >
-              {t("hero.primaryButton")}
-              <span
-                className="w-8 h-8 rounded-full bg-black/40 flex items-center justify-center
-                               transition-transform duration-300 group-hover:scale-105"
-              >
-                <ArrowUpRight className="w-4 h-4 stroke-[2.5] rtl:rotate-180" />
-              </span>
-            </a>
-            <a
-              href="#services"
-              className="inline-flex items-center text-[11px] font-semibold uppercase tracking-wider text-gray-300
-                         hover:text-white rounded-full px-6 py-2.5
-                         border border-white/10 hover:border-violet-500/30
-                         bg-white/5 hover:bg-white/[0.08]
-                         transition-all duration-300"
-            >
-              {t("hero.secondaryButton")}
-            </a>
-          </motion.div>
         </motion.div>
       </div>
 

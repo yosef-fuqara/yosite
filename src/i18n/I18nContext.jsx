@@ -24,8 +24,6 @@ function detectInitialLang() {
   if (typeof window === "undefined") return DEFAULT_LANG;
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored && LANGUAGES[stored]) return stored;
-  const browser = navigator.language?.slice(0, 2);
-  if (browser && LANGUAGES[browser]) return browser;
   return DEFAULT_LANG;
 }
 

@@ -9,17 +9,16 @@
   "hero": {
     "taglineBefore": "فكرتك",
     "taglineAfter": "حية على الويب",
-    "title": "موقع حديث لأعمالك",
-    "description": "مواقع ومتاجر وأنظمة ويب للأعمال التي تريد حضوراً احترافياً على الإنترنت.",
+    "title": "لنبني موقعاً حديثاً لأعمالك",
+    "description": "مواقع متميزة للمتاجر والأعمال ومعارض الأعمال والحجوزات ومقدّمي الخدمات.",
     "primaryButton": "ابدأ مشروعاً",
     "secondaryButton": "الخدمات",
     "scrollHint": "مرّر للاستكشاف",
     "scrollDownAria": "التمرير للأسفل"
   },
   "services": {
-    "eyebrow": "ماذا نبني",
     "title": "ماذا نبني",
-    "subtitle": "مواقع ومتاجر وتطبيقات وواجهات — مصممة للتحويل.",
+    "subtitle": "مواقع متميزة للمتاجر والأعمال ومعارض الأعمال والحجوزات ومقدّمي الخدمات.",
     "benefitsHeading": "لماذا YoSite",
     "tickerItems": [
       "متاجر إلكترونية",
@@ -107,7 +106,9 @@
       "dashboards": "لوحات",
       "ecommerce": "تجارة",
       "ui": "تصميم UI",
-      "productCard": "بطاقة منتج"
+      "productCard": "حزمة Studio Pro",
+      "productBadge": "جديد",
+      "inStock": "متوفر"
     }
   },
   "footer": {

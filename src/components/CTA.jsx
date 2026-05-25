@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ArrowRight, CheckCircle2, Layout, BarChart2, ShoppingCart, Palette, Code } from "lucide-react";
+import { ArrowRight, CheckCircle2, Layout, BarChart2, ShoppingCart, Palette, Code, Package } from "lucide-react";
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import TextReveal from "./TextReveal";
 import { useI18n } from "../i18n/I18nContext";
@@ -352,12 +352,50 @@ export default function CTA() {
               <motion.div style={{ y: isMobile ? 0 : rightY }} className="mr-6">
                 <MockupCard title={t("cta.mockups.ecommerce")} icon={ShoppingCart} className="w-[200px]">
                   <div className="space-y-2">
-                    <div className="aspect-[4/3] bg-white/5 rounded border border-white/5 flex items-center justify-center text-[10px] text-gray-500">
-                      {t("cta.mockups.productCard")}
+                    <div className="rounded-lg border border-white/10 bg-[#08080a] overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+                      <div className="relative aspect-[4/3] bg-gradient-to-br from-violet-600/50 via-violet-900/40 to-cyan-600/30">
+                        <div
+                          aria-hidden
+                          className="absolute inset-0 bg-[radial-gradient(ellipse_at_25%_15%,rgba(167,139,250,0.45),transparent_60%)]"
+                        />
+                        <span className="absolute top-1.5 start-1.5 text-[7px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-violet-500/90 text-white">
+                          {t("cta.mockups.productBadge")}
+                        </span>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-xl bg-black/35 border border-white/10 flex items-center justify-center shadow-[0_8px_24px_rgba(0,0,0,0.5)]">
+                            <Package className="w-5 h-5 text-violet-300/90" strokeWidth={1.75} />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="p-2 space-y-1.5 border-t border-white/5">
+                        <p className="text-[10px] font-semibold text-white leading-tight truncate">
+                          {t("cta.mockups.productCard")}
+                        </p>
+                        <div className="flex gap-0.5" aria-hidden>
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <span
+                              key={star}
+                              className={`w-1.5 h-1.5 rounded-full ${star <= 4 ? "bg-amber-400/85" : "bg-white/15"}`}
+                            />
+                          ))}
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[11px] font-bold text-violet-400">$99</span>
+                          <span className="text-[8px] text-gray-600 line-through">$129</span>
+                          <button
+                            type="button"
+                            tabIndex={-1}
+                            aria-hidden
+                            className="ms-auto w-5 h-5 rounded-full bg-violet-500/25 border border-violet-400/35 text-violet-200 text-[11px] font-bold leading-none flex items-center justify-center"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
                     </div>
                     <div className="flex items-center justify-between text-[8px] text-gray-400">
                       <span>YoSite Store</span>
-                      <span className="text-violet-400 font-bold">$99</span>
+                      <span className="text-emerald-400/80 font-medium">{t("cta.mockups.inStock")}</span>
                     </div>
                   </div>
                 </MockupCard>

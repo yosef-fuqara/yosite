@@ -182,7 +182,9 @@ h1, h2, h3, h4, h5, h6 {
   animation-duration: 68s;
 }
 
-.group\/build-ticker:hover .build-ticker-track {
+.group\/build-ticker:hover .build-ticker-track,
+.build-ticker-viewport.build-ticker-dragging .build-ticker-track,
+.build-ticker-viewport:active .build-ticker-track {
   animation-play-state: paused;
 }
 
