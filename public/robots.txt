@@ -1,5 +1,5 @@
-# Generated from src/seo/siteConfig.js (SITE_HOST=yositeweb.com) — do not edit by hand
+# Generated from src/seo/siteConfig.js (SITE_HOST=www.yositeweb.com) — do not edit by hand
 User-agent: *
 Allow: /
 
-Sitemap: https://yositeweb.com/sitemap.xml
+Sitemap: https://www.yositeweb.com/sitemap.xml

@@ -7,7 +7,7 @@
  * After changing SITE_HOST, run `npm run build` (or `npm run seo:sync`) so
  * sitemap.xml and robots.txt stay in sync. index.html is injected at build/dev via vite-seo-plugin.
  */
-export const SITE_HOST = "yositeweb.com";
+export const SITE_HOST = "www.yositeweb.com";
 
 /** Canonical site URL — derived from SITE_HOST; do not edit manually. */
 export const SITE_URL = `https://${SITE_HOST}/`;
