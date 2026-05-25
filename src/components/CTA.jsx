@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { ArrowRight, CheckCircle2, Sparkles, Layout, BarChart2, ShoppingCart, Palette, Code } from "lucide-react";
+import { ArrowRight, CheckCircle2, Layout, BarChart2, ShoppingCart, Palette, Code } from "lucide-react";
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import TextReveal from "./TextReveal";
+import { useI18n } from "../i18n/I18nContext";
 
 // Component for visual floaters
 function MockupCard({ title, icon: Icon, children, className = "" }) {
@@ -20,6 +21,7 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const CONTACT_API_URL = import.meta.env.VITE_CONTACT_API_URL || "/api/contact";
 
 export default function CTA() {
+  const { t } = useI18n();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -81,18 +83,18 @@ export default function CTA() {
     };
 
     if (!trimmedName) {
-      errors.name = "Please fill in your name.";
+      errors.name = t("cta.errors.name");
     }
     if (!trimmedEmail) {
-      errors.email = "Please fill in your email.";
+      errors.email = t("cta.errors.email");
     } else if (!EMAIL_REGEX.test(trimmedEmail)) {
-      errors.email = "Please enter a valid email address.";
+      errors.email = t("cta.errors.emailInvalid");
     }
     if (!trimmedPhone) {
-      errors.phone = "Please fill in your phone / WhatsApp number.";
+      errors.phone = t("cta.errors.phone");
     }
     if (!trimmedDetails) {
-      errors.details = "Please share some details about your project.";
+      errors.details = t("cta.errors.details");
     }
 
     const hasErrors = Object.values(errors).some(Boolean);
@@ -126,42 +128,42 @@ export default function CTA() {
       }
 
       if (!response.ok) {
-        setSubmitError(
-          data.error || "We could not send your message. Please try again."
-        );
+        setSubmitError(data.error || t("cta.errors.submit"));
         return;
       }
 
       setFieldErrors({ name: "", email: "", phone: "", details: "" });
       setSubmitted(true);
     } catch {
-      setSubmitError(
-        "Unable to reach the server. Check your connection and try again."
-      );
+      setSubmitError(t("cta.errors.network"));
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <section ref={sectionRef} id="cta" className="relative py-24 md:py-32 px-6 md:px-12 z-10 overflow-hidden">
-      {/* Gaseous space glow */}
-      <div className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-[70%] h-[70%] bg-violet-600/5 blur-[140px] rounded-full pointer-events-none" />
+    <section
+      id="cta"
+      ref={sectionRef}
+      className="cta-section relative z-10 overflow-x-hidden py-16 max-md:min-h-0 md:overflow-hidden md:py-32 px-4 sm:px-6 md:px-12"
+    >
+      {/* Gaseous space glow — desktop only (avoids mobile overflow) */}
+      <div className="cta-section-glow pointer-events-none absolute top-1/2 left-1/2 hidden h-[min(70%,28rem)] w-[min(70%,28rem)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-600/5 blur-[140px] md:block" />
 
-      <div className="max-w-6xl mx-auto relative">
+      <div className="relative mx-auto max-w-6xl w-full min-w-0">
         {/* Large Premium Contact Block Container */}
-        <div className="relative glass-panel rounded-[32px] border border-white/10 p-8 md:p-16 overflow-hidden bg-black/60 shadow-[0_50px_100px_rgba(0,0,0,0.9)]">
-          {/* Inner Purple Nebula spot */}
-          <div className="absolute -top-32 -right-32 w-[350px] h-[350px] rounded-full bg-violet-500/10 blur-[90px] pointer-events-none" />
-          <div className="absolute -bottom-32 -left-32 w-[350px] h-[350px] rounded-full bg-purple-500/8 blur-[90px] pointer-events-none" />
+        <div className="cta-panel relative glass-panel w-full min-w-0 min-h-0 rounded-2xl border border-white/10 bg-black/60 p-5 sm:p-6 shadow-[0_24px_48px_rgba(0,0,0,0.75)] max-md:overflow-x-hidden md:overflow-hidden md:rounded-[32px] md:p-16 md:shadow-[0_50px_100px_rgba(0,0,0,0.9)]">
+          {/* Inner Purple Nebula spot — desktop only */}
+          <div className="pointer-events-none absolute -top-32 -right-32 hidden h-[350px] w-[350px] rounded-full bg-violet-500/10 blur-[90px] md:block" />
+          <div className="pointer-events-none absolute -bottom-32 -left-32 hidden h-[350px] w-[350px] rounded-full bg-purple-500/8 blur-[90px] md:block" />
 
           {/* Staged Columns layout on Desktop */}
-          <div className="grid grid-cols-12 gap-8 items-center relative z-10">
+          <div className="relative z-10 flex w-full min-w-0 flex-col gap-0 md:grid md:grid-cols-12 md:items-center md:gap-8">
             
             {/* Column 1: Left Floating Cards (translate downward) */}
             <div className="hidden lg:col-span-3 lg:flex flex-col gap-6">
               <motion.div style={{ y: isMobile ? 0 : leftY }}>
-                <MockupCard title="Websites" icon={Layout} className="w-[200px]">
+                <MockupCard title={t("cta.mockups.websites")} icon={Layout} className="w-[200px]">
                   <div className="space-y-2">
                     <div className="w-full h-8 bg-white/5 rounded-md border border-white/5 flex items-center justify-between px-2 text-[9px] text-gray-500">
                       <span>YoSite Studio</span>
@@ -175,7 +177,7 @@ export default function CTA() {
               </motion.div>
 
               <motion.div style={{ y: isMobile ? 0 : leftY }} className="ml-4">
-                <MockupCard title="Code/Motion" icon={Code} className="w-[180px]">
+                <MockupCard title={t("cta.mockups.code")} icon={Code} className="w-[180px]">
                   <div className="font-mono text-[9px] text-violet-400 space-y-1">
                     <div><span className="text-gray-500">const</span> studio = &#123;</div>
                     <div className="pl-3">speed: <span className="text-cyan-400">"100%"</span>,</div>
@@ -187,7 +189,7 @@ export default function CTA() {
             </div>
 
             {/* Column 2: Center Contact Form */}
-            <div className="col-span-12 lg:col-span-6 flex flex-col items-center">
+            <div className="cta-form-column flex w-full min-w-0 flex-col items-stretch md:col-span-12 lg:col-span-6 lg:items-center">
               <AnimatePresence mode="wait">
                 {!submitted ? (
                   <motion.div
@@ -196,25 +198,22 @@ export default function CTA() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -15 }}
                     transition={{ duration: 0.4 }}
-                    className="w-full max-w-md mx-auto"
+                    className="cta-form-wrap mx-auto w-full min-w-0 max-md:max-w-none md:max-w-md"
                   >
-                    <div className="text-center mb-8">
+                    <div className="cta-form-header mb-8 max-md:mb-10 text-center max-md:px-1">
                       <TextReveal>
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-violet-500/20 bg-violet-950/20 mb-4 text-[10px] font-bold text-violet-400 uppercase tracking-widest">
-                          <Sparkles className="w-3 h-3" /> Partner with Us
-                        </span>
-                        <h2 className="text-2xl md:text-4xl font-extrabold text-white tracking-tight font-heading mb-2">
-                          Have a project in mind?
+                        <h2 className="cta-title mb-2 font-extrabold tracking-tight text-white font-heading md:text-4xl">
+                          {t("cta.title")}
                         </h2>
                       </TextReveal>
                       <TextReveal delay={0.15}>
-                        <p className="text-sm text-gray-400 font-light">
-                          Let’s build something people remember.
+                        <p className="text-sm font-light leading-relaxed text-gray-400 max-md:text-[0.9375rem] max-md:leading-6">
+                          {t("cta.subtitle")}
                         </p>
                       </TextReveal>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="cta-form w-full min-w-0 space-y-4 max-md:space-y-5">
                       {/* Name input */}
                       <div>
                         <input
@@ -224,8 +223,8 @@ export default function CTA() {
                             setName(e.target.value);
                             clearFieldError("name");
                           }}
-                          placeholder="Your Name"
-                          className="w-full bg-white/5 border border-white/5 focus:border-violet-500/40 rounded-xl px-5 py-3.5 text-sm text-white placeholder-gray-600 focus:outline-none transition-colors duration-300"
+                          placeholder={t("cta.name")}
+                          className="box-border w-full max-w-full bg-white/5 border border-white/5 focus:border-violet-500/40 rounded-xl px-4 py-3.5 text-sm text-white placeholder-gray-600 focus:outline-none transition-colors duration-300 max-md:px-4 sm:px-5"
                         />
                         {fieldErrors.name && (
                           <p className="text-[11px] text-rose-400/90 mt-1 px-1">{fieldErrors.name}</p>
@@ -241,8 +240,8 @@ export default function CTA() {
                             setEmail(e.target.value);
                             clearFieldError("email");
                           }}
-                          placeholder="your@email.com"
-                          className="w-full bg-white/5 border border-white/5 focus:border-violet-500/40 rounded-xl px-5 py-3.5 text-sm text-white placeholder-gray-600 focus:outline-none transition-colors duration-300"
+                          placeholder={t("cta.email")}
+                          className="box-border w-full max-w-full bg-white/5 border border-white/5 focus:border-violet-500/40 rounded-xl px-4 py-3.5 text-sm text-white placeholder-gray-600 focus:outline-none transition-colors duration-300 max-md:px-4 sm:px-5"
                         />
                         {fieldErrors.email && (
                           <p className="text-[11px] text-rose-400/90 mt-1 px-1">{fieldErrors.email}</p>
@@ -258,8 +257,8 @@ export default function CTA() {
                             setPhone(e.target.value);
                             clearFieldError("phone");
                           }}
-                          placeholder="Phone / WhatsApp"
-                          className="w-full bg-white/5 border border-white/5 focus:border-violet-500/40 rounded-xl px-5 py-3.5 text-sm text-white placeholder-gray-600 focus:outline-none transition-colors duration-300"
+                          placeholder={t("cta.phone")}
+                          className="box-border w-full max-w-full bg-white/5 border border-white/5 focus:border-violet-500/40 rounded-xl px-4 py-3.5 text-sm text-white placeholder-gray-600 focus:outline-none transition-colors duration-300 max-md:px-4 sm:px-5"
                         />
                         {fieldErrors.phone && (
                           <p className="text-[11px] text-rose-400/90 mt-1 px-1">{fieldErrors.phone}</p>
@@ -274,8 +273,8 @@ export default function CTA() {
                             setDetails(e.target.value);
                             clearFieldError("details");
                           }}
-                          placeholder="Tell us about your project..."
-                          className="w-full bg-white/5 border border-white/5 focus:border-violet-500/40 rounded-xl px-5 py-3.5 text-sm text-white placeholder-gray-600 focus:outline-none transition-colors duration-300 min-h-[100px] resize-none"
+                          placeholder={t("cta.message")}
+                          className="box-border w-full max-w-full bg-white/5 border border-white/5 focus:border-violet-500/40 rounded-xl px-4 py-3.5 text-sm text-white placeholder-gray-600 focus:outline-none transition-colors duration-300 min-h-[7.5rem] resize-y max-md:min-h-[6.5rem] max-md:resize-none sm:px-5"
                         />
                         {fieldErrors.details && (
                           <p className="text-[11px] text-rose-400/90 mt-1 px-1">{fieldErrors.details}</p>
@@ -283,7 +282,7 @@ export default function CTA() {
                       </div>
 
                       {/* Submit Button with Purple Glow & Arrow */}
-                      <div className="pt-2">
+                      <div className="pt-2 max-md:pt-3">
                         {submitError && (
                           <p className="text-[11px] text-rose-400/90 mb-2 px-1 text-center">
                             {submitError}
@@ -294,8 +293,8 @@ export default function CTA() {
                           disabled={isSubmitting}
                           className="w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-violet-600 hover:bg-violet-700 text-white text-xs font-bold uppercase tracking-wider rounded-full shadow-[0_15px_30px_rgba(139,92,246,0.25)] hover:shadow-[0_20px_45px_rgba(139,92,246,0.45)] transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                         >
-                          Send Message
-                          <ArrowRight className="w-4 h-4" />
+                          {t("cta.button")}
+                          <ArrowRight className="w-4 h-4 rtl:rotate-180" />
                         </button>
                       </div>
                     </form>
@@ -306,16 +305,16 @@ export default function CTA() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5 }}
-                    className="text-center py-10 flex flex-col items-center justify-center w-full"
+                    className="flex w-full min-w-0 flex-col items-center justify-center py-8 text-center max-md:px-1 md:py-10"
                   >
                     <div className="w-14 h-14 rounded-full bg-violet-600/10 border border-violet-500/30 flex items-center justify-center mb-6">
                       <CheckCircle2 className="w-6 h-6 text-violet-400" />
                     </div>
                     <h3 className="text-xl md:text-2xl font-bold text-white font-heading mb-2">
-                      Message Sent
+                      {t("cta.successTitle")}
                     </h3>
                     <p className="text-xs md:text-sm text-gray-400 max-w-sm font-light leading-relaxed mb-6">
-                      Thank you, <span className="text-white font-semibold">{name}</span>! We have received your project details and email (<span className="text-violet-400">{email}</span>). A studio director will contact you within 24 hours.
+                      {t("cta.successBody", { name })}
                     </p>
                     <button
                       type="button"
@@ -330,7 +329,7 @@ export default function CTA() {
                       }}
                       className="text-[10px] font-bold tracking-widest text-violet-400 hover:text-violet-300 uppercase underline transition-colors"
                     >
-                      Send another message
+                      {t("cta.sendAnother")}
                     </button>
                   </motion.div>
                 )}
@@ -340,7 +339,7 @@ export default function CTA() {
             {/* Column 3: Right Floating Cards (translate upward) */}
             <div className="hidden lg:col-span-3 lg:flex flex-col gap-6 items-end">
               <motion.div style={{ y: isMobile ? 0 : rightY }}>
-                <MockupCard title="Dashboards" icon={BarChart2} className="w-[190px]">
+                <MockupCard title={t("cta.mockups.dashboards")} icon={BarChart2} className="w-[190px]">
                   <div className="flex gap-2 items-end h-12 pt-2">
                     <div className="w-3.5 h-[40%] bg-violet-500/50 rounded-sm" />
                     <div className="w-3.5 h-[80%] bg-violet-500 rounded-sm" />
@@ -351,10 +350,10 @@ export default function CTA() {
               </motion.div>
 
               <motion.div style={{ y: isMobile ? 0 : rightY }} className="mr-6">
-                <MockupCard title="E-commerce" icon={ShoppingCart} className="w-[200px]">
+                <MockupCard title={t("cta.mockups.ecommerce")} icon={ShoppingCart} className="w-[200px]">
                   <div className="space-y-2">
                     <div className="aspect-[4/3] bg-white/5 rounded border border-white/5 flex items-center justify-center text-[10px] text-gray-500">
-                      Product Card
+                      {t("cta.mockups.productCard")}
                     </div>
                     <div className="flex items-center justify-between text-[8px] text-gray-400">
                       <span>YoSite Store</span>
@@ -365,7 +364,7 @@ export default function CTA() {
               </motion.div>
 
               <motion.div style={{ y: isMobile ? 0 : rightY }}>
-                <MockupCard title="UI Design" icon={Palette} className="w-[170px]">
+                <MockupCard title={t("cta.mockups.ui")} icon={Palette} className="w-[170px]">
                   <div className="flex gap-1.5 pt-1">
                     <div className="w-5 h-5 rounded-full bg-violet-500" />
                     <div className="w-5 h-5 rounded-full bg-fuchsia-500" />

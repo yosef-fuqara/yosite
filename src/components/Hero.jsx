@@ -1,8 +1,10 @@
 import { useRef, useState, useEffect } from "react";
 import { ArrowUpRight, ArrowDown, Lightbulb } from "lucide-react";
 import { motion } from "framer-motion";
+import { useI18n } from "../i18n/I18nContext";
 
 export default function Hero() {
+  const { t } = useI18n();
   const sectionRef = useRef(null);
   const [glowState, setGlowState] = useState("turningOn");
 
@@ -104,7 +106,7 @@ export default function Hero() {
               animate={glowState}
               className="z-20 relative transition-all duration-300"
             >
-              Your idea
+              {t("hero.taglineBefore")}
             </motion.span>
 
             <span className="relative flex items-center justify-center w-6 h-6 mx-1">
@@ -144,7 +146,7 @@ export default function Hero() {
               animate={glowState}
               className="z-20 relative transition-all duration-300"
             >
-              live on the web
+              {t("hero.taglineAfter")}
             </motion.span>
           </motion.div>
 
@@ -152,39 +154,47 @@ export default function Hero() {
             variants={item}
             className="font-heading font-extrabold tracking-tight leading-[1.05] text-white mb-5 text-[clamp(2.2rem,5vw,3.75rem)]"
           >
-            We build digital experiences that{" "}
             <span className="bg-gradient-to-r from-violet-400 via-violet-300 to-cyan-400 bg-clip-text text-transparent">
-              move your brand
-            </span>{" "}
-            forward.
+              {t("hero.title")}
+            </span>
           </motion.h1>
 
           <motion.p
             variants={item}
             className="text-sm md:text-base text-gray-400 font-light leading-relaxed mb-8 max-w-xl mx-auto"
           >
-            Websites, e-commerce, dashboards and immersive web experiences that drive results.
+            {t("hero.description")}
           </motion.p>
 
-          <motion.div variants={item} className="flex justify-center w-full">
+          <motion.div variants={item} className="flex flex-wrap items-center justify-center gap-3 w-full">
             <a
               href="#cta"
               className="group inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-wider text-white
                          bg-gradient-to-r from-violet-600 via-violet-500 to-cyan-600
                          hover:from-violet-500 hover:via-violet-400 hover:to-cyan-500
-                         rounded-full pl-6 pr-2 py-2
+                         rounded-full ps-6 pe-2 py-2
                          border border-violet-400/25
                          shadow-[0_0_28px_rgba(139,92,246,0.35)]
                          hover:shadow-[0_0_44px_rgba(139,92,246,0.55)]
                          transition-all duration-300"
             >
-              Start a Project
+              {t("hero.primaryButton")}
               <span
                 className="w-8 h-8 rounded-full bg-black/40 flex items-center justify-center
                                transition-transform duration-300 group-hover:scale-105"
               >
-                <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
+                <ArrowUpRight className="w-4 h-4 stroke-[2.5] rtl:rotate-180" />
               </span>
+            </a>
+            <a
+              href="#services"
+              className="inline-flex items-center text-[11px] font-semibold uppercase tracking-wider text-gray-300
+                         hover:text-white rounded-full px-6 py-2.5
+                         border border-white/10 hover:border-violet-500/30
+                         bg-white/5 hover:bg-white/[0.08]
+                         transition-all duration-300"
+            >
+              {t("hero.secondaryButton")}
             </a>
           </motion.div>
         </motion.div>
@@ -192,7 +202,7 @@ export default function Hero() {
 
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none select-none">
         <span className="text-[9px] font-semibold text-gray-500 uppercase tracking-[0.22em]">
-          Scroll to explore
+          {t("hero.scrollHint")}
         </span>
         <div className="relative flex flex-col items-center">
           <div className="w-px h-10 bg-gradient-to-b from-violet-500/70 to-transparent" />
@@ -200,12 +210,12 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="absolute bottom-6 right-6 lg:right-12 z-30">
+      <div className="absolute bottom-6 end-6 lg:end-12 z-30">
         <button
           onClick={() =>
             document.getElementById("services")?.scrollIntoView({ behavior: "smooth" })
           }
-          aria-label="Scroll Down"
+          aria-label={t("hero.scrollDownAria")}
           className="group w-14 h-14 rounded-full bg-white/5 border border-white/10
                      hover:border-violet-500/35 hover:text-violet-400 text-white
                      flex items-center justify-center

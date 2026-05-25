@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lightbulb } from "lucide-react";
+import { useI18n } from "../i18n/I18nContext";
 
 /* ─── respect prefers-reduced-motion ─────────────────────────────────────── */
 function usePrefersReducedMotion() {
@@ -18,6 +19,7 @@ function usePrefersReducedMotion() {
 }
 
 export default function EntranceSplash() {
+  const { t } = useI18n();
   const reduced = usePrefersReducedMotion();
   const [visible, setVisible] = useState(true);
 
@@ -201,7 +203,7 @@ export default function EntranceSplash() {
             {...(reduced ? {} : { variants: tagline, initial: "initial", animate: "animate" })}
           >
             <div className="flex items-center gap-2 text-[10px] font-extrabold tracking-[0.22em] text-gray-500 uppercase select-none">
-              <span>Your idea</span>
+              <span>{t("splash.taglineBefore")}</span>
 
               {/* The pulsing lamp/lightbulb */}
               <span className="relative flex items-center justify-center w-6 h-6 mx-0.5">
@@ -235,7 +237,7 @@ export default function EntranceSplash() {
                 </motion.div>
               </span>
 
-              <span>live on the web</span>
+              <span>{t("splash.taglineAfter")}</span>
             </div>
 
             {/* Thin light sweep */}

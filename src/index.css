@@ -30,6 +30,30 @@ body {
   font-family: var(--font-sans);
 }
 
+html[lang="he"] body,
+html[lang="he"] h1,
+html[lang="he"] h2,
+html[lang="he"] h3,
+html[lang="he"] h4,
+html[lang="he"] h5,
+html[lang="he"] h6 {
+  font-family: "Noto Sans Hebrew", var(--font-sans);
+}
+
+html[lang="ar"] body,
+html[lang="ar"] h1,
+html[lang="ar"] h2,
+html[lang="ar"] h3,
+html[lang="ar"] h4,
+html[lang="ar"] h5,
+html[lang="ar"] h6 {
+  font-family: "Noto Sans Arabic", var(--font-sans);
+}
+
+html[dir="rtl"] .font-heading {
+  letter-spacing: -0.01em;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
 }
@@ -137,6 +161,76 @@ h1, h2, h3, h4, h5, h6 {
   transform-style: preserve-3d;
 }
 
+/* Services build ticker */
+@keyframes build-ticker {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.build-ticker-track {
+  animation: build-ticker 55s linear infinite;
+  will-change: transform;
+}
+
+/* Hebrew/Arabic labels are wider — slightly slower scroll, same loop math (dir=ltr track) */
+.build-ticker-lang-he .build-ticker-track,
+.build-ticker-lang-ar .build-ticker-track {
+  animation-duration: 68s;
+}
+
+.group\/build-ticker:hover .build-ticker-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .build-ticker-track {
+    animation: none;
+    transform: none;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+    row-gap: 0.5rem;
+  }
+
+  .build-ticker-viewport {
+    overflow: visible;
+  }
+
+  .build-ticker-mask {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
+.build-ticker-chip.build-ticker-font-he {
+  font-family: "Noto Sans Hebrew", var(--font-sans);
+}
+
+.build-ticker-chip.build-ticker-font-ar {
+  font-family: "Noto Sans Arabic", var(--font-sans);
+}
+
+.build-ticker-mask {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 6%,
+    #000 94%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 6%,
+    #000 94%,
+    transparent 100%
+  );
+}
+
 /* Custom subtle animation for glows */
 @keyframes float {
   0%, 100% {
@@ -169,5 +263,39 @@ h1, h2, h3, h4, h5, h6 {
 
 .animate-twinkle {
   animation: twinkle 4s ease-in-out infinite;
+}
+
+/* Contact / CTA — mobile layout (< 768px) */
+@media (max-width: 767px) {
+  #cta.cta-section {
+    min-height: 0;
+    overflow-x: hidden;
+  }
+
+  #cta .cta-panel {
+    min-height: 0;
+  }
+
+  #cta .cta-title {
+    font-size: clamp(1.375rem, 4.5vw + 0.65rem, 2.125rem);
+    line-height: 1.15;
+  }
+
+  #cta .cta-form-wrap,
+  #cta .cta-form,
+  #cta .cta-form input,
+  #cta .cta-form textarea {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  #cta .cta-form-column {
+    align-items: stretch;
+  }
+
+  /* Prevent TextReveal slide-in from causing horizontal scroll */
+  #cta .cta-form-header > * {
+    overflow-x: hidden;
+  }
 }
 

@@ -1,6 +1,9 @@
 import { ArrowUp } from "lucide-react";
+import { useI18n } from "../i18n/I18nContext";
 
 export default function Footer() {
+  const { t } = useI18n();
+
   const handleScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -9,8 +12,7 @@ export default function Footer() {
     <footer className="relative z-10 border-t border-white/5 bg-black/30 backdrop-blur-sm py-12 px-6 md:px-12">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
         
-        {/* Left Side: Brand Logo */}
-        <div className="flex flex-col items-center md:items-start text-center md:text-left gap-1">
+        <div className="flex flex-col items-center md:items-start text-center md:text-start gap-1">
           <a href="#" className="flex items-center gap-2 group">
             <span className="text-lg font-bold tracking-tight text-white font-heading">
               Yo<span className="text-violet-500">Site</span>
@@ -18,24 +20,22 @@ export default function Footer() {
             <span className="w-1.5 h-1.5 rounded-full bg-violet-500" />
           </a>
           <p className="text-[10px] text-gray-500 font-light tracking-wide uppercase">
-            Your idea &bull; live on the web
+            {t("footer.tagline")}
           </p>
         </div>
 
-        {/* Center Side: Links */}
         <div className="flex justify-center gap-8">
-          <a href="#" className="text-xs font-semibold uppercase tracking-wider text-gray-500 hover:text-white transition-colors duration-300">Home</a>
-          <a href="#works" className="text-xs font-semibold uppercase tracking-wider text-gray-500 hover:text-white transition-colors duration-300">Works</a>
+          <a href="#" className="text-xs font-semibold uppercase tracking-wider text-gray-500 hover:text-white transition-colors duration-300">{t("footer.home")}</a>
+          <a href="#works" className="text-xs font-semibold uppercase tracking-wider text-gray-500 hover:text-white transition-colors duration-300">{t("footer.process")}</a>
         </div>
 
-        {/* Right Side: Social Icons & Scroll to Top */}
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-4">
             <a
               href="https://wa.me/972505114896"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="WhatsApp"
+              aria-label={t("footer.whatsappAria")}
               className="text-gray-500 hover:text-emerald-400 transition-colors duration-300 flex items-center justify-center"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
@@ -47,20 +47,19 @@ export default function Footer() {
           <button
             onClick={handleScrollToTop}
             className="p-2 bg-white/5 border border-white/10 rounded-full text-gray-400 hover:text-white hover:border-white/20 transition-all duration-300 cursor-pointer"
-            aria-label="Back to top"
+            aria-label={t("footer.backToTopAria")}
           >
             <ArrowUp className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
 
-      {/* Under copyright */}
-      <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+      <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-start">
         <p className="text-[10px] text-gray-600 font-light uppercase tracking-wider">
-          &copy; {new Date().getFullYear()} YoSite. All rights reserved.
+          {t("footer.copyright", { year: new Date().getFullYear() })}
         </p>
         <p className="text-[10px] text-gray-600 font-light uppercase tracking-wider">
-          Premium Cinematic Web Agency
+          {t("footer.studio")}
         </p>
       </div>
     </footer>

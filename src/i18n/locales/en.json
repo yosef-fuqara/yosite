@@ -1,0 +1,126 @@
+{
+  "nav": {
+    "home": "Home",
+    "process": "Process",
+    "cta": "Get In Touch",
+    "menuToggle": "Toggle menu",
+    "logoAria": "YoSite — Home"
+  },
+  "hero": {
+    "taglineBefore": "Your idea",
+    "taglineAfter": "live on the web",
+    "title": "A modern website for your business",
+    "description": "Premium websites, stores, and web apps for businesses that want to look serious online.",
+    "primaryButton": "Start a Project",
+    "secondaryButton": "View Services",
+    "scrollHint": "Scroll to explore",
+    "scrollDownAria": "Scroll down"
+  },
+  "services": {
+    "eyebrow": "What we build",
+    "title": "What we build",
+    "subtitle": "Websites, stores, apps, and interfaces — built to convert.",
+    "benefitsHeading": "Why YoSite",
+    "tickerItems": [
+      "Online Stores",
+      "Business Websites",
+      "Portfolio Websites",
+      "Booking Systems",
+      "Barber Appointment Websites",
+      "Restaurant Websites",
+      "Landing Pages",
+      "Dashboards",
+      "Custom Web Apps",
+      "Admin Panels",
+      "Product Catalogs",
+      "Personal Brand Websites",
+      "Service Business Websites",
+      "Real Estate Websites",
+      "Medical Clinic Websites",
+      "Course / Learning Websites"
+    ],
+    "cta": "Start a Project",
+    "items": {
+      "cleanDesign": {
+        "title": "Clean design",
+        "desc": "Modern, clear, and professional design."
+      },
+      "fastLoading": {
+        "title": "Fast loading",
+        "desc": "Optimized pages that feel quick and smooth."
+      },
+      "mobileFirst": {
+        "title": "Mobile-first",
+        "desc": "Built to look great on phones first."
+      },
+      "realBusiness": {
+        "title": "Built for real businesses",
+        "desc": "Websites made to bring trust, leads, and growth."
+      }
+    }
+  },
+  "process": {
+    "eyebrow": "Process",
+    "title": "From idea to launch",
+    "subtitle": "A simple process that turns your idea into a real website.",
+    "cardPrefix": "Card",
+    "steps": {
+      "understand": {
+        "title": "Understand",
+        "desc": "We define your goal, audience, and structure."
+      },
+      "build": {
+        "title": "Build",
+        "desc": "Design, development, responsive layout, and performance."
+      },
+      "launch": {
+        "title": "Launch",
+        "desc": "Testing, deployment, and support after launch."
+      }
+    },
+    "cta": "Start a Project",
+    "lottieAria": "Responsive website design animation — YoSite process"
+  },
+  "cta": {
+    "title": "Ready to build?",
+    "subtitle": "Let's bring your idea online.",
+    "name": "Your Name",
+    "email": "your@email.com",
+    "phone": "Phone / WhatsApp",
+    "message": "Tell us about your project...",
+    "button": "Send Message",
+    "successTitle": "Message Sent",
+    "successBody": "Thanks, {name}. We got your message and will reply soon.",
+    "sendAnother": "Send another message",
+    "errors": {
+      "name": "Please fill in your name.",
+      "email": "Please fill in your email.",
+      "emailInvalid": "Please enter a valid email address.",
+      "phone": "Please fill in your phone / WhatsApp number.",
+      "details": "Please share some details about your project.",
+      "submit": "We could not send your message. Please try again.",
+      "network": "Unable to reach the server. Check your connection and try again."
+    },
+    "mockups": {
+      "websites": "Websites",
+      "code": "Code/Motion",
+      "dashboards": "Dashboards",
+      "ecommerce": "E-commerce",
+      "ui": "UI Design",
+      "productCard": "Product Card"
+    }
+  },
+  "footer": {
+    "tagline": "Your idea • live on the web",
+    "home": "Home",
+    "process": "Process",
+    "whatsappAria": "WhatsApp",
+    "backToTopAria": "Back to top",
+    "copyright": "© {year} YoSite. All rights reserved.",
+    "studio": "Premium web development studio"
+  },
+  "splash": {
+    "taglineBefore": "Your idea",
+    "taglineAfter": "live on the web"
+  }
+}
