@@ -1,0 +1,48 @@
+---
+description: Yo-site scroll and motion patterns — native scroll + Framer Motion
+globs: src/components/**/*.jsx
+alwaysApply: false
+---
+
+# Scroll Motion (Yo-Site)
+
+Native browser scroll + Framer Motion only. No Lenis, GSAP, or ScrollTrigger.
+
+## Default pattern
+
+Use `TextReveal` or `whileInView` with `once: true` and easing `[0.16, 1, 0.3, 1]`.
+
+```jsx
+<motion.div
+  initial={{ opacity: 0, x: 40, scale: 0.97 }}
+  whileInView={{ opacity: 1, x: 0, scale: 1 }}
+  viewport={{ once: true, margin: "-100px" }}
+  transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+/>
+```
+
+## Staggered cards
+
+```jsx
+viewport={{ once: true, margin: "-50px" }}
+variants with delay: i * 0.12, duration: 0.8
+```
+
+## Scroll-linked parallax (desktop only, rare)
+
+Only for CTA-style floating panels. Use `useScroll` + `useSpring` + `useTransform`.
+Disable on mobile (`width < 1024`). Left Y: `[-60, 90]`, Right Y: `[90, -60]`.
+
+## Layout
+
+- Root: `overflow-x-hidden`
+- Background: `fixed inset-0` layer behind content
+- Content: `<main className="relative z-10">`
+
+## Do not
+
+- Add scroll libraries without explicit request
+- Use `useScroll` for normal section reveals
+- Skip `once: true` on viewport animations
+
+See `scroll-motion-kit/SKILL.md` for full reference.

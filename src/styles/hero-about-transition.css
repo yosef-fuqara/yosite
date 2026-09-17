@@ -1,0 +1,196 @@
+/* Scroll-driven Hero → About cinematic ink reveal */
+
+.hero-about-zone {
+  --hero-exit-t: 0;
+  --hero-exit-delay: 0;
+  --hero-exit-span: 0.28;
+  --hero-exit-opacity: 1;
+  --about-enter: 1;
+
+  position: relative;
+  isolation: isolate;
+}
+
+/*
+  Keep the exit compositor path on from the first paint.
+  Gating it on data-entrance / data-transition retargets overflow,
+  perspective and transform on the letters and they jump when the
+  hero entrance hands off to the resting state.
+*/
+
+.yo-hero [data-hero-exit] {
+  --letter-exit: clamp(
+    0,
+    (var(--hero-exit-t) - var(--hero-exit-delay, 0)) / var(--hero-exit-span),
+    1
+  );
+  transform: translate3d(0, calc(var(--letter-exit) * -1.7em), 0)
+    rotateX(calc(var(--letter-exit) * -48deg));
+  opacity: calc(1 - var(--letter-exit) * 0.98);
+  transform-origin: 50% 100%;
+}
+
+.hero-about-zone[data-transition="active"] .yo-hero__cta {
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .hero-about-sheet-rise {
+    top: -16vh;
+    height: calc(100% + 16vh);
+  }
+
+  .hero-about-sheet-fill {
+    top: 12vh;
+  }
+
+  .hero-about-sheet-ink {
+    height: 16vh;
+    filter: blur(18px);
+  }
+}
+
+/*
+  Fixed white sheet — rises from the bottom with a soft organic ink edge.
+  Kept below sticky chrome:
+  navbar 9999 / audio+aside 9998 / scroll-rail 10000
+*/
+
+.hero-about-sheet-layer {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 35;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.hero-about-sheet-rise {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -22vh;
+  height: calc(100% + 22vh);
+  background: transparent;
+  transform: translate3d(0, 100%, 0);
+  will-change: transform;
+}
+
+.hero-about-sheet-fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 16vh;
+  bottom: 0;
+  background: #ffffff;
+}
+
+.hero-about-sheet-ink {
+  position: absolute;
+  left: -12%;
+  right: -12%;
+  top: 0;
+  height: 22vh;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 34% 14vh at 4% 78%, #ffffff 52%, transparent 72%),
+    radial-gradient(ellipse 26% 11vh at 18% 52%, #ffffff 48%, transparent 70%),
+    radial-gradient(ellipse 30% 16vh at 33% 88%, #ffffff 54%, transparent 74%),
+    radial-gradient(ellipse 22% 10vh at 47% 44%, #ffffff 46%, transparent 68%),
+    radial-gradient(ellipse 36% 15vh at 62% 82%, #ffffff 52%, transparent 73%),
+    radial-gradient(ellipse 24% 12vh at 78% 50%, #ffffff 48%, transparent 70%),
+    radial-gradient(ellipse 32% 14vh at 94% 76%, #ffffff 52%, transparent 72%),
+    radial-gradient(ellipse 18% 9vh at 26% 30%, #ffffff 40%, transparent 66%),
+    radial-gradient(ellipse 20% 10vh at 71% 28%, #ffffff 38%, transparent 64%),
+    linear-gradient(to bottom, transparent 38%, rgba(255, 255, 255, 0.55) 62%, #ffffff 88%);
+  filter: blur(22px);
+  opacity: 1;
+}
+
+.hero-about-zone .about-section {
+  position: relative;
+  z-index: 40;
+  margin-top: 0;
+}
+
+.hero-about-zone:not([data-transition-complete="true"]) .about-section {
+  background-color: transparent;
+}
+
+.hero-about-zone.is-reduced .hero-about-sheet-layer {
+  display: none;
+}
+
+.hero-about-zone.is-reduced .yo-hero__year-mark,
+.hero-about-zone.is-reduced .yo-hero__aside,
+.hero-about-zone.is-reduced .yo-hero__year {
+  transform: none;
+  opacity: 1;
+}
+
+/* Keeps the resting offset so reduced motion matches the settled hero exactly. */
+.hero-about-zone.is-reduced .yo-hero__content {
+  transform: translateY(var(--hero-content-y));
+  opacity: 1;
+}
+
+.hero-about-zone[data-transition="active"] .yo-hero {
+  transform: translate3d(0, calc(var(--hero-exit-t) * -6vh), 0);
+}
+
+.hero-about-zone.is-reduced [data-hero-exit] {
+  transform: none;
+  opacity: 1;
+  will-change: auto;
+}
+
+.hero-about-zone.is-reduced:not([data-transition-complete="true"]) .about-section {
+  background-color: var(--about-bg);
+}
+
+.hero-about-zone.is-reduced .about-section {
+  --about-enter: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-about-sheet-layer {
+    display: none;
+  }
+
+  .hero-about-zone[data-transition="active"] .yo-hero__year-mark,
+  .hero-about-zone[data-transition="active"] .yo-hero__aside,
+  .hero-about-zone[data-transition="active"] .yo-hero__year {
+    transform: none;
+    opacity: 1;
+  }
+
+  .hero-about-zone[data-transition="active"] .yo-hero__content {
+    transform: translateY(var(--hero-content-y));
+    opacity: 1;
+  }
+
+  .hero-about-zone[data-transition="active"] .yo-hero {
+    transform: none;
+  }
+
+  .hero-about-zone [data-hero-exit] {
+    transform: none;
+    opacity: 1;
+    will-change: auto;
+  }
+
+  .hero-about-zone:not([data-transition-complete="true"]) .about-section {
+    background-color: var(--about-bg);
+  }
+
+  .hero-about-zone .about-section {
+    --about-enter: 1;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-about-zone .about-section {
+    --about-enter: 1;
+  }
+}

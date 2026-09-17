@@ -1,0 +1,524 @@
+/* Fixed chrome (nav / rails) — white source + difference blend
+   inverts against page content, same technique as .scroll-rail. */
+.yo-sticky-chrome {
+  mix-blend-mode: difference;
+  color: #ffffff;
+  overflow: visible;
+}
+
+.yo-nav {
+  position: relative;
+  overflow: visible;
+}
+
+.yo-nav__logo-slot {
+  display: block;
+  width: 0;
+  height: 1px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.yo-nav__logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  transform: translate(-50%, -50%);
+}
+
+.yo-nav__logo-inner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  font-size: clamp(1.2rem, 4.8vw, 1.75rem);
+  font-weight: 700;
+  font-family: var(--font-heading, "Sora", sans-serif);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.yo-lang {
+  position: relative;
+}
+
+.yo-lang__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0.35rem 0.15rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  cursor: pointer;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.yo-lang__btn:focus {
+  outline: none;
+}
+
+.yo-lang__btn:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 4px;
+}
+
+.yo-lang__chevron {
+  display: block;
+  opacity: 0.72;
+}
+
+.yo-lang__menu {
+  position: fixed;
+  z-index: 10060;
+  display: flex;
+  flex-direction: column;
+  min-width: 4.5rem;
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  background: #000000;
+  color: #ffffff;
+  isolation: isolate;
+  mix-blend-mode: normal;
+  transform: translateX(-100%);
+}
+
+.yo-lang__option {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0.5rem 0.7rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-align: start;
+  text-transform: uppercase;
+  cursor: pointer;
+  appearance: none;
+}
+
+.yo-lang__option[data-active="true"],
+.yo-lang__option:hover {
+  background: #ffffff;
+  color: #000000;
+}
+
+.yo-lang__option:focus {
+  outline: none;
+}
+
+.yo-lang__option:focus-visible {
+  outline: 1px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* Nav intro mark — shown after the 3D handoff replaces the text logo */
+
+.yo-nav-intro-mark {
+  display: none;
+  flex-shrink: 0;
+  width: auto;
+  height: 1.65rem;
+  overflow: visible;
+  color: inherit;
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (min-width: 640px) {
+  .yo-nav-intro-mark {
+    height: 1.75rem;
+  }
+}
+
+html.yo-intro-logo-live .yo-logo-mark {
+  opacity: 0 !important;
+  visibility: hidden;
+}
+
+/* Upper-left “y.” micro-interactions — monochrome, decorative only */
+
+.yo-logo-mark {
+  --yo-logo-dot-travel: 36px;
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  overflow: visible;
+  pointer-events: none;
+  user-select: none;
+}
+
+.yo-logo-mark__y-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.yo-logo-mark__y {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  will-change: transform;
+}
+
+.yo-logo-mark__stage {
+  position: relative;
+  display: inline-block;
+  margin-inline-start: -0.02em;
+  overflow: visible;
+  vertical-align: baseline;
+  pointer-events: none;
+}
+
+.yo-logo-mark__dot {
+  position: relative;
+  z-index: 3;
+  display: inline-block;
+  font-weight: 800;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  line-height: 1;
+  color: inherit;
+  will-change: transform;
+  transition: opacity 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/*
+  While the hero entrance flies its stand-in dot to the fold, the real period
+  steps aside. !important because the interaction loop writes opacity inline.
+  Quick out, gentler back in, so the hand-off reads as one continuous object.
+*/
+.yo-logo-mark__dot[data-detached="true"] {
+  opacity: 0 !important;
+  transition-duration: 140ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yo-logo-mark__dot {
+    transition: none;
+  }
+}
+
+/* Editorial recall line — fixed so it can span from HOME / menu to the period */
+.yo-logo-mark__tether {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  height: 1px;
+  width: 0;
+  margin: 0;
+  background: rgba(255, 255, 255, 0.38);
+  opacity: 0;
+  pointer-events: none;
+  transform-origin: 0 50%;
+  will-change: transform, opacity, width;
+}
+
+/* Custom hamburger — three lines for sequential recall cue */
+.yo-nav-burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 1.25rem;
+  height: 1.25rem;
+  pointer-events: none;
+}
+
+.yo-nav-burger__line {
+  display: block;
+  width: 100%;
+  height: 1.5px;
+  border-radius: 1px;
+  background: currentColor;
+  transform-origin: center center;
+  opacity: 1;
+}
+
+.yo-logo-mark__pulse {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 0;
+  width: 1.35em;
+  height: 1.35em;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  translate: -50% -50%;
+  transform: scale(0.35);
+  will-change: transform, opacity;
+}
+
+.yo-logo-mark__line {
+  position: absolute;
+  left: 0;
+  bottom: 0.2em;
+  z-index: 1;
+  height: 1px;
+  width: var(--yo-logo-dot-travel);
+  transform-origin: left center;
+  transform: scaleX(0);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.yo-logo-mark__line--magnet {
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.yo-logo-mark__line--string {
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.yo-logo-mark__rail {
+  position: absolute;
+  left: 0;
+  bottom: 0.08em;
+  z-index: 1;
+  height: 1px;
+  width: calc(var(--yo-logo-dot-travel) + 0.22em);
+  background: rgba(255, 255, 255, 0.4);
+  transform-origin: left center;
+  transform: scaleX(0);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.yo-logo-mark__platform {
+  position: absolute;
+  left: 0;
+  bottom: 0.04em;
+  z-index: 1;
+  width: calc(0.28em + var(--yo-logo-dot-travel));
+  height: 1px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(18px);
+  will-change: transform, opacity;
+}
+
+.yo-logo-mark__catch,
+.yo-logo-mark__ring {
+  position: absolute;
+  left: 0.02em;
+  bottom: 0.02em;
+  z-index: 2;
+  width: 0.42em;
+  height: 0.42em;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.yo-logo-mark__catch {
+  transform: scale(1.35);
+}
+
+.yo-logo-mark__ring {
+  transform: rotate(0deg);
+}
+
+.yo-logo-mark__string-handle {
+  position: absolute;
+  left: 0.06em;
+  bottom: 0.1em;
+  z-index: 4;
+  width: 0.28em;
+  height: 0.28em;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.yo-logo-mark__gate {
+  position: absolute;
+  left: 0.1em;
+  bottom: -0.08em;
+  z-index: 2;
+  width: 1px;
+  height: 0.9em;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.yo-logo-mark__corner {
+  position: absolute;
+  left: 0.05em;
+  bottom: 0.05em;
+  z-index: 4;
+  width: 0.4em;
+  height: 0.4em;
+  border-top: 1px solid rgba(255, 255, 255, 0.65);
+  border-right: 1px solid rgba(255, 255, 255, 0.65);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(14px);
+  transform-origin: top right;
+  will-change: transform, opacity;
+}
+
+.yo-logo-mark__cursor,
+.yo-logo-mark__arrow,
+.yo-logo-mark__fingertip,
+.yo-logo-mark__hand,
+.yo-logo-mark__person {
+  position: absolute;
+  left: 0;
+  z-index: 4;
+  display: flex;
+  color: currentColor;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.yo-logo-mark__cursor {
+  bottom: -0.05em;
+  transform: translateX(14px);
+}
+
+.yo-logo-mark__arrow {
+  bottom: 0.12em;
+  color: currentColor;
+  transform: translateX(16px);
+}
+
+.yo-logo-mark__fingertip {
+  bottom: -0.02em;
+  transform: translateX(16px);
+}
+
+.yo-logo-mark__hand {
+  bottom: 0.05em;
+  transform-origin: center bottom;
+  transform: translateX(16px);
+}
+
+.yo-logo-mark__person {
+  bottom: -0.15em;
+  transform: translateX(18px);
+}
+
+.yo-logo-mark__person svg,
+.yo-logo-mark__cursor svg,
+.yo-logo-mark__arrow svg,
+.yo-logo-mark__fingertip svg,
+.yo-logo-mark__hand svg {
+  display: block;
+}
+
+.yo-logo-mark__secondary {
+  position: absolute;
+  left: 0.08em;
+  bottom: 0.12em;
+  z-index: 4;
+  width: 0.18em;
+  height: 0.18em;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(16px);
+  will-change: transform, opacity;
+}
+
+.yo-logo-mark__bumper {
+  position: absolute;
+  left: 0.05em;
+  bottom: 0.08em;
+  z-index: 4;
+  width: 0.34em;
+  height: 0.34em;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 1.5px;
+  background: rgba(255, 255, 255, 0.06);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(18px);
+  will-change: transform, opacity;
+}
+
+.yo-logo-mark__scan {
+  position: absolute;
+  left: 0.12em;
+  bottom: -0.05em;
+  z-index: 4;
+  width: 1px;
+  height: 0.85em;
+  background: rgba(255, 255, 255, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(18px);
+  will-change: transform, opacity;
+}
+
+@media (max-width: 767px) {
+  .yo-logo-mark {
+    --yo-logo-dot-travel: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yo-logo-mark__pulse,
+  .yo-logo-mark__line,
+  .yo-logo-mark__rail,
+  .yo-logo-mark__platform,
+  .yo-logo-mark__catch,
+  .yo-logo-mark__ring,
+  .yo-logo-mark__string-handle,
+  .yo-logo-mark__gate,
+  .yo-logo-mark__corner,
+  .yo-logo-mark__cursor,
+  .yo-logo-mark__secondary,
+  .yo-logo-mark__arrow,
+  .yo-logo-mark__bumper,
+  .yo-logo-mark__scan,
+  .yo-logo-mark__fingertip,
+  .yo-logo-mark__hand,
+  .yo-logo-mark__person {
+    display: none !important;
+  }
+
+  .yo-logo-mark__y,
+  .yo-logo-mark__dot {
+    transform: none !important;
+  }
+
+  .yo-logo-mark__tether {
+    display: none !important;
+  }
+}

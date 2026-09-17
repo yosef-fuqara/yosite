@@ -47,9 +47,9 @@ function TickerChip({ label, Icon, lang }) {
   return (
     <span
       data-lang={lang}
-      className={`build-ticker-chip inline-flex shrink-0 items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-gray-300 md:px-4 md:py-2 md:text-sm ${TICKER_FONT_CLASS[lang] || ""}`}
+      className={`build-ticker-chip inline-flex shrink-0 items-center gap-2 rounded-full border border-black/10 bg-black/[0.03] px-3 py-1.5 text-xs text-neutral-600 md:px-4 md:py-2 md:text-sm ${TICKER_FONT_CLASS[lang] || ""}`}
     >
-      <Icon className="h-3.5 w-3.5 shrink-0 text-violet-400 md:h-4 md:w-4" aria-hidden />
+      <Icon className="h-3.5 w-3.5 shrink-0 text-neutral-500 md:h-4 md:w-4" aria-hidden />
       <span className="whitespace-nowrap font-light">{label}</span>
     </span>
   );
@@ -100,11 +100,12 @@ export default function BuildTicker() {
       className={`build-ticker-mask build-ticker-lang-${lang} mt-6 w-full min-w-0 max-w-full overflow-hidden`}
       aria-hidden
     >
-      <div className="group/build-ticker glass-panel overflow-hidden rounded-xl border border-white/5 py-2 md:py-2.5">
+      <div className="group/build-ticker glass-panel overflow-hidden rounded-xl border border-black/10 py-2 md:py-2.5">
         {/* dir=ltr keeps the infinite loop seamless for all UI languages (he/ar/ru/en) */}
         <div
           ref={viewportRef}
           className="build-ticker-viewport overflow-x-auto no-scrollbar overscroll-x-contain cursor-grab touch-pan-x active:cursor-grabbing"
+          data-lenis-prevent-wheel
           dir="ltr"
           onPointerDown={handlePointerDown}
           onWheel={(e) => {

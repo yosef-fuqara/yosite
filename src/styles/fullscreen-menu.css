@@ -1,0 +1,181 @@
+/* Inline menu — two-line trigger to X, no overlay */
+
+.yo-menu-slot {
+  --yo-menu-extent: 220px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.yo-menu-trigger {
+  --yo-menu-ease: cubic-bezier(0.76, 0, 0.24, 1);
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #ffffff;
+  cursor: pointer;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  isolation: isolate;
+  overflow: visible;
+}
+
+.yo-menu-trigger__icon {
+  position: relative;
+  display: block;
+  width: 24px;
+  height: 24px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.yo-menu-trigger__bar {
+  position: absolute;
+  left: 3px;
+  top: 11.25px;
+  display: block;
+  width: 18px;
+  height: 1.5px;
+  border: 0;
+  border-radius: 1px;
+  background: currentColor;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.yo-menu-trigger__bar--top {
+  transform: translateY(-4px);
+}
+
+.yo-menu-trigger__bar--bottom {
+  transform: translateY(4px);
+}
+
+.yo-menu-trigger[data-open="true"] {
+  background: transparent;
+  color: #ffffff;
+}
+
+.yo-menu-trigger:focus {
+  outline: none;
+}
+
+.yo-menu-trigger:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 4px;
+}
+
+.yo-fsmenu__list {
+  position: absolute;
+  top: calc(50% + 0.72rem);
+  left: 0.2rem;
+  z-index: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: var(--yo-menu-extent);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+
+.yo-menu-trigger[data-open="true"] + .yo-fsmenu__list {
+  pointer-events: auto;
+}
+
+.yo-fsmenu__item {
+  margin: 0;
+  padding: 0;
+}
+
+.yo-fsmenu__link {
+  display: inline-block;
+  padding: 0.2rem 0.05rem;
+  color: #ffffff;
+  font-family: var(--font-sans, Inter, system-ui, sans-serif);
+  font-size: clamp(0.5625rem, 1.7vw, 0.6875rem);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .yo-fsmenu__list:hover .yo-fsmenu__link:not(:hover) {
+    color: rgba(255, 255, 255, 0.42);
+  }
+}
+
+.yo-fsmenu__link:focus {
+  outline: none;
+}
+
+.yo-fsmenu__link:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 4px;
+}
+
+@media (max-width: 767px) {
+  .yo-menu-slot {
+    max-width: 100%;
+  }
+
+  .yo-menu-trigger {
+    width: 2.75rem;
+    height: 2.75rem;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+
+  .yo-fsmenu__list {
+    top: calc(50% + 0.9rem);
+    left: var(--yo-menu-line-origin, 1.1rem);
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0.35rem;
+    width: max-content;
+    max-width: calc(100vw - var(--yo-menu-line-origin, 1.1rem) - 1.25rem);
+  }
+
+  .yo-fsmenu__item {
+    width: auto;
+    flex: 0 0 auto;
+  }
+
+  .yo-fsmenu__link {
+    display: flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0.65rem 0.1rem;
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yo-menu-trigger__bar,
+  .yo-fsmenu__link {
+    transition: none !important;
+  }
+}

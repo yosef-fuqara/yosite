@@ -27,3 +27,9 @@ dist-ssr
 *.sw?
 
 .vercel
+
+# Local Cursor/MCP config
+.cursor/
+
+# QA screenshots and scratch renders
+tmp-*

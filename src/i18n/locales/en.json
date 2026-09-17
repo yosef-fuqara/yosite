@@ -1,24 +1,118 @@
 {
   "nav": {
     "home": "Home",
+    "services": "Services",
+    "work": "Our Work",
+    "workShort": "Work",
     "process": "Process",
+    "contact": "Contact",
     "cta": "Get In Touch",
+    "subtitle": "Digital Studio",
+    "studio": "YoSite Digital Studio",
+    "menu": "MENU",
+    "close": "CLOSE",
+    "openAria": "Open menu",
+    "closeAria": "Close menu",
     "menuToggle": "Toggle menu",
-    "logoAria": "YoSite — Home"
+    "logoAria": "YoSite — Home",
+    "languagesAria": "Language",
+    "soundOn": "Sound on",
+    "soundOff": "Sound off",
+    "soundOnAria": "Mute menu sounds",
+    "soundOffAria": "Unmute menu sounds"
   },
   "hero": {
-    "taglineBefore": "Your idea",
-    "taglineAfter": "live on the web",
-    "title": "Let's build a modern website for your business",
-    "description": "Premium websites for stores, businesses, portfolios, bookings, and service providers — built to look serious and convert.",
-    "primaryButton": "Start a Project",
-    "secondaryButton": "View Services",
-    "scrollHint": "Scroll to explore",
-    "scrollDownAria": "Scroll down"
+    "headlineLine1": "SITES WITH",
+    "headlineLine2": "SOUL",
+    "headlineAria": "Sites with soul",
+    "titleA": "Give your idea",
+    "titleB": "room to unfold.",
+    "support": "A considered digital experience.",
+    "enter": "Enter the work",
+    "mediaAlt": "Sunlit terracotta archway with an olive tree in a stone planter",
+    "eyebrowStart": "Your idea",
+    "eyebrowEnd": "Live on the web",
+    "titleLine1": "Immerse your brand.",
+    "titleLine2": "Experience the digital.",
+    "titleLine3": "Thrill beyond limits.",
+    "body": "We combine design, development,\nmotion, and 3D to create immersive\ndigital experiences that stand out.",
+    "cta": "See our work",
+    "studio": "YoSite Digital Studio",
+    "scroll": "Scroll",
+    "menuAria": "Open menu",
+    "logoAria": "YoSite — Home"
+  },
+  "intro": {
+    "main": "BUILD",
+    "final": "BUILT",
+    "supporting": ["DESIGN", "MOTION", "CODE", "EXPERIENCE"],
+    "srLabel": "Building a digital experience. Design, motion, code, experience. Built."
+  },
+  "about": {
+    "label": "ABOUT US",
+    "heading": "We turn ideas into experiences",
+    "line1": "WE TURN",
+    "line2": "IDEAS INTO",
+    "line3": "EXPERIENCES",
+    "body": "We design and develop digital experiences where clarity, character and motion work as one. Every detail is shaped to make an idea feel distinctive, intuitive and built to last.",
+    "cta": "Our approach",
+    "images": {
+      "vision": "Creative professional illuminated by colorful interface light",
+      "structure": "Geometric contemporary architecture with primary-color walls",
+      "detail": "Hands arranging wireframes and design materials on a studio desk",
+      "interaction": "Person touching a transparent digital interface in a gallery",
+      "experience": "Person facing a monumental projected digital composition"
+    }
+  },
+  "work": {
+    "label": "SELECTED WORK",
+    "headingLine1": "Selected work",
+    "headingLine2": "& explorations",
+    "viewAll": "View all projects",
+    "explore": "Explore project",
+    "projects": {
+      "one": {
+        "title": "Aurelia House",
+        "description": "A quiet architectural experience shaped by light, material, and landscape."
+      },
+      "two": {
+        "title": "Veloura",
+        "description": "An editorial digital experience for a refined fashion and fragrance brand."
+      },
+      "three": {
+        "title": "Nocturne Studio",
+        "description": "An immersive music platform built around sound, movement, and culture."
+      }
+    }
   },
   "services": {
-    "title": "What we build",
-    "subtitle": "Premium websites for stores, businesses, portfolios, bookings, and service providers — built to look serious and convert.",
+    "revealLabel": "Our services",
+    "revealLine1": "A.I.",
+    "revealLine2": "Design",
+    "revealLine3": "Development",
+    "title": "WHAT WE BUILD?",
+    "titleWords": ["WHAT", "WE", "BUILD"],
+    "titleLeadAlt": "HOW",
+    "titleMark": "?",
+    "processSteps": [
+      {
+        "title": "IDEA & RESEARCH",
+        "caption": "Understanding the real problem."
+      },
+      {
+        "title": "DESIGN",
+        "caption": "Turning insight into direction."
+      },
+      {
+        "title": "DEVELOPMENT",
+        "caption": "Building the experience precisely."
+      },
+      {
+        "title": "LAUNCH & ITERATE",
+        "caption": "Refining after the real launch."
+      }
+    ],
+    "subtitle": "Design, code, motion, stores, systems — if it lives on the web, we can build it.",
     "benefitsHeading": "Why YoSite",
     "tickerItems": [
       "Online Stores",
@@ -39,46 +133,32 @@
       "Course / Learning Websites"
     ],
     "cta": "Start a Project",
-    "items": {
-      "cleanDesign": {
-        "title": "Clean design",
-        "desc": "Modern, clear, and professional design."
+    "cards": {
+      "webDesign": {
+        "title": "Web Design",
+        "desc": "Editorial, responsive interfaces shaped around clarity, character and user experience."
       },
-      "fastLoading": {
-        "title": "Fast loading",
-        "desc": "Optimized pages that feel quick and smooth."
+      "webDev": {
+        "title": "Web Development",
+        "desc": "Fast, scalable websites built with clean modern technology."
       },
-      "mobileFirst": {
-        "title": "Mobile-first",
-        "desc": "Built to look great on phones first."
+      "ecommerce": {
+        "title": "E-commerce",
+        "desc": "Conversion-focused stores designed to make browsing and buying effortless."
       },
-      "realBusiness": {
-        "title": "Built for real businesses",
-        "desc": "Websites made to bring trust, leads, and growth."
+      "motion": {
+        "title": "Motion & Interaction",
+        "desc": "Purposeful movement that makes every interaction feel natural and memorable."
+      },
+      "landing": {
+        "title": "Landing Pages",
+        "desc": "Focused digital experiences created to turn attention into action."
+      },
+      "seo": {
+        "title": "Performance & SEO",
+        "desc": "Technical refinement that improves speed, accessibility and discoverability."
       }
     }
-  },
-  "process": {
-    "eyebrow": "Process",
-    "title": "From idea to launch",
-    "subtitle": "A simple process that turns your idea into a real website.",
-    "cardPrefix": "Card",
-    "steps": {
-      "understand": {
-        "title": "Understand",
-        "desc": "We define your goal, audience, and structure."
-      },
-      "build": {
-        "title": "Build",
-        "desc": "Design, development, responsive layout, and performance."
-      },
-      "launch": {
-        "title": "Launch",
-        "desc": "Testing, deployment, and support after launch."
-      }
-    },
-    "cta": "Start a Project",
-    "lottieAria": "Responsive website design animation — YoSite process"
   },
   "cta": {
     "title": "Ready to build?",
@@ -114,14 +194,10 @@
   "footer": {
     "tagline": "Your idea • live on the web",
     "home": "Home",
-    "process": "Process",
+    "services": "Services",
     "whatsappAria": "WhatsApp",
     "backToTopAria": "Back to top",
     "copyright": "© {year} YoSite. All rights reserved.",
     "studio": "Premium web development studio"
-  },
-  "splash": {
-    "taglineBefore": "Your idea",
-    "taglineAfter": "live on the web"
   }
 }

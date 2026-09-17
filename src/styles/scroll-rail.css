@@ -1,0 +1,115 @@
+/* Global left scroll rail — thin track + progress dot.
+   Portaled to document.body; must stay above all page sections.
+   Visible while scrolling; fades out on inactivity (opacity only).
+   mix-blend-mode: difference → track/dot invert against page content
+   (white→black on light areas, black→white on dark). Avoid will-change /
+   isolation on this node so blending reaches the backdrop. */
+
+.scroll-rail {
+  --scroll-rail-fade-out: 850ms;
+  --scroll-rail-fade-in: 180ms;
+
+  position: fixed;
+  /* Safe inset: clear browser chrome / notch without horizontal overflow */
+  left: max(12px, calc(env(safe-area-inset-left, 0px) + 10px));
+  top: 0;
+  bottom: 0;
+  z-index: 10000;
+  width: 24px;
+  /* Centered in viewport; capped so it stays below the fixed navbar */
+  height: min(56vh, 620px);
+  max-height: calc(100dvh - 140px);
+  margin-block: auto;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--scroll-rail-fade-out) ease,
+    visibility var(--scroll-rail-fade-out) linear;
+  mix-blend-mode: difference;
+}
+
+.scroll-rail[data-active="true"] {
+  opacity: 1;
+  visibility: visible;
+  /* Reappear quickly when scrolling resumes */
+  transition:
+    opacity var(--scroll-rail-fade-in) ease,
+    visibility 0ms linear;
+}
+
+/* Instant show/hide — no fade when reduced motion is preferred */
+.scroll-rail[data-reduced-motion="true"],
+.scroll-rail[data-reduced-motion="true"][data-active="true"] {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-rail,
+  .scroll-rail[data-active="true"] {
+    transition: none;
+  }
+}
+
+.scroll-rail__track {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform: translateX(-50%);
+  /* White source → difference blend inverts against the page */
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.scroll-rail__dot-wrap {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 0;
+  height: 0;
+  /* y is driven by Framer Motion (scroll progress → pixels) */
+  will-change: transform;
+}
+
+.scroll-rail__glow {
+  position: absolute;
+  inset: -7px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0.28) 45%,
+    rgba(255, 255, 255, 0) 75%
+  );
+  filter: blur(2px);
+}
+
+.scroll-rail__dot {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ffffff;
+  transform: translate(-50%, -50%);
+}
+
+@media (max-width: 640px) {
+  .scroll-rail {
+    left: max(8px, calc(env(safe-area-inset-left, 0px) + 6px));
+    width: 16px;
+    height: min(40vh, 360px);
+    max-height: calc(100dvh - 120px);
+  }
+
+  .scroll-rail__dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scroll-rail__glow {
+    inset: -5px;
+  }
+}

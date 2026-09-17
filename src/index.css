@@ -1,32 +1,79 @@
 @import "tailwindcss";
 
+:root {
+  --site-background: #ffffff;
+  --services-sheet: #ffffff;
+  --services-ink: #111111;
+  --services-sans: "Familjen Grotesk Variable", Inter, system-ui, sans-serif;
+}
+
 @theme {
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
   --font-heading: "Sora", sans-serif;
 
-  --color-charcoal-50: #f5f5f6;
-  --color-charcoal-100: #e7e7e9;
-  --color-charcoal-200: #cfcfd2;
-  --color-charcoal-300: #a7a7ac;
-  --color-charcoal-400: #787880;
-  --color-charcoal-500: #5a5a60;
-  --color-charcoal-600: #48484d;
-  --color-charcoal-700: #3b3b3f;
-  --color-charcoal-800: #1c1c1e;
-  --color-charcoal-900: #0b0b0c;
-  --color-charcoal-950: #020203;
+  --color-charcoal-50: #ffffff;
+  --color-charcoal-100: #f5f5f5;
+  --color-charcoal-200: #e5e5e5;
+  --color-charcoal-300: #d4d4d4;
+  --color-charcoal-400: #a3a3a3;
+  --color-charcoal-500: #737373;
+  --color-charcoal-600: #525252;
+  --color-charcoal-700: #404040;
+  --color-charcoal-800: #1a1a1a;
+  --color-charcoal-900: #0a0a0a;
+  --color-charcoal-950: #000000;
 
-  --color-accent-violet: #8b5cf6;
-  --color-accent-violet-glow: rgba(139, 92, 246, 0.15);
-  --color-accent-cyan: #06b6d4;
-  --color-accent-cyan-glow: rgba(6, 182, 212, 0.15);
-  --color-accent-pink: #ec4899;
+  --color-accent-violet: #ffffff;
+  --color-accent-violet-glow: rgba(255, 255, 255, 0.12);
+  --color-accent-cyan: #d4d4d4;
+  --color-accent-cyan-glow: rgba(255, 255, 255, 0.1);
+  --color-accent-pink: #a3a3a3;
+  --color-site-background: #ffffff;
 }
 
 /* Custom global styles & utility classes */
+html,
 body {
-  background-color: #000000;
-  color: #d1d5db;
+  background-color: var(--site-background);
+  color: #000000;
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: auto;
+  /* Reserve the scrollbar track so locking scroll never shifts the layout. */
+  scrollbar-gutter: stable;
+}
+
+/* Overlay is viewport-fixed at width:100%. A stable gutter shrinks that
+   box by the scrollbar track and leaves a side gap in the curtain. */
+html.yo-intro-pending,
+html.yo-intro-active,
+html.yo-intro-locked {
+  scrollbar-gutter: auto;
+}
+
+/* Rest gutter before the mark lands so the rise ends on the final top-center. */
+html.yo-intro-active.yo-intro-handoff,
+html.yo-intro-active.yo-intro-logo-live {
+  scrollbar-gutter: stable;
+}
+
+/* Scroll lock used by the hero entrance; Lenis watches this class and stops. */
+html.yo-intro-locked,
+html.yo-intro-locked body {
+  overflow: hidden !important;
+  overscroll-behavior: none;
+  touch-action: none;
+}
+
+#about,
+#selected-work,
+#services {
+  scroll-margin-top: 5.5rem;
+}
+
+body {
   font-family: var(--font-sans);
 }
 
@@ -74,82 +121,57 @@ h1, h2, h3, h4, h5, h6 {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #020203;
+  background: var(--site-background);
 }
 ::-webkit-scrollbar-thumb {
-  background: #1c1c1e;
+  background: #d4d4d4;
   border-radius: 9999px;
-  border: 2px solid #020203;
+  border: 2px solid var(--site-background);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3b3b3f;
+  background: #a3a3a3;
 }
 
-/* Cinema background elements */
+/* Legacy cinema classes — solid white canvas */
+.noise-overlay,
+.grid-overlay,
+.grid-overlay::after,
+.galaxy-nebula-base,
+.galaxy-vignette {
+  background: var(--site-background, #ffffff);
+  background-image: none;
+}
+
 .noise-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  content: "";
-  opacity: 0.025;
+  inset: 0;
+  opacity: 0;
   pointer-events: none;
-  z-index: 50;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  z-index: 0;
 }
 
 .grid-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 50px 50px;
-  background-position: center top;
+  inset: 0;
   pointer-events: none;
 }
 
 .grid-overlay::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(ellipse 120% 80% at 50% 45%, transparent 35%, rgba(0, 0, 0, 0.55) 100%);
-}
-
-/* Galaxy nebula — full-viewport base layer */
-.galaxy-nebula-base {
-  background:
-    radial-gradient(ellipse 90% 55% at 18% 8%, rgba(88, 28, 135, 0.22) 0%, transparent 58%),
-    radial-gradient(ellipse 70% 50% at 82% 22%, rgba(76, 29, 149, 0.14) 0%, transparent 55%),
-    radial-gradient(ellipse 65% 45% at 12% 55%, rgba(59, 7, 100, 0.16) 0%, transparent 52%),
-    radial-gradient(ellipse 75% 50% at 88% 68%, rgba(91, 33, 182, 0.12) 0%, transparent 54%),
-    radial-gradient(ellipse 80% 55% at 45% 92%, rgba(49, 10, 101, 0.18) 0%, transparent 56%),
-    #000000;
-}
-
-.galaxy-vignette {
-  background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 42%, rgba(0, 0, 0, 0.35) 100%);
+  content: none;
 }
 
 /* Glassmorphism base rules */
 .glass-panel {
-  background: rgba(8, 8, 12, 0.55);
+  background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .glass-panel-hover:hover {
-  background: rgba(28, 28, 30, 0.7);
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8), 0 0 50px -10px rgba(139, 92, 246, 0.15);
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(0, 0, 0, 0.14);
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.12), 0 0 50px -10px rgba(0, 0, 0, 0.06);
 }
 
 /* 3D Depth Utilities */
@@ -267,37 +289,22 @@ h1, h2, h3, h4, h5, h6 {
   animation: twinkle 4s ease-in-out infinite;
 }
 
-/* Contact / CTA — mobile layout (< 768px) */
-@media (max-width: 767px) {
-  #cta.cta-section {
-    min-height: 0;
-    overflow-x: hidden;
-  }
-
-  #cta .cta-panel {
-    min-height: 0;
-  }
-
-  #cta .cta-title {
-    font-size: clamp(1.375rem, 4.5vw + 0.65rem, 2.125rem);
-    line-height: 1.15;
-  }
-
-  #cta .cta-form-wrap,
-  #cta .cta-form,
-  #cta .cta-form input,
-  #cta .cta-form textarea {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  #cta .cta-form-column {
-    align-items: stretch;
-  }
-
-  /* Prevent TextReveal slide-in from causing horizontal scroll */
-  #cta .cta-form-header > * {
-    overflow-x: hidden;
-  }
+/* Site-wide ink cursor trail. White pixels + difference = black on light, white on dark. */
+.yo-ink-trail {
+  position: fixed;
+  inset: 0;
+  z-index: 10040;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  user-select: none;
+  background: transparent;
+  mix-blend-mode: difference;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .yo-ink-trail {
+    display: none !important;
+  }
+}

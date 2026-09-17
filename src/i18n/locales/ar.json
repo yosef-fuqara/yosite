@@ -1,24 +1,126 @@
 {
   "nav": {
     "home": "الرئيسية",
-    "process": "العملية",
+    "work": "أعمالنا",
     "cta": "تواصل معنا",
+    "subtitle": "استوديو رقمي",
+    "studio": "YoSite Digital Studio",
+    "menu": "القائمة",
+    "close": "إغلاق",
+    "openAria": "فتح القائمة",
+    "closeAria": "إغلاق القائمة",
     "menuToggle": "فتح القائمة",
-    "logoAria": "YoSite — الصفحة الرئيسية"
+    "logoAria": "YoSite — الصفحة الرئيسية",
+    "languagesAria": "اللغة",
+    "soundOn": "الصوت تشغيل",
+    "soundOff": "الصوت إيقاف",
+    "soundOnAria": "كتم أصوات القائمة",
+    "soundOffAria": "تشغيل أصوات القائمة",
+    "services": "الخدمات",
+    "workShort": "أعمال",
+    "process": "العملية",
+    "contact": "تواصل"
+  },
+  "intro": {
+    "main": "BUILD",
+    "final": "BUILT",
+    "supporting": [
+      "DESIGN",
+      "MOTION",
+      "CODE",
+      "EXPERIENCE"
+    ],
+    "srLabel": "بناء تجربة رقمية. تصميم، حركة، برمجة، تجربة. Built."
   },
   "hero": {
-    "taglineBefore": "فكرتك",
-    "taglineAfter": "حية على الويب",
-    "title": "لنبني موقعاً حديثاً لأعمالك",
-    "description": "مواقع متميزة للمتاجر والأعمال ومعارض الأعمال والحجوزات ومقدّمي الخدمات.",
-    "primaryButton": "ابدأ مشروعاً",
-    "secondaryButton": "الخدمات",
-    "scrollHint": "مرّر للاستكشاف",
-    "scrollDownAria": "التمرير للأسفل"
+    "headlineLine1": "مواقع",
+    "headlineLine2": "بروح",
+    "headlineAria": "مواقع بروح",
+    "titleA": "امنح فكرتك",
+    "titleB": "مساحة لتتفتح.",
+    "support": "تجربة رقمية مدروسة.",
+    "enter": "ادخل إلى الأعمال",
+    "mediaAlt": "قوس من التراكوتا تغمره الشمس مع شجرة زيتون في أصيص حجري",
+    "eyebrowStart": "فكرتك",
+    "eyebrowEnd": "حية على الويب",
+    "titleLine1": "اغمر علامتك.",
+    "titleLine2": "اختبر الرقمي.",
+    "titleLine3": "إثارة تتجاوز الحدود.",
+    "body": "نجمع بين التصميم والتطوير\nوالحركة والثلاثي الأبعاد لنصنع\nتجارب رقمية غامرة تتميّز.",
+    "cta": "شاهد أعمالنا",
+    "studio": "YoSite Digital Studio",
+    "scroll": "مرّر",
+    "menuAria": "فتح القائمة",
+    "logoAria": "YoSite — الصفحة الرئيسية"
+  },
+  "about": {
+    "label": "ABOUT US",
+    "heading": "نحوّل الأفكار إلى تجارب",
+    "line1": "WE TURN",
+    "line2": "IDEAS INTO",
+    "line3": "EXPERIENCES",
+    "body": "نصمّم ونطوّر تجارب رقمية يعمل فيها الوضوح والشخصية والحركة كوحدة واحدة. كل تفصيل يُصاغ ليجعل الفكرة مميزة، بديهية ومبنية لتدوم.",
+    "cta": "منهجنا",
+    "images": {
+      "vision": "محترفة إبداعية مضاءة بضوء واجهة رقمية ملون",
+      "structure": "عمارة هندسية معاصرة بجدران بالألوان الأساسية",
+      "detail": "أيدٍ ترتّب مخططات ومواد تصميم على مكتب الاستوديو",
+      "interaction": "شخص يلمس واجهة رقمية شفافة في معرض",
+      "experience": "شخص يواجه تركيبة رقمية إسقاطية هائلة"
+    }
+  },
+  "work": {
+    "label": "SELECTED WORK",
+    "headingLine1": "أعمال مختارة",
+    "headingLine2": "واستكشافات",
+    "viewAll": "عرض كل المشاريع",
+    "explore": "استكشف المشروع",
+    "projects": {
+      "one": {
+        "title": "Aurelia House",
+        "description": "A quiet architectural experience shaped by light, material, and landscape."
+      },
+      "two": {
+        "title": "Veloura",
+        "description": "An editorial digital experience for a refined fashion and fragrance brand."
+      },
+      "three": {
+        "title": "Nocturne Studio",
+        "description": "An immersive music platform built around sound, movement, and culture."
+      }
+    }
   },
   "services": {
-    "title": "ماذا نبني",
-    "subtitle": "مواقع متميزة للمتاجر والأعمال ومعارض الأعمال والحجوزات ومقدّمي الخدمات.",
+    "revealLabel": "خدماتنا",
+    "revealLine1": "A.I.",
+    "revealLine2": "Design",
+    "revealLine3": "Development",
+    "title": "ماذا نبني؟",
+    "titleWords": [
+      "ماذا",
+      "نبني"
+    ],
+    "titleLeadAlt": "كيف",
+    "titleMark": "؟",
+    "processSteps": [
+      {
+        "title": "الفكرة والبحث",
+        "caption": "فهم المشكلة الحقيقية."
+      },
+      {
+        "title": "التصميم",
+        "caption": "تحويل البصيرة إلى اتجاه."
+      },
+      {
+        "title": "التطوير",
+        "caption": "بناء التجربة بدقة."
+      },
+      {
+        "title": "الإطلاق والتحسين",
+        "caption": "الصقل بعد الإطلاق الحقيقي."
+      }
+    ],
+    "subtitle": "تصميم، كود، حركة، متاجر وأنظمة — إذا كان يعيش على الويب، يمكننا بناءه.",
     "benefitsHeading": "لماذا YoSite",
     "tickerItems": [
       "متاجر إلكترونية",
@@ -39,46 +141,32 @@
       "مواقع دورات وتعلم"
     ],
     "cta": "ابدأ مشروعاً",
-    "items": {
-      "cleanDesign": {
-        "title": "تصميم نظيف",
-        "desc": "تصميم عصري وواضح واحترافي."
+    "cards": {
+      "webDesign": {
+        "title": "تصميم مواقع",
+        "desc": "واجهات تحريرية ومتجاوبة تُبنى حول الوضوح والطابع وتجربة المستخدم."
       },
-      "fastLoading": {
-        "title": "تحميل سريع",
-        "desc": "صفحات محسّنة تبدو سريعة وسلسة."
+      "webDev": {
+        "title": "تطوير مواقع",
+        "desc": "مواقع سريعة وقابلة للتوسع، مبنية بتقنية حديثة ونظيفة."
       },
-      "mobileFirst": {
-        "title": "الجوال أولاً",
-        "desc": "مبني ليبدو رائعاً على الهاتف أولاً."
+      "ecommerce": {
+        "title": "تجارة إلكترونية",
+        "desc": "متاجر تركز على التحويل لجعل التصفح والشراء سهلاً."
       },
-      "realBusiness": {
-        "title": "لأعمال حقيقية",
-        "desc": "مواقع تبني الثقة والعملاء المحتملين والنمو."
+      "motion": {
+        "title": "حركة وتفاعل",
+        "desc": "حركة مقصودة تجعل كل تفاعل طبيعياً ولا يُنسى."
+      },
+      "landing": {
+        "title": "صفحات هبوط",
+        "desc": "تجارب رقمية مركّزة تحوّل الانتباه إلى فعل."
+      },
+      "seo": {
+        "title": "أداء وترتيب",
+        "desc": "صقل تقني يحسّن السرعة وإمكانية الوصول والاكتشاف."
       }
     }
-  },
-  "process": {
-    "eyebrow": "العملية",
-    "title": "من الفكرة إلى الإطلاق",
-    "subtitle": "عملية بسيطة تحوّل فكرتك إلى موقع حقيقي.",
-    "cardPrefix": "بطاقة",
-    "steps": {
-      "understand": {
-        "title": "نفهم",
-        "desc": "نحدد الهدف والجمهور والهيكل."
-      },
-      "build": {
-        "title": "نبني",
-        "desc": "تصميم وتطوير وتجاوب وأداء."
-      },
-      "launch": {
-        "title": "نطلق",
-        "desc": "اختبار ونشر ودعم بعد الإطلاق."
-      }
-    },
-    "cta": "ابدأ مشروعاً",
-    "lottieAria": "رسوم متحركة لعملية تصميم موقع متجاوب — YoSite"
   },
   "cta": {
     "title": "مستعد للبدء؟",
@@ -114,14 +202,10 @@
   "footer": {
     "tagline": "فكرتك • حية على الويب",
     "home": "الرئيسية",
-    "process": "العملية",
     "whatsappAria": "واتساب",
     "backToTopAria": "العودة للأعلى",
     "copyright": "© {year} YoSite. جميع الحقوق محفوظة.",
-    "studio": "استوديو تطوير ويب متميز"
-  },
-  "splash": {
-    "taglineBefore": "فكرتك",
-    "taglineAfter": "حية على الويب"
+    "studio": "استوديو تطوير ويب متميز",
+    "services": "الخدمات"
   }
 }

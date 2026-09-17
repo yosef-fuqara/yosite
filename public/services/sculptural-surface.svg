@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <title>Placeholder  replace with final black sculptural surface</title>
+  <defs>
+    <linearGradient id="fold-a" x1="0%" y1="8%" x2="100%" y2="92%">
+      <stop offset="0%" stop-color="#0c0c0c"/>
+      <stop offset="38%" stop-color="#050505"/>
+      <stop offset="62%" stop-color="#101010"/>
+      <stop offset="100%" stop-color="#030303"/>
+    </linearGradient>
+    <linearGradient id="ridge" x1="20%" y1="0%" x2="78%" y2="100%">
+      <stop offset="0%" stop-color="#d8d4cc" stop-opacity="0"/>
+      <stop offset="42%" stop-color="#ece8e0" stop-opacity="0.18"/>
+      <stop offset="58%" stop-color="#f4f1ea" stop-opacity="0.07"/>
+      <stop offset="100%" stop-color="#d8d4cc" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="vignette" cx="50%" cy="48%" r="58%">
+      <stop offset="0%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="55%" stop-color="#000" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="1"/>
+    </radialGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+  </defs>
+  <rect width="800" height="1200" fill="#000"/>
+  <g opacity="0.92">
+    <path fill="url(#fold-a)" d="M210 40 C340 80 470 40 590 110 C710 186 740 340 680 490 C612 656 520 700 430 820 C330 958 300 1080 390 1180 L120 1180 C40 980 80 760 150 600 C230 420 90 280 210 40Z"/>
+    <path fill="#080808" d="M300 160 C410 210 500 180 560 260 C640 360 600 470 540 560 C470 660 400 700 360 820 C320 940 360 1040 430 1120 L260 1120 C180 960 210 780 250 640 C300 480 180 300 300 160Z"/>
+  </g>
+  <g fill="none" stroke="url(#ridge)" stroke-width="1.15" filter="url(#soft)">
+    <path d="M280 90 C360 180 390 300 350 430 C300 590 410 680 390 820 C370 960 330 1060 380 1160"/>
+    <path d="M420 70 C500 150 540 280 510 420 C470 590 560 670 530 820 C500 970 470 1080 520 1180"/>
+    <path d="M360 200 C430 280 450 390 420 520"/>
+  </g>
+  <rect width="800" height="1200" fill="url(#vignette)"/>
+</svg>

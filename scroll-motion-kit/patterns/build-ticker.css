@@ -1,0 +1,75 @@
+/* Yo-site build ticker — paste into your global CSS (e.g. index.css) */
+
+@keyframes build-ticker {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.build-ticker-track {
+  animation: build-ticker 55s linear infinite;
+  will-change: transform;
+}
+
+/* Wider RTL labels — slower, same -50% loop math */
+.build-ticker-lang-he .build-ticker-track,
+.build-ticker-lang-ar .build-ticker-track {
+  animation-duration: 68s;
+}
+
+.group\/build-ticker:hover .build-ticker-track,
+.build-ticker-viewport.build-ticker-dragging .build-ticker-track,
+.build-ticker-viewport:active .build-ticker-track {
+  animation-play-state: paused;
+}
+
+.build-ticker-mask {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 6%,
+    #000 94%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 6%,
+    #000 94%,
+    transparent 100%
+  );
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .build-ticker-track {
+    animation: none;
+    transform: none;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+    row-gap: 0.5rem;
+  }
+
+  .build-ticker-viewport {
+    overflow: visible;
+  }
+
+  .build-ticker-mask {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
+/* Horizontal drag handler — attach to viewport ref */
+/* See BuildTicker.jsx in yo-site for pointer drag + wheel → scrollLeft */
