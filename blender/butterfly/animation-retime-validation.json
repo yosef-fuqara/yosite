@@ -1,0 +1,51 @@
+{
+  "retimeFactor": 2,
+  "sourceAction": {
+    "beforeFLYSeconds": 1,
+    "afterFLYSeconds": 2,
+    "flyPoseValuesAndScaledBezierHandlesIdentical": true,
+    "idleUnchanged": true,
+    "glideUnchanged": true,
+    "frames": {
+      "FLY": [
+        0,
+        240
+      ],
+      "IDLE": [
+        0,
+        480
+      ],
+      "GLIDE": [
+        0,
+        360
+      ]
+    }
+  },
+  "three": {
+    "durations": {
+      "FLY": 2,
+      "GLIDE": 3,
+      "IDLE": 4
+    },
+    "flyLoop": {
+      "endpointPositionGapMeters": 1.11212105805721e-12,
+      "endpointAngleGapRadians": 0,
+      "endpointTangentGap": 0,
+      "repeated100LoopsGapMeters": 3.295048310537293e-17,
+      "collisionSampleCount": 961
+    },
+    "collisions": [],
+    "rootMaxDistanceMeters": 0,
+    "restMaxVertexDeltaMeters": 1.9102402828929958e-9,
+    "materialMismatch": [],
+    "browserErrors": []
+  },
+  "gltfValidator": {
+    "numErrors": 0,
+    "numWarnings": 0,
+    "numInfos": 0,
+    "numHints": 0,
+    "messages": [],
+    "truncated": false
+  }
+}

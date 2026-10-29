@@ -1,0 +1,63 @@
+{
+  "source_sha256": {
+    "butterfly.blend": "a7252764bff79bdf2543c33d1adb0179edb2696022a7d74789fed2bfd4379e16",
+    "butterfly.glb": "a2fcf1bed25452ab3295456bd4e52661b30c73793e8ee7d09cfa7c245ec2583c"
+  },
+  "mesh_signatures_unchanged": {
+    "Body": "4d9b2fa2d5eb8778059921d5cda10dce841b5ede1f1f26d30dd1d5858e07e5ef",
+    "Head": "fd46e85f1651269568010aacb9c9b1228f0a2147d788ef026ee53ef6b43fe98c",
+    "Left_Forewing": "f29cd46ec5010343f66534e631b1f362faf9371403f559072e52bf81e57a1ee2",
+    "Left_Hindwing": "b8260489f8047a1064b260082e44e2b265460495598b4deb083539ca9e30a8e5",
+    "Right_Forewing": "1c644da0a5af1e300816a703444e875c5d6c98f01799bb0f341427fa3b760f55",
+    "Right_Hindwing": "850926f6907591ec70345aa15053a8ea3363e6d465b3441f1986eaf75c206a9b",
+    "Antenna_L": "62fc6c150d43436bf18a65773e6e9446010f23a5ac1d6bc3c1c11f217e697c45",
+    "Antenna_R": "8a22b7cfa9cd0af7342b10d6ba25c3646888c4e5df0c6d2d2a3e1c0729d2d28b"
+  },
+  "packed_texture_sha256_unchanged": {
+    "body_normal.png": "4959060d12335ed8f7fb3ddfd133449d133bb0b330450e8f44bf15a7439cd667",
+    "wing_basecolor.png": "b39e636d500bb3e63da113d251a75269c8fd6233b9ca905cfaf0b07c482a1140",
+    "wing_normal.png": "6687a87dc90f050f96666c3f30ad2d76305e3c32d42381daece24a9c7f565e09",
+    "wing_orm.png": "5ea2a4b126b22480e38e4d08d601bdb96ba69dcd69f1e206a4e07f73c733ebd7",
+    "wing_transmission.png": "bc1c373917d2f639a156fde21ae56bcecbd88c0264439a8ecf04b97054f7473a"
+  },
+  "bones": [
+    "Root",
+    "Body",
+    "Left_Forewing",
+    "Left_Hindwing",
+    "Right_Forewing",
+    "Right_Hindwing"
+  ],
+  "clip_seconds": {
+    "IDLE": 4,
+    "FLY": 2,
+    "GLIDE": 3
+  },
+  "source_fps": 120,
+  "root_motion": false,
+  "animated_glb_bytes": 4081508,
+  "loop_interpolation": {
+    "FLY": {
+      "channels": 6,
+      "interpolation": "CUBICSPLINE",
+      "endpoint_tangents_shared": true
+    },
+    "GLIDE": {
+      "channels": 6,
+      "interpolation": "CUBICSPLINE",
+      "endpoint_tangents_shared": true
+    },
+    "IDLE": {
+      "channels": 6,
+      "interpolation": "CUBICSPLINE",
+      "endpoint_tangents_shared": true
+    }
+  },
+  "retimed_clip": {
+    "FLY": {
+      "from_seconds": 1,
+      "to_seconds": 2,
+      "factor": 2
+    }
+  }
+}

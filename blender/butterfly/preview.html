@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>YoSite — Butterfly material inspection</title><link rel="icon" href="data:,">
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#000;color:#b5b5b5;font:12px/1.5 system-ui,sans-serif;overflow:hidden}
+    canvas{display:block;width:100vw;height:100vh}header{position:absolute;top:28px;left:32px;pointer-events:none}
+    h1{margin:0;color:#ddd;font-size:15px;letter-spacing:.08em;font-weight:500}p{margin:6px 0}
+    nav{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-wrap:wrap;justify-content:center;gap:7px;max-width:95vw;width:max-content}
+    button{padding:8px 12px;border:1px solid #7776;border-radius:4px;background:#181818dd;color:#ddd;cursor:pointer;font:inherit}
+    button:hover,button[aria-pressed=true]{background:#ddd;color:#111}button:focus-visible{outline:2px solid #aaa;outline-offset:3px}
+    #status{position:absolute;right:28px;top:28px;text-align:right;pointer-events:none}.light{color:#555}.light h1{color:#222}
+    .qa header,.qa nav,.qa #status{display:none}
+    @media(max-width:600px){header{left:18px;top:18px}#status{right:18px;top:72px}nav{bottom:16px}}
+  </style>
+  <script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+</head>
+<body>
+<header><h1>YO / BUTTERFLY</h1><p>Monochrome swallowtail · material inspection</p><p>Drag to orbit · scroll to zoom</p></header>
+<div id="status">Loading GLB…</div>
+<nav aria-label="Model inspection">
+  <button data-view="three-quarter">¾ view</button><button data-view="top">Top</button><button data-view="front">Front</button>
+  <button data-view="side">Side</button><button data-view="underside">Underneath</button>
+  <button id="background" aria-pressed="false">White background</button><button id="wire" aria-pressed="false">Topology</button>
+</nav>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+const scene=new THREE.Scene(); scene.background=new THREE.Color(0x000000);
+const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(innerWidth,innerHeight);
+renderer.toneMapping=THREE.AgXToneMapping; renderer.toneMappingExposure=1;
+document.body.prepend(renderer.domElement);
+const aspect=innerWidth/innerHeight;
+const camera=new THREE.OrthographicCamera(-.067*aspect,.067*aspect,.067,-.067,.001,2);
+const controls=new OrbitControls(camera,renderer.domElement); controls.enableDamping=false; controls.minZoom=.45; controls.maxZoom=5;
+const pmrem=new THREE.PMREMGenerator(renderer); const room=new RoomEnvironment();
+const env=pmrem.fromScene(room,.04); scene.environment=env.texture; scene.environmentIntensity=.6;
+room.dispose(); pmrem.dispose();
+const hemi=new THREE.HemisphereLight(0xffffff,0xffffff,.3); scene.add(hemi);
+for(const [position,intensity] of [[[-.08,.15,-.07],2.4],[[.08,.07,.03],.7],[[.02,.05,.10],1.1],[[0,-.12,0],.7]]){
+  const l=new THREE.DirectionalLight(0xffffff,intensity); l.position.set(...position); scene.add(l);
+}
+let model; const mats=new Set();
+const views={'three-quarter':[.035,.175,.10],top:[0,.2,0],front:[0,.022,-.19],side:[.2,.012,0],underside:[0,-.2,0]};
+function render(){renderer.render(scene,camera)}
+function setView(name){
+  camera.up.set(0,1,0); if(name==='top'||name==='underside')camera.up.set(0,0,-1);
+  camera.position.set(...views[name]); camera.zoom=1; camera.updateProjectionMatrix(); controls.target.set(0,0,0); camera.lookAt(0,0,0); controls.update();render();
+  document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===name)));
+}
+function background(light){scene.background.set(light?0xffffff:0);document.body.classList.toggle('light',light);document.querySelector('#background').setAttribute('aria-pressed',String(light));render()}
+controls.addEventListener('change',render);
+document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));
+document.querySelector('#background').onclick=()=>background(!document.body.classList.contains('light'));
+document.querySelector('#wire').onclick=e=>{const on=e.currentTarget.getAttribute('aria-pressed')!=='true';mats.forEach(m=>m.wireframe=on);e.currentTarget.setAttribute('aria-pressed',String(on));render()};
+addEventListener('resize',()=>{const a=innerWidth/innerHeight;camera.left=-.067*a;camera.right=.067*a;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);render()});
+try{
+  const gltf=await new GLTFLoader().loadAsync('/public/models/butterfly.glb');model=gltf.scene;scene.add(model);
+  const meshes=[];
+  model.traverse(o=>{if(o.isMesh){meshes.push(o);mats.add(o.material);for(const key of ['map','normalMap','roughnessMap','transmissionMap'])if(o.material[key])o.material[key].anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy())}});
+  setView('three-quarter');
+  const box=new THREE.Box3().setFromObject(model);const size=box.getSize(new THREE.Vector3());
+  const triangles=meshes.reduce((s,o)=>s+o.geometry.index.count/3,0);
+  const report={meshes:meshes.map(o=>({name:o.name,triangles:o.geometry.index.count/3,position:o.position.toArray(),scale:o.scale.toArray(),quaternion:o.quaternion.toArray()})),triangles,materials:mats.size,animations:gltf.animations.length,sizeMeters:size.toArray(),renderCalls:renderer.info.render.calls,textures:renderer.info.memory.textures};
+  document.querySelector('#status').innerHTML=`${triangles.toLocaleString()} triangles<br>${meshes.length} meshes · ${mats.size} materials<br>${Math.round(size.x*1000)} mm wingspan`;
+  window.butterflyQA={report,setView,background,render,model,camera,renderer}; window.butterflyReady=true;
+  console.log('BUTTERFLY_WEBGL_READY',JSON.stringify(report));
+}catch(error){document.querySelector('#status').textContent='GLB failed to load';console.error(error);window.butterflyError=String(error)}
+if(new URLSearchParams(location.search).has('qa'))document.body.classList.add('qa');
+</script>
+</body></html>

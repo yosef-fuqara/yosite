@@ -28,22 +28,11 @@ function applyHeroExit(zone, progress, reducedMotion) {
   zone.dataset.transition = active ? "active" : "idle";
   zone.dataset.transitionComplete = progress >= 0.995 ? "true" : "false";
 
-  const title = zone.querySelector(".yo-hero__title");
-  const hero = zone.querySelector(".yo-hero");
   const vh = window.innerHeight || 1;
-  const prevT = Number.parseFloat(zone.style.getPropertyValue("--hero-exit-t")) || 0;
-  const heroPullPx = active ? prevT * vh * 0.06 : 0;
-
-  let exitT = 0;
-  if (title && hero) {
-    const naturalTop =
-      hero.getBoundingClientRect().bottom + heroPullPx - title.offsetHeight;
-    const start = Math.max(vh * 0.2, 128);
-    const span = Math.max(vh * 0.36, 240);
-    const raw = (start - naturalTop) / span;
-    const linear = raw <= 0 ? 0 : Math.min(1, raw);
-    exitT = linear * linear;
-  }
+  // Begin while the headline is still visible, and restore the same pose
+  // at the same scroll position when the user scrolls back up.
+  const travelled = -zone.getBoundingClientRect().top;
+  const exitT = Math.max(0, Math.min(1, (travelled - 16) / Math.max(vh * 0.55, 240)));
 
   zone.style.setProperty("--hero-exit-t", exitT === 0 ? "0" : exitT.toFixed(4));
   zone.style.setProperty(
@@ -99,9 +88,11 @@ export default function HeroAboutZone() {
 
     sync();
     window.addEventListener("resize", sync);
+    window.addEventListener("scroll", sync, { passive: true });
 
     return () => {
       window.removeEventListener("resize", sync);
+      window.removeEventListener("scroll", sync);
     };
   }, [reducedMotion, scrollYProgress]);
 

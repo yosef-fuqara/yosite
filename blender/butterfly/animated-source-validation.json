@@ -1,0 +1,47 @@
+{
+  "mesh_geometry_uv_origins_and_material_assignments_unchanged": true,
+  "packed_textures_unchanged": true,
+  "exported_materials_and_texture_bytes_identical": true,
+  "original_blend_and_glb_hashes_unchanged": true,
+  "bones": [
+    "Root",
+    "Body",
+    "Left_Forewing",
+    "Left_Hindwing",
+    "Right_Forewing",
+    "Right_Hindwing"
+  ],
+  "independent_wing_pivots_match_original": true,
+  "root_channels": 0,
+  "actions": {
+    "FLY": [
+      0.0,
+      240.0
+    ],
+    "GLIDE": [
+      0.0,
+      360.0
+    ],
+    "IDLE": [
+      0.0,
+      480.0
+    ]
+  },
+  "source_mesh_signatures": {
+    "Body": "d92cbc4b50d846c9776eb443a6c3d827930bb125c28b1f385e3dee80521ef8fa",
+    "Head": "8f87ff4d2e2507904fa833777c1b85c6b3033224d748f67be8ead1c3d354e1e4",
+    "Left_Forewing": "03ee076c0d159d6574323cdcd4bc5556dd7631677178cba0ef19bff776c08327",
+    "Left_Hindwing": "a8490eb30efc5bde9d585744cc46ab20b1a211cc1e4f25c699ebb645e382253c",
+    "Right_Forewing": "1a61eeb03562f591e580e89bc6ab10a0b322424c5e12c06eed1f84f250c12ee1",
+    "Right_Hindwing": "92191a48f740080026d6289315cd74e677ed600e376f867cfa26ee6c4c36d0bd",
+    "Antenna_L": "5a2669cf2e76e6ac55b66ae02f517906eaab3d08a978a9c9e29a5abe2c712cf4",
+    "Antenna_R": "c8f2ea13d90d14fdea2c2841ec17aff5818a6a4afb6e27deb6057e9835e9baaf",
+    "packed_images": {
+      "body_normal.png": "4959060d12335ed8f7fb3ddfd133449d133bb0b330450e8f44bf15a7439cd667",
+      "wing_basecolor.png": "b39e636d500bb3e63da113d251a75269c8fd6233b9ca905cfaf0b07c482a1140",
+      "wing_normal.png": "6687a87dc90f050f96666c3f30ad2d76305e3c32d42381daece24a9c7f565e09",
+      "wing_orm.png": "5ea2a4b126b22480e38e4d08d601bdb96ba69dcd69f1e206a4e07f73c733ebd7",
+      "wing_transmission.png": "bc1c373917d2f639a156fde21ae56bcecbd88c0264439a8ecf04b97054f7473a"
+    }
+  }
+}

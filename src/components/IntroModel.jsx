@@ -36,6 +36,10 @@ function isCurtainName(name) {
   return isIntroCurtainName(name);
 }
 
+function isBallFaceName(name) {
+  return /^(?:Face_|Left_eye$|Right_eye$|Mouth_)/i.test(name || "");
+}
+
 function isBlackMaterial(material) {
   const hex = material?.color?.getHexString?.();
   return hex === "000000" || /black/i.test(material?.name || "");
@@ -50,6 +54,11 @@ function prepareIntroRoot(scene) {
     }
 
     if (isCurtainName(obj.name)) {
+      obj.visible = false;
+      return;
+    }
+
+    if (isBallFaceName(obj.name)) {
       obj.visible = false;
       return;
     }

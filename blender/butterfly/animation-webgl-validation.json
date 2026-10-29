@@ -1,0 +1,524 @@
+{
+  "clips": [
+    {
+      "name": "FLY",
+      "duration": 2,
+      "tracks": 6
+    },
+    {
+      "name": "GLIDE",
+      "duration": 3,
+      "tracks": 6
+    },
+    {
+      "name": "HERO_ENTRY_H_LAND",
+      "duration": 8.699999809265137,
+      "tracks": 8
+    },
+    {
+      "name": "IDLE",
+      "duration": 4,
+      "tracks": 6
+    },
+    {
+      "name": "PERCHED_IDLE_H",
+      "duration": 5,
+      "tracks": 7
+    }
+  ],
+  "bones": [
+    "Root",
+    "Body",
+    "Left_Forewing",
+    "Left_Hindwing",
+    "Right_Forewing",
+    "Right_Hindwing"
+  ],
+  "meshCount": 8,
+  "triangles": 23464,
+  "maxInfluences": 1,
+  "maxWeightSumError": 0,
+  "minTriangleAreaRatio": 0.994852174448899,
+  "minNormalAlignment": 0.9999956465809723,
+  "restMaxVertexDeltaMeters": 1.9102402828929958e-9,
+  "materialMismatch": [],
+  "loops": {
+    "FLY": {
+      "endpointPositionGapMeters": 1.11212105805721e-12,
+      "endpointAngleGapRadians": 0,
+      "endpointTangentGap": 0,
+      "repeated100LoopsGapMeters": 3.2261573843210855e-17,
+      "collisionSampleCount": 961
+    },
+    "GLIDE": {
+      "endpointPositionGapMeters": 1.7491683251087639e-13,
+      "endpointAngleGapRadians": 0,
+      "endpointTangentGap": 0,
+      "repeated100LoopsGapMeters": 4.0657581468206416e-20,
+      "collisionSampleCount": 181
+    },
+    "HERO_ENTRY_H_LAND": {
+      "endpointPositionGapMeters": 0.8643986575571986,
+      "endpointAngleGapRadians": 2.1451397401740815,
+      "endpointTangentGap": 2.783681631088257,
+      "repeated100LoopsGapMeters": 6.6693744663078e-16,
+      "collisionSampleCount": 523
+    },
+    "IDLE": {
+      "endpointPositionGapMeters": 4.1575192269010296e-14,
+      "endpointAngleGapRadians": 0,
+      "endpointTangentGap": 0,
+      "repeated100LoopsGapMeters": 1.1677214766175423e-18,
+      "collisionSampleCount": 241
+    },
+    "PERCHED_IDLE_H": {
+      "endpointPositionGapMeters": 3.1362087548877655e-10,
+      "endpointAngleGapRadians": 0,
+      "endpointTangentGap": 0,
+      "repeated100LoopsGapMeters": 3.736960380813366e-18,
+      "collisionSampleCount": 301
+    }
+  },
+  "collisions": [
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.09999999780764525,
+      "pair": [
+        "Left_Forewing",
+        "Left_Hindwing"
+      ],
+      "point": [
+        -0.8531756506831458,
+        0.038921791566026896,
+        -0.046056858567279674
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.11666666410891946,
+      "pair": [
+        "Left_Forewing",
+        "Left_Hindwing"
+      ],
+      "point": [
+        -0.8471438252046006,
+        0.03649572489281327,
+        -0.044578756549784215
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.11666666410891946,
+      "pair": [
+        "Right_Forewing",
+        "Right_Hindwing"
+      ],
+      "point": [
+        -0.833411395161008,
+        0.027079646002346087,
+        -0.012850116208724744
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.13333333041019366,
+      "pair": [
+        "Left_Forewing",
+        "Left_Hindwing"
+      ],
+      "point": [
+        -0.8393789672038272,
+        0.03342407902036484,
+        -0.040419610971493415
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.13333333041019366,
+      "pair": [
+        "Right_Forewing",
+        "Right_Hindwing"
+      ],
+      "point": [
+        -0.8276077861116008,
+        0.027416473491622927,
+        -0.017547226849274414
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.14999999671146788,
+      "pair": [
+        "Left_Forewing",
+        "Left_Hindwing"
+      ],
+      "point": [
+        -0.8327742168347028,
+        0.03153080307801055,
+        -0.03644242480333273
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.14999999671146788,
+      "pair": [
+        "Right_Forewing",
+        "Right_Hindwing"
+      ],
+      "point": [
+        -0.8252142899088044,
+        0.027677635170465113,
+        -0.021378931525741704
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.16666666301274208,
+      "pair": [
+        "Left_Forewing",
+        "Left_Hindwing"
+      ],
+      "point": [
+        -0.8299104126206672,
+        0.03125157265762341,
+        -0.03763389092454296
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.16666666301274208,
+      "pair": [
+        "Right_Forewing",
+        "Right_Hindwing"
+      ],
+      "point": [
+        -0.8221652255091707,
+        0.027706328818507146,
+        -0.021452220381782926
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.1833333293140163,
+      "pair": [
+        "Left_Forewing",
+        "Left_Hindwing"
+      ],
+      "point": [
+        -0.831363081812543,
+        0.03075071720126481,
+        -0.044399934441446104
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.1833333293140163,
+      "pair": [
+        "Right_Forewing",
+        "Right_Hindwing"
+      ],
+      "point": [
+        -0.8204720813285027,
+        0.02729259253276433,
+        -0.020457462817773407
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.5666666542433231,
+      "pair": [
+        "Left_Forewing",
+        "Left_Hindwing"
+      ],
+      "point": [
+        -0.7530430472756697,
+        0.06377816448942256,
+        -0.025034543627174284
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.5833333205445973,
+      "pair": [
+        "Left_Forewing",
+        "Left_Hindwing"
+      ],
+      "point": [
+        -0.7464856094935741,
+        0.059414643896879615,
+        -0.025091185118683072
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.5999999868458715,
+      "pair": [
+        "Left_Forewing",
+        "Left_Hindwing"
+      ],
+      "point": [
+        -0.7428615460666448,
+        0.05842175369787079,
+        -0.026007110210501543
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.6166666531471457,
+      "pair": [
+        "Left_Forewing",
+        "Left_Hindwing"
+      ],
+      "point": [
+        -0.7397990428196528,
+        0.05820387816960042,
+        -0.027442081829319922
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.6333333194484199,
+      "pair": [
+        "Left_Forewing",
+        "Left_Hindwing"
+      ],
+      "point": [
+        -0.7345712518292675,
+        0.05521421220161503,
+        -0.026086839226945345
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.6333333194484199,
+      "pair": [
+        "Right_Forewing",
+        "Right_Hindwing"
+      ],
+      "point": [
+        -0.7277727909982971,
+        0.04640544328957611,
+        -0.005327023378797629
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.6499999857496941,
+      "pair": [
+        "Left_Forewing",
+        "Left_Hindwing"
+      ],
+      "point": [
+        -0.7289051914399692,
+        0.05319950153706225,
+        -0.024768081187982467
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.6499999857496941,
+      "pair": [
+        "Right_Forewing",
+        "Right_Hindwing"
+      ],
+      "point": [
+        -0.7240681287400864,
+        0.046137052405525215,
+        -0.007306799958731622
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.6666666520509683,
+      "pair": [
+        "Left_Forewing",
+        "Left_Hindwing"
+      ],
+      "point": [
+        -0.724426507000429,
+        0.05201764466562368,
+        -0.023699750519364814
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.6666666520509683,
+      "pair": [
+        "Right_Forewing",
+        "Right_Hindwing"
+      ],
+      "point": [
+        -0.7204612317104448,
+        0.04630104805249349,
+        -0.007674335297946458
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.6833333183522425,
+      "pair": [
+        "Left_Forewing",
+        "Left_Hindwing"
+      ],
+      "point": [
+        -0.7209548413402449,
+        0.05179395493505164,
+        -0.024030532949275478
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.6833333183522425,
+      "pair": [
+        "Right_Forewing",
+        "Right_Hindwing"
+      ],
+      "point": [
+        -0.716948467963413,
+        0.04637202952267873,
+        -0.007475497544123095
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.6999999846535168,
+      "pair": [
+        "Left_Forewing",
+        "Left_Hindwing"
+      ],
+      "point": [
+        -0.718631780423372,
+        0.052100757057680275,
+        -0.026404698309902677
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.6999999846535168,
+      "pair": [
+        "Right_Forewing",
+        "Right_Hindwing"
+      ],
+      "point": [
+        -0.7135290134539563,
+        0.046271990429000695,
+        -0.006497700423859674
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.716666650954791,
+      "pair": [
+        "Left_Forewing",
+        "Left_Hindwing"
+      ],
+      "point": [
+        -0.7185816627754333,
+        0.052324548414155694,
+        -0.030985339887837395
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 0.716666650954791,
+      "pair": [
+        "Right_Forewing",
+        "Right_Hindwing"
+      ],
+      "point": [
+        -0.7100673448459849,
+        0.04531298825545137,
+        -0.0030637122873576096
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 1.1333333084866462,
+      "pair": [
+        "Right_Forewing",
+        "Right_Hindwing"
+      ],
+      "point": [
+        -0.6245207894057174,
+        0.0645019323486048,
+        0.009244064951855941
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 1.1499999747879204,
+      "pair": [
+        "Left_Forewing",
+        "Left_Hindwing"
+      ],
+      "point": [
+        -0.6255188475857176,
+        0.07778914552484034,
+        -0.011767188686996877
+      ]
+    },
+    {
+      "clip": "HERO_ENTRY_H_LAND",
+      "time": 1.1499999747879204,
+      "pair": [
+        "Right_Forewing",
+        "Right_Hindwing"
+      ],
+      "point": [
+        -0.6190737893404249,
+        0.0624934151936708,
+        0.0034493664070703715
+      ]
+    }
+  ],
+  "rootMaxDistanceMeters": 0.8608042893476537,
+  "maxPivotErrorMeters": 5.551115123125783e-17,
+  "maxBoneScaleError": 1.8256730083265893e-7,
+  "attachmentOverlapBaselineMeters": {
+    "Left_Forewing": 0.0031752190173420813,
+    "Left_Hindwing": 0.002839647499791132,
+    "Right_Forewing": 0.0031736799884635983,
+    "Right_Hindwing": 0.0028155226703433936
+  },
+  "normalDiagnostic": {
+    "clip": "HERO_ENTRY_H_LAND",
+    "time": 0.399999991230581,
+    "wing": "Right_Forewing",
+    "triangle": 1886,
+    "weight": 1,
+    "restArea": 8.331118754176638e-9,
+    "restNormal": [
+      0.26021376663422496,
+      -0.9189959738360269,
+      -0.2962012757015097
+    ],
+    "actual": [
+      0.6353877628971861,
+      -0.6771992716955739,
+      0.3710573233012572
+    ],
+    "expected": [
+      0.637551564084468,
+      -0.6751938916406378,
+      0.3710002854778138
+    ],
+    "vertices": [
+      [
+        -0.7752990126609802,
+        0.03719330206513405,
+        -0.018833201378583908
+      ],
+      [
+        -0.7751340866088867,
+        0.03697948902845383,
+        -0.019505836069583893
+      ],
+      [
+        -0.7751243710517883,
+        0.03698569908738136,
+        -0.019511139020323753
+      ]
+    ]
+  },
+  "browserErrors": []
+}

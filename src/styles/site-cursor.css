@@ -1,0 +1,30 @@
+.yo-site-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2147482999;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #050505;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.82);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform;
+  transition: opacity 120ms ease;
+}
+
+.yo-site-cursor[data-visible="true"] {
+  opacity: 1;
+}
+
+html.yo-custom-cursor,
+html.yo-custom-cursor * {
+  cursor: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yo-site-cursor {
+    transition: none;
+  }
+}

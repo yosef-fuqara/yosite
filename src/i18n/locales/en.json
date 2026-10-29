@@ -4,6 +4,7 @@
     "services": "Services",
     "work": "Our Work",
     "workShort": "Work",
+    "about": "About",
     "process": "Process",
     "contact": "Contact",
     "cta": "Get In Touch",
@@ -22,12 +23,14 @@
     "soundOffAria": "Unmute menu sounds"
   },
   "hero": {
-    "headlineLine1": "SITES WITH",
-    "headlineLine2": "SOUL",
-    "headlineAria": "Sites with soul",
+    "headlineLine1": "WEBSITES",
+    "headlineLine2": "THAT MAKE",
+    "headlineLine3": "YOU",
+    "headlineLine4": "THINK.",
+    "headlineAria": "Websites that make you think.",
     "titleA": "Give your idea",
     "titleB": "room to unfold.",
-    "support": "A considered digital experience.",
+    "support": "Digital experiences for curious brands and people.",
     "enter": "Enter the work",
     "mediaAlt": "Sunlit terracotta archway with an olive tree in a stone planter",
     "eyebrowStart": "Your idea",
@@ -94,21 +97,28 @@
     "titleWords": ["WHAT", "WE", "BUILD"],
     "titleLeadAlt": "HOW",
     "titleMark": "?",
+    "learnMore": "Learn more",
+    "processLines": [
+      "FROM IDEA TO DIRECTION",
+      "FROM DIRECTION TO DESIGN",
+      "FROM DESIGN TO REALITY",
+      "FROM BUILD TO LAUNCH"
+    ],
     "processSteps": [
       {
-        "title": "IDEA & RESEARCH",
-        "caption": "Understanding the real problem."
+        "title": "Idea & Research",
+        "caption": "Finding the right direction before building."
       },
       {
-        "title": "DESIGN",
+        "title": "Design / UI UX",
         "caption": "Turning insight into direction."
       },
       {
-        "title": "DEVELOPMENT",
+        "title": "Development / Build",
         "caption": "Building the experience precisely."
       },
       {
-        "title": "LAUNCH & ITERATE",
+        "title": "Launch & Iterate",
         "caption": "Refining after the real launch."
       }
     ],
@@ -190,6 +200,41 @@
       "productBadge": "New",
       "inStock": "In stock"
     }
+  },
+  "coffee": {
+    "eyebrow": "A good place to start",
+    "smallNote": "One conversation away",
+    "title": "Let’s talk.",
+    "titleAccent": "Coffee’s on me.",
+    "intro": "Have an idea in mind? Pull up a chair. Let’s talk about your next website and make something that feels like you.",
+    "whatsapp": "Let’s chat on WhatsApp",
+    "whatsappMessage": "Hi! I have a website idea. Shall we talk over coffee?",
+    "noteLine1": "You bring the idea.",
+    "noteLine2": "I’ll put the coffee on.",
+    "formTitle": "What are you dreaming of?",
+    "labels": {
+      "name": "Your name",
+      "email": "Email address",
+      "phone": "Phone / WhatsApp",
+      "message": "A little about your idea"
+    },
+    "placeholders": {
+      "name": "Nice to meet you…",
+      "email": "you@example.com",
+      "phone": "Where can I reach you?",
+      "message": "A new website, a fresh start, something different…"
+    },
+    "formNote": "Just a conversation. No pressure, no commitment.",
+    "send": "Let’s make it happen",
+    "sending": "Sending…",
+    "required": "Please fill in this field.",
+    "emailInvalid": "Please enter a valid email address.",
+    "submitError": "Your message couldn’t be sent. Please try again, or reach me on WhatsApp.",
+    "successTitle": "Let’s get the coffee brewing.",
+    "successBody": "Thanks, {name}. Your message is in — I’ll be in touch soon.",
+    "sendAnother": "Send another message",
+    "bottomLeft": "Good things start with a conversation.",
+    "bottomRight": "Your idea. Our next chapter."
   },
   "footer": {
     "tagline": "Your idea • live on the web",

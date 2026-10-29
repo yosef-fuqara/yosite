@@ -1,30 +1,61 @@
 /* YoSite hero — white field, oversized centered claim */
 
 .yo-hero {
-  --hero-bg: var(--site-background, #ffffff);
+  --hero-bg: var(--site-background, #F7F7F7);
   --hero-text: #000000;
   --hero-text-muted: #525252;
   --hero-purple: #000000;
   --hero-sans: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue",
     system-ui, sans-serif;
   --hero-nav-clearance: 4.25rem;
-  --hero-content-y: 0;
+  --hero-content-y: calc((var(--hero-nav-clearance) + var(--soul-bleed)) / -2);
   --soul-bleed: clamp(1.7rem, 5.2vw, 5.25rem);
 
   position: relative;
   isolation: isolate;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   width: 100%;
-  min-height: calc(100svh + var(--soul-bleed));
-  padding: var(--hero-nav-clearance) 1.5rem 0;
+  min-height: 100svh;
+  padding: var(--hero-nav-clearance) 1.5rem clamp(2rem, 4vh, 3rem);
   box-sizing: border-box;
   overflow: hidden;
   background: var(--hero-bg);
   color: var(--hero-text);
   font-family: var(--hero-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Editorial grid + centered ring (reference hero art). */
+.yo-hero__field {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+}
+
+.yo-hero__field-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.055) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.055) 1px, transparent 1px);
+  background-size: clamp(3.5rem, 11vw, 7.5rem) clamp(3.5rem, 11vw, 7.5rem);
+  opacity: 0.9;
+}
+
+.yo-hero__field-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(92vw, 52rem);
+  aspect-ratio: 1;
+  border: 1px solid rgba(0, 0, 0, 0.11);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* Rays / grid disabled — hero stays a flat white field. */
@@ -210,67 +241,394 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  align-self: center;
   width: 100%;
-  max-width: min(94vw, 86rem);
+  max-width: min(92vw, 44rem);
   text-align: center;
-  transform: translateY(
-      calc(
-        var(--hero-content-y) -
-          var(--hero-exit-t, 0) * var(--hero-exit-t, 0) * 32vh
-      )
-    )
-    scale(calc(1 - var(--hero-exit-t, 0) * 0.04));
-  will-change: opacity, transform;
+  transform: translateY(calc(var(--hero-content-y) * 0.35));
 }
 
 .yo-hero__title {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: max-content;
+  max-width: 100%;
   margin: 0;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue",
     system-ui, sans-serif;
-  font-weight: 800;
-  font-size: clamp(6.3rem, 19.6vw, 20rem);
-  line-height: 0.86;
-  letter-spacing: -0.048em;
+  font-weight: 900;
+  font-size: clamp(2rem, 5.15vw, 5.65rem);
+  line-height: 0.88;
+  letter-spacing: -0.035em;
   text-transform: uppercase;
   color: var(--hero-text);
   text-align: center;
   perspective: 820px;
 }
 
+.yo-hero__liquid-filter {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+@media (max-width: 767px), (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .yo-hero__title {
+    filter: none !important;
+  }
+}
+
 html[dir="rtl"] .yo-hero__title {
-  font-family: "Noto Sans Hebrew", "Noto Sans Arabic", "Inter", sans-serif;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+    system-ui, sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.05em;
 }
 
 .yo-hero__line {
   display: block;
   white-space: nowrap;
-  overflow: hidden;
-  padding-block: 0.08em 0.04em;
+  overflow: visible;
+  padding-block: 0.02em 0;
 }
 
-.yo-hero__line:first-child {
-  font-size: clamp(4.4rem, 12.4vw, 12.5rem);
+/* Both entrance and exit travel through the same line window.
+   Horizontal bleed preserves the ink at the sides of tightly tracked glyphs. */
+.yo-hero__line {
+  clip-path: inset(0 -0.1em);
 }
 
-.yo-hero__line--soul {
-  padding-bottom: 0;
+.yo-hero__line-reveal {
+  display: block;
 }
 
-.yo-hero__line--soul .yo-hero__char-clip {
-  padding-bottom: 0;
+.yo-hero__line--rotate {
+  text-align: center;
+}
+
+/* The entrance clip would slice 3D motion and falling letters. */
+.yo-hero__line--rotate:has(.yo-hero__word-rotate.is-run[data-fx="cube"]),
+.yo-hero__line--rotate:has(.yo-hero__word-rotate.is-run[data-fx="flip"]),
+.yo-hero__line--rotate:has(.yo-hero__word-rotate.is-run[data-fx="fall"]),
+.yo-hero__line--rotate:has(.yo-hero__word-rotate.is-run[data-fx="magnetic"]) {
+  overflow: visible;
+  clip-path: none;
+}
+
+/* ------------------------------------------------------------ rotating word
+   Fixed box: every word is stacked in one grid cell, so the line is always
+   as wide as the longest word and exactly one line tall.
+   Cycle: flip → cube → fall → magnetic → scan. */
+
+.yo-hero__word-rotate {
+  display: inline-grid;
+  vertical-align: bottom;
+  perspective: 8.5em;
+  perspective-origin: 50% 50%;
+  line-height: 0.82;
+}
+
+.yo-hero__word-rotate.is-instant,
+.yo-hero__word-rotate.is-instant * {
+  transition: none !important;
+}
+
+.yo-hero__word-rotate-sizer,
+.yo-hero__word-rotate-scene {
+  grid-area: 1 / 1;
+}
+
+.yo-hero__word-rotate-sizer {
+  display: grid;
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
+}
+
+.yo-hero__word-rotate-sizer > span {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+}
+
+.yo-hero__word-rotate-scene,
+.yo-hero__word-rotate-cube {
+  transform-style: preserve-3d;
+}
+
+.yo-hero__word-rotate-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.yo-hero__word-rotate-cube {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 50% calc(var(--cube-half, 0.41em) * -1);
+}
+
+.yo-hero__word-rotate-panel {
+  position: absolute;
+  inset: 0;
+  display: block;
+  white-space: nowrap;
+  line-height: inherit;
+}
+
+.yo-hero__word-rotate-panel.is-next {
+  visibility: hidden;
+}
+
+.yo-hero__word-rotate[data-fx] .yo-hero__word-rotate-panel.is-next {
+  visibility: visible;
+}
+
+/* A — cuboid. Front face rests on the type plane (z = 0). The next word
+   sits on the bottom face. Rotating +90° around the box center lands that
+   face back on the type plane, so the settle does not scale or shift. */
+.yo-hero__word-rotate[data-fx="cube"] .yo-hero__word-rotate-panel {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.yo-hero__word-rotate[data-fx="cube"] .yo-hero__word-rotate-cube {
+  transform: rotateX(0deg);
+}
+
+.yo-hero__word-rotate[data-fx="cube"] .is-next {
+  transform: translateY(var(--cube-half, 0.41em))
+    translateZ(calc(var(--cube-half, 0.41em) * -1)) rotateX(-90deg);
+}
+
+.yo-hero__word-rotate[data-fx="cube"].is-run .yo-hero__word-rotate-cube {
+  transform: rotateX(90deg);
+  transition: transform 800ms cubic-bezier(0.55, 0.06, 0.2, 1);
+}
+
+.yo-hero__word-rotate.is-run[data-fx="cube"] .yo-hero__word-rotate-cube {
+  will-change: transform;
+}
+
+/* 1 — per-letter Y-axis flip with stagger. */
+.yo-hero__word-rotate[data-fx="flip"] .yo-hero__word-rotate-scene,
+.yo-hero__word-rotate[data-fx="flip"] .yo-hero__word-rotate-cube,
+.yo-hero__word-rotate[data-fx="flip"] .yo-hero__word-rotate-panel {
+  transform-style: preserve-3d;
+}
+
+.yo-hero__word-rotate-letter {
+  display: inline-block;
+}
+
+.yo-hero__word-rotate[data-fx="flip"] .yo-hero__word-rotate-letter {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: rotateY(0deg);
+}
+
+.yo-hero__word-rotate[data-fx="flip"] .is-next .yo-hero__word-rotate-letter {
+  transform: rotateY(88deg);
+  opacity: 0;
+}
+
+.yo-hero__word-rotate[data-fx="flip"].is-run .is-current .yo-hero__word-rotate-letter {
+  transform: rotateY(-88deg);
+  opacity: 0;
+  transition: transform 520ms cubic-bezier(0.45, 0.05, 0.2, 1) calc(var(--i) * 38ms),
+    opacity 300ms ease calc(var(--i) * 38ms);
+}
+
+.yo-hero__word-rotate[data-fx="flip"].is-run .is-next .yo-hero__word-rotate-letter {
+  transform: rotateY(0deg);
+  opacity: 1;
+  transition: transform 520ms cubic-bezier(0.45, 0.05, 0.2, 1) calc(160ms + var(--i) * 38ms),
+    opacity 360ms ease calc(180ms + var(--i) * 38ms);
+}
+
+.yo-hero__word-rotate.is-run[data-fx="flip"] .yo-hero__word-rotate-letter {
+  will-change: transform, opacity;
+}
+
+/* 3 — letters fall with gravity, incoming word settles from above. */
+.yo-hero__word-rotate[data-fx="fall"] .yo-hero__word-rotate-scene,
+.yo-hero__word-rotate[data-fx="fall"] .yo-hero__word-rotate-cube {
+  transform-style: flat;
+}
+
+.yo-hero__word-rotate[data-fx="fall"] .yo-hero__word-rotate-scene {
+  overflow: visible;
+}
+
+.yo-hero__word-rotate[data-fx="fall"] .yo-hero__word-rotate-letter {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+}
+
+.yo-hero__word-rotate[data-fx="fall"] .is-next .yo-hero__word-rotate-letter {
+  transform: translate3d(0, -0.42em, 0);
+  opacity: 0;
+}
+
+.yo-hero__word-rotate[data-fx="fall"].is-run .is-current .yo-hero__word-rotate-letter {
+  transform: translate3d(0, 0.52em, 0) rotate(2.5deg);
+  opacity: 0;
+  transition: transform 640ms cubic-bezier(0.55, 0.06, 0.2, 1) calc(var(--i) * 30ms),
+    opacity 420ms ease calc(var(--i) * 30ms);
+}
+
+.yo-hero__word-rotate[data-fx="fall"].is-run .is-next .yo-hero__word-rotate-letter {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  transition: transform 620ms cubic-bezier(0.22, 1, 0.36, 1) calc(320ms + var(--i) * 34ms),
+    opacity 460ms ease calc(340ms + var(--i) * 34ms);
+}
+
+.yo-hero__word-rotate.is-run[data-fx="fall"] .yo-hero__word-rotate-letter {
+  will-change: transform, opacity;
+}
+
+/* 4 — magnetic collapse toward center, next word expands outward. */
+.yo-hero__word-rotate[data-fx="magnetic"] .yo-hero__word-rotate-scene,
+.yo-hero__word-rotate[data-fx="magnetic"] .yo-hero__word-rotate-cube {
+  transform-style: flat;
+}
+
+.yo-hero__word-rotate[data-fx="magnetic"] .yo-hero__word-rotate-panel {
+  transform-origin: 50% 50%;
+}
+
+.yo-hero__word-rotate[data-fx="magnetic"] .is-current {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.yo-hero__word-rotate[data-fx="magnetic"] .is-next {
+  opacity: 0;
+  transform: scale(0.78);
+}
+
+.yo-hero__word-rotate[data-fx="magnetic"].is-run .is-current {
+  transition: opacity 360ms cubic-bezier(0.4, 0, 0.2, 1),
+    transform 360ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.yo-hero__word-rotate[data-fx="magnetic"].is-run .is-next {
+  transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1) 240ms,
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1) 240ms;
+}
+
+.yo-hero__word-rotate[data-fx="magnetic"].is-run .is-current {
+  opacity: 0;
+  transform: scale(0.52);
+}
+
+.yo-hero__word-rotate[data-fx="magnetic"].is-run .is-next {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.yo-hero__word-rotate.is-run[data-fx="magnetic"] .yo-hero__word-rotate-panel {
+  will-change: transform, opacity;
+}
+
+/* 5 — horizontal scan wipe with a subtle leading edge. */
+.yo-hero__word-rotate[data-fx="scan"] .yo-hero__word-rotate-scene,
+.yo-hero__word-rotate[data-fx="scan"] .yo-hero__word-rotate-cube {
+  transform-style: flat;
+}
+
+.yo-hero__word-rotate[data-fx="scan"] .yo-hero__word-rotate-scene {
+  overflow: clip;
+  clip-path: inset(-0.04em -0.08em -0.06em -0.04em);
+}
+
+.yo-hero__word-rotate[data-fx="scan"] .yo-hero__word-rotate-scene::after {
+  content: "";
+  position: absolute;
+  inset-block: -0.06em;
+  inset-inline-start: 0;
+  width: 0.06em;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-0.04em);
+  z-index: 2;
+}
+
+.yo-hero__word-rotate[data-fx="scan"] .is-current {
+  opacity: 1;
+}
+
+.yo-hero__word-rotate[data-fx="scan"] .is-next {
+  clip-path: inset(0 100% 0 0);
+  -webkit-clip-path: inset(0 100% 0 0);
+}
+
+.yo-hero__word-rotate[data-fx="scan"].is-run .is-current {
+  opacity: 0.12;
+  transition: opacity 520ms cubic-bezier(0.4, 0, 0.2, 1) 120ms;
+}
+
+.yo-hero__word-rotate[data-fx="scan"].is-run .is-next {
+  clip-path: inset(0 0 0 0);
+  -webkit-clip-path: inset(0 0 0 0);
+  transition: clip-path 760ms cubic-bezier(0.45, 0.05, 0.2, 1),
+    -webkit-clip-path 760ms cubic-bezier(0.45, 0.05, 0.2, 1);
+}
+
+.yo-hero__word-rotate[data-fx="scan"].is-run .yo-hero__word-rotate-scene::after {
+  opacity: 0.35;
+  animation: yo-hero-word-scan 760ms cubic-bezier(0.45, 0.05, 0.2, 1) forwards;
+}
+
+@keyframes yo-hero-word-scan {
+  from {
+    inset-inline-start: 0;
+    opacity: 0.45;
+  }
+  to {
+    inset-inline-start: 100%;
+    opacity: 0;
+  }
+}
+
+.yo-hero__word-rotate.is-run[data-fx="scan"] .yo-hero__word-rotate-panel {
+  will-change: clip-path, opacity;
+}
+
+html[dir="rtl"] .yo-hero__word-rotate[data-fx="scan"] .is-next {
+  clip-path: inset(0 0 0 100%);
+  -webkit-clip-path: inset(0 0 0 100%);
+}
+
+html[dir="rtl"] .yo-hero__word-rotate[data-fx="scan"].is-run .is-next {
+  clip-path: inset(0 0 0 0);
+  -webkit-clip-path: inset(0 0 0 0);
+}
+
+/* Reduced motion — opacity only, swapped while invisible. */
+.yo-hero__word-rotate[data-fx="fade"] .is-current {
+  transition: opacity 280ms ease;
+}
+
+.yo-hero__word-rotate[data-fx="fade"].is-out .is-current {
+  opacity: 0;
+}
+
+.yo-hero[data-entrance="pending"] .yo-hero__line-reveal {
+  visibility: hidden;
 }
 
 .yo-hero__char-clip {
   display: inline-block;
-  overflow: hidden;
+  overflow: visible;
   vertical-align: bottom;
-  line-height: 1;
-  padding-bottom: 0.04em;
+  line-height: 0.86;
+  padding-bottom: 0;
 }
 
 .yo-hero__char-clip.is-space {
@@ -289,23 +647,50 @@ html[dir="rtl"] .yo-hero__title {
 }
 
 .yo-hero__meta {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.35rem;
-  margin: 1.15rem 0 0;
+  display: block;
+  max-width: 22rem;
+  margin: clamp(1.35rem, 3.2vh, 2rem) 0 0;
+  padding: 0 0.5rem;
   font-family: var(--hero-sans);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  line-height: 1.2;
+  font-size: clamp(0.8125rem, 1.05vw, 0.9375rem);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.45;
   text-transform: none;
-  color: var(--hero-text-muted);
+  color: var(--hero-text);
   pointer-events: none;
   user-select: none;
 }
 
+.yo-hero__scroll-cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin-top: clamp(1.5rem, 3.5vh, 2.35rem);
+  pointer-events: none;
+  user-select: none;
+}
+
+.yo-hero__scroll-line {
+  display: block;
+  width: 1px;
+  height: clamp(2.75rem, 8vh, 4.25rem);
+  background: rgba(0, 0, 0, 0.42);
+}
+
+.yo-hero__scroll-dot {
+  display: block;
+  width: 5px;
+  height: 5px;
+  margin-top: -1px;
+  border-radius: 50%;
+  background: var(--hero-text);
+}
+
 .hero-about-zone[data-transition="active"] .yo-hero__meta,
+.hero-about-zone[data-transition="active"] .yo-hero__scroll-cue,
+.hero-about-zone[data-transition="active"] .yo-hero__field,
 .hero-about-zone[data-transition="active"] .yo-hero__year {
   opacity: var(--hero-exit-opacity, 1);
 }
@@ -367,15 +752,23 @@ html[dir="rtl"] .yo-hero__title {
 
 .yo-hero__audio {
   position: fixed;
-  z-index: 9998;
+  z-index: 9000;
   left: clamp(2rem, 2.8vw, 3rem);
   bottom: clamp(2rem, 2.8vw, 3rem);
   margin: 0;
   padding: 0;
   pointer-events: auto;
   max-width: calc(100% - 4rem);
-  mix-blend-mode: difference;
   color: #ffffff;
+  mix-blend-mode: difference;
+}
+
+@media (max-width: 767px) {
+  .yo-hero__aside,
+  .yo-hero__audio {
+    mix-blend-mode: normal;
+    color: #111111;
+  }
 }
 
 .yo-hero__audio-btn {
@@ -404,7 +797,7 @@ html[dir="rtl"] .yo-hero__title {
 }
 
 .yo-hero__audio-btn:focus-visible {
-  outline: 1px solid rgba(255, 255, 255, 0.45);
+  outline: 1px solid currentColor;
   outline-offset: 5px;
 }
 
@@ -462,7 +855,7 @@ html[dir="rtl"] .yo-hero__title {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.12em;
+  gap: 0.28em;
   font-family: var(--font-heading, "Sora", sans-serif);
   font-size: 0.8125rem;
   font-weight: 600;
@@ -480,14 +873,14 @@ html[dir="rtl"] .yo-hero__title {
 
 .yo-hero__aside {
   position: fixed;
-  z-index: 9998;
+  z-index: 9000;
   inset-block: 0;
   right: clamp(1.25rem, 3.2vw, 2.75rem);
   width: min(3.5rem, 12vw);
   pointer-events: none;
   user-select: none;
-  mix-blend-mode: difference;
   color: #ffffff;
+  mix-blend-mode: difference;
 }
 
 .yo-hero__aside-body {
@@ -565,14 +958,6 @@ html[dir="rtl"] .yo-hero__title {
     padding-inline: 1.25rem;
   }
 
-  .yo-hero__title {
-    font-size: clamp(5.2rem, 17.2vw, 13rem);
-  }
-
-  .yo-hero__line:first-child {
-    font-size: clamp(3.4rem, 10.4vw, 7.8rem);
-  }
-
   .yo-hero__year {
     left: clamp(0.85rem, 2.4vw, 1.5rem);
     width: 3rem;
@@ -608,28 +993,27 @@ html[dir="rtl"] .yo-hero__title {
 
 @media (max-width: 767px) {
   .yo-hero {
-    --hero-nav-clearance: 4.25rem;
-    --hero-content-y: 0;
+    --hero-nav-clearance: 5.5rem;
     --soul-bleed: clamp(1.15rem, 7vw, 1.85rem);
     padding: 5.5rem 1rem 0;
   }
 
   .yo-hero__content {
-    max-width: 100%;
+    max-width: calc(100% - 2.75rem);
   }
 
   .yo-hero__title {
-    font-size: clamp(4.7rem, 24vw, 6.7rem);
-    letter-spacing: -0.04em;
-  }
-
-  .yo-hero__line:first-child {
-    font-size: clamp(2.5rem, 13.2vw, 3.5rem);
+    font-size: clamp(1.85rem, 11vw, 3.25rem);
+    letter-spacing: -0.03em;
   }
 
   .yo-hero__meta {
-    font-size: 0.625rem;
-    letter-spacing: 0.1em;
+    font-size: 0.8125rem;
+    max-width: 18rem;
+  }
+
+  .yo-hero__field-ring {
+    width: min(96vw, 22rem);
   }
 
   .yo-hero__cta {
@@ -647,7 +1031,19 @@ html[dir="rtl"] .yo-hero__title {
   }
 
   .yo-hero__aside {
-    display: none;
+    right: max(0.4rem, env(safe-area-inset-right, 0px));
+    width: 2rem;
+  }
+
+  .yo-hero__aside-body {
+    top: 52%;
+    gap: 0.35rem;
+    min-height: 7.5rem;
+  }
+
+  .yo-hero__aside-label {
+    font-size: 0.5rem;
+    letter-spacing: 0.08em;
   }
 
   .yo-hero__audio {
@@ -659,6 +1055,24 @@ html[dir="rtl"] .yo-hero__title {
 /* ---------------------------------------------------- reduced motion */
 
 @media (prefers-reduced-motion: reduce) {
+  .yo-hero__word-rotate[data-fx="cube"] .yo-hero__word-rotate-cube,
+  .yo-hero__word-rotate[data-fx="flip"] .yo-hero__word-rotate-letter,
+  .yo-hero__word-rotate[data-fx="fall"] .yo-hero__word-rotate-letter,
+  .yo-hero__word-rotate[data-fx="magnetic"] .yo-hero__word-rotate-panel,
+  .yo-hero__word-rotate[data-fx="scan"] .yo-hero__word-rotate-panel,
+  .yo-hero__word-rotate[data-fx="scan"] .yo-hero__word-rotate-scene::after {
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+    clip-path: none !important;
+    -webkit-clip-path: none !important;
+  }
+
+  .yo-hero__word-rotate[data-fx="fade"] .is-current {
+    transition: opacity 280ms ease !important;
+  }
+
   .yo-hero__glyph {
     filter: none !important;
     transform: none;

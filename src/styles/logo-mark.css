@@ -1,9 +1,13 @@
-/* Fixed chrome (nav / rails) — white source + difference blend
-   inverts against page content, same technique as .scroll-rail. */
+/* The entire navigation shares the Hero canvas and moves as one bar. */
 .yo-sticky-chrome {
-  mix-blend-mode: difference;
-  color: #ffffff;
+  background: var(--site-background);
+  mix-blend-mode: normal;
+  color: #000000;
   overflow: visible;
+}
+
+.yo-sticky-chrome .yo-logo-mark {
+  filter: brightness(0);
 }
 
 .yo-nav {
@@ -41,7 +45,84 @@
   font-family: var(--font-heading, "Sora", sans-serif);
   letter-spacing: -0.025em;
   line-height: 1;
-  color: #ffffff;
+  color: inherit;
+}
+
+.yo-nav__contact-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: .45em;
+  padding: .55rem 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: .6875rem;
+  font-weight: 500;
+  letter-spacing: .105em;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.yo-nav__contact-link::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: .26rem;
+  left: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .35s ease;
+}
+
+.yo-nav__contact-label,
+.yo-nav__contact-arrow {
+  display: inline-block;
+}
+
+.yo-nav__contact-arrow {
+  transition: transform .35s ease;
+}
+
+.yo-nav__contact-label {
+  overflow: visible;
+  pointer-events: none;
+}
+
+.yo-nav__contact-char {
+  display: inline-block;
+  white-space: pre;
+  transform-origin: 50% 65%;
+  transform: translateY(0px) rotate(0deg);
+  opacity: 1;
+}
+
+.yo-nav__contact-link:hover::after,
+.yo-nav__contact-link:focus-visible::after { transform: scaleX(1); }
+.yo-nav__contact-link:hover .yo-nav__contact-arrow { transform: translate(2px, 2px); }
+.yo-nav__contact-link:focus-visible { outline: 1px solid currentColor; outline-offset: 5px; }
+
+@media (max-width: 480px) {
+  .yo-nav__contact-link {
+    gap: .2em;
+    font-size: .5625rem;
+    letter-spacing: .055em;
+  }
+}
+
+@media (max-width: 360px) {
+  .yo-nav__contact-link { left: 4px; }
+  .yo-nav__contact-arrow { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yo-nav__contact-link::after,
+  .yo-nav__contact-arrow { transition: none; }
 }
 
 .yo-lang {
@@ -119,7 +200,7 @@
 
 .yo-lang__option[data-active="true"],
 .yo-lang__option:hover {
-  background: #ffffff;
+  background: #F7F7F7;
   color: #000000;
 }
 

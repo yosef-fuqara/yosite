@@ -187,8 +187,8 @@ export function measureIntroHandoff(markRect, targetEl, stageEl) {
   const x = toCx - (originX + (markCx - originX) * scale);
   let y = toCy - (originY + (markCy - originY) * scale);
 
-  /* Same scale; only shift down if the parked mark would clip the viewport. */
-  const visualTop = originY + y - (stageH * scale) / 2;
+  /* Protect the visible mark, not the transparent canvas around it. */
+  const visualTop = originY + y + (mark.top - originY) * scale;
   if (visualTop < 8) {
     y += 8 - visualTop;
   }

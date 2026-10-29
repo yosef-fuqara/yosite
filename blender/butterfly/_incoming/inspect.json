@@ -1,0 +1,2474 @@
+{
+  "scenes": [
+    {
+      "name": "Scene",
+      "fps": 24,
+      "frame_start": 1,
+      "frame_end": 60,
+      "frame_current": 30
+    }
+  ],
+  "objects": [
+    {
+      "name": "antenna",
+      "type": "MESH",
+      "parent": "Armature",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.04608,
+        0.09132,
+        0.01423
+      ],
+      "verts": 89,
+      "polys": 88,
+      "materials": [
+        "leg.001"
+      ],
+      "vertex_groups": [
+        "torso",
+        "abd1",
+        "abd2",
+        "abd3",
+        "head",
+        "ante1",
+        "ante2",
+        "ante3",
+        "ante4",
+        "ante5",
+        "ante6",
+        "ante7",
+        "ante 8",
+        "Bone.018",
+        "leg 1",
+        "leg2",
+        "leg3",
+        "leg4",
+        "Bone.017",
+        "Bone.019"
+      ],
+      "modifiers": [
+        [
+          "Armature",
+          "ARMATURE"
+        ]
+      ],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "antenna.001",
+      "type": "MESH",
+      "parent": "Armature",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.04608,
+        0.09132,
+        0.01423
+      ],
+      "verts": 89,
+      "polys": 88,
+      "materials": [
+        "leg.001"
+      ],
+      "vertex_groups": [
+        "torso",
+        "abd1",
+        "abd2",
+        "abd3",
+        "head",
+        "ante1",
+        "ante2",
+        "ante3",
+        "ante4",
+        "ante5",
+        "ante6",
+        "ante7",
+        "ante 8",
+        "Bone.018",
+        "leg 1",
+        "leg2",
+        "leg3",
+        "leg4",
+        "Bone.017",
+        "Bone.019"
+      ],
+      "modifiers": [
+        [
+          "Armature",
+          "ARMATURE"
+        ]
+      ],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "Armature",
+      "type": "ARMATURE",
+      "parent": null,
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.3867,
+        0.36181,
+        0.36079
+      ],
+      "bones": [
+        {
+          "name": "base",
+          "parent": null,
+          "head": [
+            0.0,
+            0.0,
+            -0.04944
+          ],
+          "tail": [
+            0.0,
+            0.0,
+            -0.02544
+          ],
+          "deform": true,
+          "length": 0.02401
+        },
+        {
+          "name": "torso",
+          "parent": "base",
+          "head": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tail": [
+            -0.00043,
+            0.02103,
+            0.00025
+          ],
+          "deform": true,
+          "length": 0.02104
+        },
+        {
+          "name": "abd1",
+          "parent": "torso",
+          "head": [
+            -0.00043,
+            0.02103,
+            0.00025
+          ],
+          "tail": [
+            -0.00043,
+            0.05377,
+            0.00158
+          ],
+          "deform": true,
+          "length": 0.03276
+        },
+        {
+          "name": "abd2",
+          "parent": "abd1",
+          "head": [
+            -0.00043,
+            0.05377,
+            0.00158
+          ],
+          "tail": [
+            -0.00034,
+            0.09358,
+            0.00133
+          ],
+          "deform": true,
+          "length": 0.03982
+        },
+        {
+          "name": "abd3",
+          "parent": "abd2",
+          "head": [
+            -0.00034,
+            0.09358,
+            0.00133
+          ],
+          "tail": [
+            -0.00034,
+            0.13916,
+            0.00279
+          ],
+          "deform": true,
+          "length": 0.0456
+        },
+        {
+          "name": "head",
+          "parent": "torso",
+          "head": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tail": [
+            0.0,
+            -0.01617,
+            0.0
+          ],
+          "deform": true,
+          "length": 0.01617
+        },
+        {
+          "name": "ante1",
+          "parent": "head",
+          "head": [
+            -0.00226,
+            -0.01212,
+            0.00622
+          ],
+          "tail": [
+            -0.00448,
+            -0.03016,
+            0.01072
+          ],
+          "deform": true,
+          "length": 0.01873
+        },
+        {
+          "name": "ante2",
+          "parent": "ante1",
+          "head": [
+            -0.00448,
+            -0.03016,
+            0.01072
+          ],
+          "tail": [
+            -0.01523,
+            -0.05945,
+            0.01647
+          ],
+          "deform": true,
+          "length": 0.03173
+        },
+        {
+          "name": "ante3",
+          "parent": "ante2",
+          "head": [
+            -0.01523,
+            -0.05945,
+            0.01647
+          ],
+          "tail": [
+            -0.03078,
+            -0.08303,
+            0.01312
+          ],
+          "deform": true,
+          "length": 0.02843
+        },
+        {
+          "name": "ante4",
+          "parent": "ante3",
+          "head": [
+            -0.03078,
+            -0.08303,
+            0.01312
+          ],
+          "tail": [
+            -0.04897,
+            -0.10287,
+            0.00094
+          ],
+          "deform": true,
+          "length": 0.02954
+        },
+        {
+          "name": "ante5",
+          "parent": "head",
+          "head": [
+            0.00164,
+            -0.01212,
+            0.00622
+          ],
+          "tail": [
+            0.0039,
+            -0.03016,
+            0.01072
+          ],
+          "deform": true,
+          "length": 0.01873
+        },
+        {
+          "name": "ante6",
+          "parent": "ante5",
+          "head": [
+            0.0039,
+            -0.03016,
+            0.01072
+          ],
+          "tail": [
+            0.01465,
+            -0.05945,
+            0.01647
+          ],
+          "deform": true,
+          "length": 0.03173
+        },
+        {
+          "name": "ante7",
+          "parent": "ante6",
+          "head": [
+            0.01465,
+            -0.05945,
+            0.01647
+          ],
+          "tail": [
+            0.0302,
+            -0.08303,
+            0.01312
+          ],
+          "deform": true,
+          "length": 0.02843
+        },
+        {
+          "name": "ante 8",
+          "parent": "ante7",
+          "head": [
+            0.0302,
+            -0.08303,
+            0.01312
+          ],
+          "tail": [
+            0.0484,
+            -0.10287,
+            0.00094
+          ],
+          "deform": true,
+          "length": 0.02955
+        },
+        {
+          "name": "Bone.018",
+          "parent": "head",
+          "head": [
+            0.0484,
+            -0.10287,
+            0.00094
+          ],
+          "tail": [
+            0.0484,
+            -0.10287,
+            0.01873
+          ],
+          "deform": true,
+          "length": 0.01778
+        },
+        {
+          "name": "Bone.017",
+          "parent": "head",
+          "head": [
+            -0.04897,
+            -0.10287,
+            0.00094
+          ],
+          "tail": [
+            -0.04897,
+            -0.10287,
+            0.01879
+          ],
+          "deform": true,
+          "length": 0.01785
+        },
+        {
+          "name": "leg 1",
+          "parent": "torso",
+          "head": [
+            0.0031,
+            0.00961,
+            -0.00612
+          ],
+          "tail": [
+            0.0341,
+            0.00972,
+            0.00828
+          ],
+          "deform": true,
+          "length": 0.03418
+        },
+        {
+          "name": "leg2",
+          "parent": "leg 1",
+          "head": [
+            0.0341,
+            0.00972,
+            0.00828
+          ],
+          "tail": [
+            0.06393,
+            0.00943,
+            -0.03231
+          ],
+          "deform": true,
+          "length": 0.05037
+        },
+        {
+          "name": "leg3",
+          "parent": "leg2",
+          "head": [
+            0.06393,
+            0.00943,
+            -0.03231
+          ],
+          "tail": [
+            0.07424,
+            0.00956,
+            -0.04618
+          ],
+          "deform": true,
+          "length": 0.01728
+        },
+        {
+          "name": "leg4",
+          "parent": "leg3",
+          "head": [
+            0.07424,
+            0.00956,
+            -0.04618
+          ],
+          "tail": [
+            0.08189,
+            0.00969,
+            -0.04946
+          ],
+          "deform": true,
+          "length": 0.00833
+        },
+        {
+          "name": "torso rot",
+          "parent": "torso",
+          "head": [
+            -0.0,
+            0.03203,
+            0.00323
+          ],
+          "tail": [
+            -0.00043,
+            0.05306,
+            0.00348
+          ],
+          "deform": true,
+          "length": 0.02104
+        },
+        {
+          "name": "leg 1.002",
+          "parent": "torso",
+          "head": [
+            -0.00359,
+            0.00964,
+            -0.00612
+          ],
+          "tail": [
+            -0.03459,
+            0.00975,
+            0.00828
+          ],
+          "deform": true,
+          "length": 0.03418
+        },
+        {
+          "name": "leg2.002",
+          "parent": "leg 1.002",
+          "head": [
+            -0.03459,
+            0.00975,
+            0.00828
+          ],
+          "tail": [
+            -0.06442,
+            0.00947,
+            -0.03231
+          ],
+          "deform": true,
+          "length": 0.05037
+        },
+        {
+          "name": "leg3.002",
+          "parent": "leg2.002",
+          "head": [
+            -0.06442,
+            0.00947,
+            -0.03231
+          ],
+          "tail": [
+            -0.07473,
+            0.00959,
+            -0.04618
+          ],
+          "deform": true,
+          "length": 0.01728
+        },
+        {
+          "name": "leg4.004",
+          "parent": "leg3.002",
+          "head": [
+            -0.07473,
+            0.00959,
+            -0.04618
+          ],
+          "tail": [
+            -0.08238,
+            0.00972,
+            -0.04946
+          ],
+          "deform": true,
+          "length": 0.00833
+        },
+        {
+          "name": "leg 1.003",
+          "parent": "torso",
+          "head": [
+            -0.00273,
+            0.0062,
+            -0.00612
+          ],
+          "tail": [
+            -0.02855,
+            -0.01096,
+            0.00828
+          ],
+          "deform": true,
+          "length": 0.03418
+        },
+        {
+          "name": "leg2.003",
+          "parent": "leg 1.003",
+          "head": [
+            -0.02855,
+            -0.01096,
+            0.00828
+          ],
+          "tail": [
+            -0.05317,
+            -0.0278,
+            -0.03231
+          ],
+          "deform": true,
+          "length": 0.05037
+        },
+        {
+          "name": "leg3.003",
+          "parent": "leg2.003",
+          "head": [
+            -0.05317,
+            -0.0278,
+            -0.03231
+          ],
+          "tail": [
+            -0.06181,
+            -0.03343,
+            -0.04618
+          ],
+          "deform": true,
+          "length": 0.01728
+        },
+        {
+          "name": "leg4.006",
+          "parent": "leg3.003",
+          "head": [
+            -0.06181,
+            -0.03343,
+            -0.04618
+          ],
+          "tail": [
+            -0.06824,
+            -0.03758,
+            -0.04946
+          ],
+          "deform": true,
+          "length": 0.00833
+        },
+        {
+          "name": "leg 1.004",
+          "parent": "torso",
+          "head": [
+            -0.00315,
+            0.01325,
+            -0.00612
+          ],
+          "tail": [
+            -0.0273,
+            0.0327,
+            0.00828
+          ],
+          "deform": true,
+          "length": 0.03418
+        },
+        {
+          "name": "leg2.004",
+          "parent": "leg 1.004",
+          "head": [
+            -0.0273,
+            0.0327,
+            0.00828
+          ],
+          "tail": [
+            -0.05078,
+            0.05109,
+            -0.03231
+          ],
+          "deform": true,
+          "length": 0.05037
+        },
+        {
+          "name": "leg3.004",
+          "parent": "leg2.004",
+          "head": [
+            -0.05078,
+            0.05109,
+            -0.03231
+          ],
+          "tail": [
+            -0.05876,
+            0.05763,
+            -0.04618
+          ],
+          "deform": true,
+          "length": 0.01728
+        },
+        {
+          "name": "leg4.008",
+          "parent": "leg3.004",
+          "head": [
+            -0.05876,
+            0.05763,
+            -0.04618
+          ],
+          "tail": [
+            -0.06465,
+            0.06251,
+            -0.04946
+          ],
+          "deform": true,
+          "length": 0.00833
+        },
+        {
+          "name": "leg 1.005",
+          "parent": "torso",
+          "head": [
+            0.00244,
+            0.0061,
+            -0.00612
+          ],
+          "tail": [
+            0.02827,
+            -0.01105,
+            0.00828
+          ],
+          "deform": true,
+          "length": 0.03418
+        },
+        {
+          "name": "leg2.005",
+          "parent": "leg 1.005",
+          "head": [
+            0.02827,
+            -0.01105,
+            0.00828
+          ],
+          "tail": [
+            0.05289,
+            -0.02789,
+            -0.03231
+          ],
+          "deform": true,
+          "length": 0.05037
+        },
+        {
+          "name": "leg3.005",
+          "parent": "leg2.005",
+          "head": [
+            0.05289,
+            -0.02789,
+            -0.03231
+          ],
+          "tail": [
+            0.06153,
+            -0.03352,
+            -0.04618
+          ],
+          "deform": true,
+          "length": 0.01728
+        },
+        {
+          "name": "leg4.010",
+          "parent": "leg3.005",
+          "head": [
+            0.06153,
+            -0.03352,
+            -0.04618
+          ],
+          "tail": [
+            0.06796,
+            -0.03767,
+            -0.04946
+          ],
+          "deform": true,
+          "length": 0.00833
+        },
+        {
+          "name": "leg 1.006",
+          "parent": "torso",
+          "head": [
+            0.00287,
+            0.01316,
+            -0.00612
+          ],
+          "tail": [
+            0.02702,
+            0.0326,
+            0.00828
+          ],
+          "deform": true,
+          "length": 0.03418
+        },
+        {
+          "name": "leg2.006",
+          "parent": "leg 1.006",
+          "head": [
+            0.02702,
+            0.0326,
+            0.00828
+          ],
+          "tail": [
+            0.0505,
+            0.051,
+            -0.03231
+          ],
+          "deform": true,
+          "length": 0.05037
+        },
+        {
+          "name": "leg3.006",
+          "parent": "leg2.006",
+          "head": [
+            0.0505,
+            0.051,
+            -0.03231
+          ],
+          "tail": [
+            0.05847,
+            0.05754,
+            -0.04618
+          ],
+          "deform": true,
+          "length": 0.01728
+        },
+        {
+          "name": "leg4.012",
+          "parent": "leg3.006",
+          "head": [
+            0.05847,
+            0.05754,
+            -0.04618
+          ],
+          "tail": [
+            0.06437,
+            0.06242,
+            -0.04946
+          ],
+          "deform": true,
+          "length": 0.00833
+        },
+        {
+          "name": "wing",
+          "parent": "torso",
+          "head": [
+            -0.0051,
+            0.00695,
+            0.00808
+          ],
+          "tail": [
+            -0.21061,
+            0.00607,
+            0.0082
+          ],
+          "deform": true,
+          "length": 0.20551
+        },
+        {
+          "name": "wing.001",
+          "parent": "wing",
+          "head": [
+            -0.21061,
+            0.00607,
+            0.0082
+          ],
+          "tail": [
+            -0.34379,
+            -0.19293,
+            0.00833
+          ],
+          "deform": true,
+          "length": 0.23945
+        },
+        {
+          "name": "wingb",
+          "parent": "wing",
+          "head": [
+            -0.00451,
+            0.01281,
+            0.00763
+          ],
+          "tail": [
+            -0.27274,
+            0.14406,
+            0.00782
+          ],
+          "deform": true,
+          "length": 0.29863
+        },
+        {
+          "name": "wing.002",
+          "parent": "torso",
+          "head": [
+            0.00395,
+            0.00695,
+            0.00808
+          ],
+          "tail": [
+            0.20944,
+            0.00411,
+            0.0082
+          ],
+          "deform": true,
+          "length": 0.20551
+        },
+        {
+          "name": "wing.003",
+          "parent": "wing.002",
+          "head": [
+            0.20944,
+            0.00411,
+            0.0082
+          ],
+          "tail": [
+            0.34264,
+            -0.19293,
+            0.00833
+          ],
+          "deform": true,
+          "length": 0.23784
+        },
+        {
+          "name": "wingb.001",
+          "parent": "wing.002",
+          "head": [
+            0.00336,
+            0.01281,
+            0.00763
+          ],
+          "tail": [
+            0.27159,
+            0.14406,
+            0.00782
+          ],
+          "deform": true,
+          "length": 0.29863
+        },
+        {
+          "name": "leg4.001",
+          "parent": "base",
+          "head": [
+            0.08189,
+            0.00969,
+            -0.04946
+          ],
+          "tail": [
+            0.08189,
+            0.00969,
+            -0.03423
+          ],
+          "deform": true,
+          "length": 0.01523
+        },
+        {
+          "name": "leg4.005",
+          "parent": "base",
+          "head": [
+            -0.08238,
+            0.00972,
+            -0.04946
+          ],
+          "tail": [
+            -0.08238,
+            0.00972,
+            -0.03423
+          ],
+          "deform": true,
+          "length": 0.01523
+        },
+        {
+          "name": "leg4.007",
+          "parent": "base",
+          "head": [
+            -0.06824,
+            -0.03758,
+            -0.04946
+          ],
+          "tail": [
+            -0.06824,
+            -0.03758,
+            -0.03423
+          ],
+          "deform": true,
+          "length": 0.01523
+        },
+        {
+          "name": "leg4.009",
+          "parent": "base",
+          "head": [
+            -0.06465,
+            0.06251,
+            -0.04946
+          ],
+          "tail": [
+            -0.06465,
+            0.06251,
+            -0.03423
+          ],
+          "deform": true,
+          "length": 0.01523
+        },
+        {
+          "name": "leg4.011",
+          "parent": "base",
+          "head": [
+            0.06796,
+            -0.03767,
+            -0.04946
+          ],
+          "tail": [
+            0.06796,
+            -0.03767,
+            -0.03423
+          ],
+          "deform": true,
+          "length": 0.01523
+        },
+        {
+          "name": "leg4.013",
+          "parent": "base",
+          "head": [
+            0.06437,
+            0.06242,
+            -0.04946
+          ],
+          "tail": [
+            0.06437,
+            0.06242,
+            -0.03423
+          ],
+          "deform": true,
+          "length": 0.01523
+        }
+      ],
+      "action": "break pose",
+      "nla": []
+    },
+    {
+      "name": "Camera",
+      "type": "CAMERA",
+      "parent": null,
+      "location": [
+        0.49142,
+        -0.4504,
+        0.04432
+      ],
+      "rotation_euler": [
+        1.74334,
+        0.00163,
+        0.8153
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Camera.001",
+      "type": "CAMERA",
+      "parent": null,
+      "location": [
+        0.8611,
+        0.02026,
+        0.08204
+      ],
+      "rotation_euler": [
+        1.63605,
+        -0.0,
+        1.5708
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "cir",
+      "type": "MESH",
+      "parent": null,
+      "location": [
+        0.05405,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        1.5708,
+        -0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.11292,
+        0.11292,
+        0.11292
+      ],
+      "verts": 128,
+      "polys": 64,
+      "materials": [],
+      "vertex_groups": [],
+      "modifiers": [],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "Circle",
+      "type": "MESH",
+      "parent": null,
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.45094,
+        0.0,
+        0.45094
+      ],
+      "verts": 32,
+      "polys": 0,
+      "materials": [],
+      "vertex_groups": [],
+      "modifiers": [],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "eye",
+      "type": "MESH",
+      "parent": "Armature",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        -0.05478,
+        -0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.02206,
+        0.01599,
+        0.01358
+      ],
+      "verts": 162,
+      "polys": 160,
+      "materials": [
+        "eyes"
+      ],
+      "vertex_groups": [
+        "base",
+        "head"
+      ],
+      "modifiers": [
+        [
+          "Armature",
+          "ARMATURE"
+        ]
+      ],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "head",
+      "type": "MESH",
+      "parent": "Armature",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        -0.05478,
+        -0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.01202,
+        0.01714,
+        0.01527
+      ],
+      "verts": 82,
+      "polys": 80,
+      "materials": [
+        "leg.001"
+      ],
+      "vertex_groups": [
+        "base",
+        "head"
+      ],
+      "modifiers": [
+        [
+          "Armature",
+          "ARMATURE"
+        ]
+      ],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "leg.001",
+      "type": "MESH",
+      "parent": "Armature",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.06786,
+        0.04597,
+        0.05803
+      ],
+      "verts": 62,
+      "polys": 59,
+      "materials": [
+        "leg.001"
+      ],
+      "vertex_groups": [
+        "torso",
+        "abd1",
+        "abd2",
+        "abd3",
+        "head",
+        "ante1",
+        "ante2",
+        "ante3",
+        "ante4",
+        "ante5",
+        "ante6",
+        "ante7",
+        "ante 8",
+        "Bone.018",
+        "Bone.017",
+        "leg 1",
+        "leg2",
+        "leg3",
+        "leg4",
+        "torso rot",
+        "leg 1.001",
+        "leg2.001",
+        "leg3.001",
+        "leg4.002",
+        "leg 1.002",
+        "leg2.002",
+        "leg3.002",
+        "leg4.004",
+        "leg 1.003",
+        "leg2.003",
+        "leg3.003",
+        "leg4.006",
+        "leg 1.004",
+        "leg2.004",
+        "leg3.004",
+        "leg4.008",
+        "leg 1.005",
+        "leg2.005",
+        "leg3.005",
+        "leg4.010",
+        "leg 1.006",
+        "leg2.006",
+        "leg3.006",
+        "leg4.012",
+        "leg4.001",
+        "leg4.003",
+        "leg4.005",
+        "leg4.009",
+        "leg4.011",
+        "leg4.013"
+      ],
+      "modifiers": [
+        [
+          "Armature",
+          "ARMATURE"
+        ]
+      ],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "leg.002",
+      "type": "MESH",
+      "parent": "Armature",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.06385,
+        0.05149,
+        0.05805
+      ],
+      "verts": 62,
+      "polys": 59,
+      "materials": [
+        "leg.001"
+      ],
+      "vertex_groups": [
+        "torso",
+        "abd1",
+        "abd2",
+        "abd3",
+        "head",
+        "ante1",
+        "ante2",
+        "ante3",
+        "ante4",
+        "ante5",
+        "ante6",
+        "ante7",
+        "ante 8",
+        "Bone.018",
+        "Bone.017",
+        "leg 1",
+        "leg2",
+        "leg3",
+        "leg4",
+        "torso rot",
+        "leg 1.001",
+        "leg2.001",
+        "leg3.001",
+        "leg4.002",
+        "leg 1.002",
+        "leg2.002",
+        "leg3.002",
+        "leg4.004",
+        "leg 1.003",
+        "leg2.003",
+        "leg3.003",
+        "leg4.006",
+        "leg 1.004",
+        "leg2.004",
+        "leg3.004",
+        "leg4.008",
+        "leg 1.005",
+        "leg2.005",
+        "leg3.005",
+        "leg4.010",
+        "leg 1.006",
+        "leg2.006",
+        "leg3.006",
+        "leg4.012",
+        "leg4.001",
+        "leg4.003",
+        "leg4.005",
+        "leg4.007",
+        "leg4.009",
+        "leg4.011"
+      ],
+      "modifiers": [
+        [
+          "Armature",
+          "ARMATURE"
+        ]
+      ],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "leg.003",
+      "type": "MESH",
+      "parent": "Armature",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.06789,
+        0.04598,
+        0.05803
+      ],
+      "verts": 62,
+      "polys": 59,
+      "materials": [
+        "leg.001"
+      ],
+      "vertex_groups": [
+        "torso",
+        "abd1",
+        "abd2",
+        "abd3",
+        "head",
+        "ante1",
+        "ante2",
+        "ante3",
+        "ante4",
+        "ante5",
+        "ante6",
+        "ante7",
+        "ante 8",
+        "Bone.018",
+        "Bone.017",
+        "leg 1",
+        "leg2",
+        "leg3",
+        "leg4",
+        "torso rot",
+        "leg 1.001",
+        "leg2.001",
+        "leg3.001",
+        "leg4.002",
+        "leg 1.002",
+        "leg2.002",
+        "leg3.002",
+        "leg4.004",
+        "leg 1.003",
+        "leg2.003",
+        "leg3.003",
+        "leg4.006",
+        "leg 1.004",
+        "leg2.004",
+        "leg3.004",
+        "leg4.008",
+        "leg 1.005",
+        "leg2.005",
+        "leg3.005",
+        "leg4.010",
+        "leg 1.006",
+        "leg2.006",
+        "leg3.006",
+        "leg4.012",
+        "leg4.001",
+        "leg4.003",
+        "leg4.005",
+        "leg4.007",
+        "leg4.009",
+        "leg4.013"
+      ],
+      "modifiers": [
+        [
+          "Armature",
+          "ARMATURE"
+        ]
+      ],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "leg.004",
+      "type": "MESH",
+      "parent": "Armature",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.08074,
+        0.00353,
+        0.05803
+      ],
+      "verts": 62,
+      "polys": 59,
+      "materials": [
+        "leg.001"
+      ],
+      "vertex_groups": [
+        "torso",
+        "abd1",
+        "abd2",
+        "abd3",
+        "head",
+        "ante1",
+        "ante2",
+        "ante3",
+        "ante4",
+        "ante5",
+        "ante6",
+        "ante7",
+        "ante 8",
+        "Bone.018",
+        "Bone.017",
+        "leg 1",
+        "leg2",
+        "leg3",
+        "leg4",
+        "torso rot",
+        "leg 1.001",
+        "leg2.001",
+        "leg3.001",
+        "leg4.002",
+        "leg 1.002",
+        "leg2.002",
+        "leg3.002",
+        "leg4.004",
+        "leg4.001",
+        "leg4.003"
+      ],
+      "modifiers": [
+        [
+          "Armature",
+          "ARMATURE"
+        ]
+      ],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "leg.005",
+      "type": "MESH",
+      "parent": "Armature",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.06383,
+        0.05148,
+        0.05805
+      ],
+      "verts": 62,
+      "polys": 59,
+      "materials": [
+        "leg.001"
+      ],
+      "vertex_groups": [
+        "torso",
+        "abd1",
+        "abd2",
+        "abd3",
+        "head",
+        "ante1",
+        "ante2",
+        "ante3",
+        "ante4",
+        "ante5",
+        "ante6",
+        "ante7",
+        "ante 8",
+        "Bone.018",
+        "Bone.017",
+        "leg 1",
+        "leg2",
+        "leg3",
+        "leg4",
+        "torso rot",
+        "leg 1.001",
+        "leg2.001",
+        "leg3.001",
+        "leg4.002",
+        "leg 1.002",
+        "leg2.002",
+        "leg3.002",
+        "leg4.004",
+        "leg 1.003",
+        "leg2.003",
+        "leg3.003",
+        "leg4.006",
+        "leg 1.004",
+        "leg2.004",
+        "leg3.004",
+        "leg4.008",
+        "leg 1.005",
+        "leg2.005",
+        "leg3.005",
+        "leg4.010",
+        "leg 1.006",
+        "leg2.006",
+        "leg3.006",
+        "leg4.012",
+        "leg4.001",
+        "leg4.003",
+        "leg4.005",
+        "leg4.007",
+        "leg4.011",
+        "leg4.013",
+        "leg4.009"
+      ],
+      "modifiers": [
+        [
+          "Armature",
+          "ARMATURE"
+        ]
+      ],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "leg.006",
+      "type": "MESH",
+      "parent": "Armature",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.08081,
+        0.00349,
+        0.05859
+      ],
+      "verts": 68,
+      "polys": 65,
+      "materials": [
+        "leg.001"
+      ],
+      "vertex_groups": [
+        "Group",
+        "torso",
+        "abd1",
+        "abd2",
+        "abd3",
+        "head",
+        "ante1",
+        "ante2",
+        "ante3",
+        "ante4",
+        "ante5",
+        "ante6",
+        "ante7",
+        "ante 8",
+        "Bone.018",
+        "leg 1",
+        "leg2",
+        "leg3",
+        "leg4",
+        "Bone.017",
+        "Bone.019",
+        "leg4.001"
+      ],
+      "modifiers": [
+        [
+          "Armature",
+          "ARMATURE"
+        ]
+      ],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "Light",
+      "type": "LIGHT",
+      "parent": null,
+      "location": [
+        0.03054,
+        -1.19396,
+        1.7046
+      ],
+      "rotation_euler": [
+        0.37919,
+        -0.15675,
+        0.51399
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Plane",
+      "type": "MESH",
+      "parent": null,
+      "location": [
+        0.0,
+        0.0,
+        -0.05679
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        2.0,
+        2.0,
+        0.0
+      ],
+      "verts": 4,
+      "polys": 1,
+      "materials": [],
+      "vertex_groups": [],
+      "modifiers": [],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "plane bas",
+      "type": "MESH",
+      "parent": null,
+      "location": [
+        0.0,
+        0.0,
+        -0.126
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.30207,
+        0.0,
+        0.30207
+      ],
+      "verts": 12,
+      "polys": 0,
+      "materials": [],
+      "vertex_groups": [],
+      "modifiers": [],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "probocis",
+      "type": "MESH",
+      "parent": "Armature",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        -0.05478,
+        -0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.00153,
+        0.0122,
+        0.01469
+      ],
+      "verts": 105,
+      "polys": 105,
+      "materials": [
+        "leg.001"
+      ],
+      "vertex_groups": [
+        "head"
+      ],
+      "modifiers": [
+        [
+          "Armature",
+          "ARMATURE"
+        ]
+      ],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "torso+tail",
+      "type": "MESH",
+      "parent": "Armature",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.01752,
+        0.13881,
+        0.01701
+      ],
+      "verts": 154,
+      "polys": 160,
+      "materials": [
+        "torso"
+      ],
+      "vertex_groups": [
+        "torso",
+        "abd1",
+        "abd2",
+        "abd3",
+        "head",
+        "ante1",
+        "ante2",
+        "ante3",
+        "ante4",
+        "ante5",
+        "ante6",
+        "ante7",
+        "ante 8",
+        "Bone.018",
+        "leg 1",
+        "leg2",
+        "leg3",
+        "leg4",
+        "Bone.017",
+        "Bone.019"
+      ],
+      "modifiers": [
+        [
+          "Armature",
+          "ARMATURE"
+        ]
+      ],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "torssss",
+      "type": "MESH",
+      "parent": null,
+      "location": [
+        0.0,
+        0.0,
+        0.02084
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.06266,
+        0.06266,
+        0.06266
+      ],
+      "verts": 8,
+      "polys": 6,
+      "materials": [],
+      "vertex_groups": [],
+      "modifiers": [],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "wing",
+      "type": "MESH",
+      "parent": "Armature",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.24795,
+        0.22758,
+        0.26621
+      ],
+      "verts": 22,
+      "polys": 12,
+      "materials": [
+        "wing"
+      ],
+      "vertex_groups": [
+        "torso",
+        "abd1",
+        "abd2",
+        "abd3",
+        "head",
+        "ante1",
+        "ante2",
+        "ante3",
+        "ante4",
+        "ante5",
+        "ante6",
+        "ante7",
+        "ante 8",
+        "Bone.018",
+        "Bone.017",
+        "leg 1",
+        "leg2",
+        "leg3",
+        "leg4",
+        "torso rot",
+        "leg 1.002",
+        "leg2.002",
+        "leg3.002",
+        "leg4.004",
+        "leg 1.003",
+        "leg2.003",
+        "leg3.003",
+        "leg4.006",
+        "leg 1.004",
+        "leg2.004",
+        "leg3.004",
+        "leg4.008",
+        "leg 1.005",
+        "leg2.005",
+        "leg3.005",
+        "leg4.010",
+        "leg 1.006",
+        "leg2.006",
+        "leg3.006",
+        "leg4.012",
+        "leg4.001",
+        "leg4.005",
+        "leg4.007",
+        "leg4.009",
+        "leg4.011",
+        "leg4.013",
+        "wing",
+        "wing.001",
+        "wingb"
+      ],
+      "modifiers": [
+        [
+          "Armature",
+          "ARMATURE"
+        ]
+      ],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "wing b",
+      "type": "MESH",
+      "parent": "Armature",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.18069,
+        0.29085,
+        0.19219
+      ],
+      "verts": 22,
+      "polys": 12,
+      "materials": [
+        "wing"
+      ],
+      "vertex_groups": [
+        "torso",
+        "head",
+        "ante1",
+        "ante2",
+        "ante3",
+        "ante4",
+        "ante5",
+        "ante6",
+        "ante7",
+        "ante 8",
+        "Bone.018",
+        "Bone.017",
+        "leg 1",
+        "leg2",
+        "leg3",
+        "leg4",
+        "torso rot",
+        "leg 1.002",
+        "leg3.002",
+        "leg4.004",
+        "leg 1.003",
+        "leg2.003",
+        "leg3.003",
+        "leg4.006",
+        "leg 1.004",
+        "leg2.004",
+        "leg3.004",
+        "leg4.008",
+        "leg 1.005",
+        "leg2.005",
+        "leg3.005",
+        "leg4.010",
+        "leg 1.006",
+        "leg2.006",
+        "leg3.006",
+        "leg4.012",
+        "leg4.001",
+        "leg4.007",
+        "leg4.009",
+        "leg4.011",
+        "leg4.013",
+        "wing",
+        "wing.001",
+        "wingb"
+      ],
+      "modifiers": [
+        [
+          "Armature",
+          "ARMATURE"
+        ]
+      ],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "wing b.001",
+      "type": "MESH",
+      "parent": "Armature",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.12356,
+        0.28326,
+        0.24922
+      ],
+      "verts": 22,
+      "polys": 12,
+      "materials": [
+        "wing"
+      ],
+      "vertex_groups": [
+        "torso",
+        "abd1",
+        "head",
+        "ante1",
+        "ante2",
+        "ante3",
+        "ante4",
+        "ante5",
+        "ante6",
+        "ante7",
+        "ante 8",
+        "Bone.018",
+        "Bone.017",
+        "leg2",
+        "leg3",
+        "leg4",
+        "leg 1.002",
+        "leg2.002",
+        "leg3.002",
+        "leg4.004",
+        "leg 1.003",
+        "leg2.003",
+        "leg3.003",
+        "leg4.006",
+        "leg 1.004",
+        "leg2.004",
+        "leg3.004",
+        "leg4.008",
+        "leg 1.005",
+        "leg2.005",
+        "leg3.005",
+        "leg4.010",
+        "leg 1.006",
+        "leg2.006",
+        "leg3.006",
+        "leg4.012",
+        "leg4.001",
+        "leg4.005",
+        "leg4.007",
+        "leg4.009",
+        "leg4.011",
+        "leg4.013",
+        "wing",
+        "wing.001",
+        "wingb",
+        "wing.002",
+        "wing.003",
+        "wingb.001"
+      ],
+      "modifiers": [
+        [
+          "Armature",
+          "ARMATURE"
+        ]
+      ],
+      "uvs": [
+        "UVMap"
+      ]
+    },
+    {
+      "name": "wing.001",
+      "type": "MESH",
+      "parent": "Armature",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dims": [
+        0.14351,
+        0.23456,
+        0.31547
+      ],
+      "verts": 22,
+      "polys": 12,
+      "materials": [
+        "wing"
+      ],
+      "vertex_groups": [
+        "torso",
+        "abd1",
+        "abd2",
+        "abd3",
+        "head",
+        "ante1",
+        "ante2",
+        "ante3",
+        "ante4",
+        "ante5",
+        "ante6",
+        "ante 8",
+        "Bone.017",
+        "leg2",
+        "leg3",
+        "leg4",
+        "torso rot",
+        "leg 1.002",
+        "leg2.002",
+        "leg3.002",
+        "leg4.004",
+        "leg 1.003",
+        "leg2.003",
+        "leg3.003",
+        "leg4.006",
+        "leg 1.004",
+        "leg2.004",
+        "leg3.004",
+        "leg4.008",
+        "leg 1.005",
+        "leg2.005",
+        "leg3.005",
+        "leg4.010",
+        "leg 1.006",
+        "leg2.006",
+        "leg3.006",
+        "leg4.012",
+        "leg4.001",
+        "leg4.005",
+        "leg4.007",
+        "leg4.009",
+        "leg4.011",
+        "leg4.013",
+        "wing",
+        "wing.001",
+        "wingb",
+        "wing.002",
+        "wing.003"
+      ],
+      "modifiers": [
+        [
+          "Armature",
+          "ARMATURE"
+        ]
+      ],
+      "uvs": [
+        "UVMap"
+      ]
+    }
+  ],
+  "armatures": [],
+  "actions": [
+    {
+      "name": "break pose",
+      "frame_range": [
+        1.0,
+        61.0
+      ],
+      "fcurves": 370,
+      "groups": []
+    },
+    {
+      "name": "PoseLib.001",
+      "frame_range": [
+        1.0,
+        1.0
+      ],
+      "fcurves": 440,
+      "groups": []
+    }
+  ],
+  "materials": [
+    {
+      "name": "Dots Stroke",
+      "use_nodes": true,
+      "nodes": [
+        "FRAME:Frame",
+        "OUTPUT_MATERIAL:Material Output",
+        "BSDF_PRINCIPLED:Principled BSDF",
+        "OUTPUT_MATERIAL:Material Output.001",
+        "BSDF_DIFFUSE:Diffuse BSDF"
+      ],
+      "bsdf": {
+        "Base Color": [
+          0.8,
+          0.8,
+          0.8,
+          1.0
+        ],
+        "Metallic": 0.0,
+        "Roughness": 0.4,
+        "Alpha": 1.0,
+        "Transmission Weight": 0.0,
+        "Sheen Weight": 0.0,
+        "IOR": 1.5
+      }
+    },
+    {
+      "name": "eyes",
+      "use_nodes": true,
+      "nodes": [
+        "BSDF_PRINCIPLED:Principled BSDF",
+        "OUTPUT_MATERIAL:Material Output"
+      ],
+      "bsdf": {
+        "Base Color": [
+          0.1155,
+          0.3587,
+          1.0,
+          1.0
+        ],
+        "Metallic": 0.5942,
+        "Roughness": 0.15,
+        "Alpha": 1.0,
+        "Transmission Weight": 0.0,
+        "Sheen Weight": 0.0,
+        "IOR": 1.45
+      }
+    },
+    {
+      "name": "leg.001",
+      "use_nodes": true,
+      "nodes": [
+        "BSDF_PRINCIPLED:Principled BSDF",
+        "OUTPUT_MATERIAL:Material Output"
+      ],
+      "bsdf": {
+        "Base Color": [
+          0.0183,
+          0.0183,
+          0.0183,
+          1.0
+        ],
+        "Metallic": 0.324,
+        "Roughness": 0.352,
+        "Alpha": 1.0,
+        "Transmission Weight": 0.0,
+        "Sheen Weight": 0.0,
+        "IOR": 1.45
+      }
+    },
+    {
+      "name": "Material",
+      "use_nodes": true,
+      "nodes": [
+        "OUTPUT_MATERIAL:Material Output",
+        "BSDF_PRINCIPLED:Principled BSDF"
+      ],
+      "bsdf": {
+        "Base Color": [
+          0.8,
+          0.8,
+          0.8,
+          1.0
+        ],
+        "Metallic": 0.0,
+        "Roughness": 0.4,
+        "Alpha": 1.0,
+        "Transmission Weight": 0.0,
+        "Sheen Weight": 0.0,
+        "IOR": 1.45
+      }
+    },
+    {
+      "name": "torso",
+      "use_nodes": true,
+      "nodes": [
+        "OUTPUT_MATERIAL:Material Output",
+        "BSDF_PRINCIPLED:Principled BSDF",
+        "MAPPING:Mapping",
+        "VALTORGB:ColorRamp",
+        "TEX_NOISE:Noise Texture",
+        "TEX_COORD:Texture Coordinate"
+      ],
+      "bsdf": {
+        "Base Color": [
+          0.8,
+          0.8,
+          0.8,
+          1.0
+        ],
+        "Metallic": 0.0,
+        "Roughness": 0.5,
+        "Alpha": 1.0,
+        "Transmission Weight": 0.0,
+        "Sheen Weight": 0.0,
+        "IOR": 1.45
+      }
+    },
+    {
+      "name": "wing",
+      "use_nodes": true,
+      "nodes": [
+        "TEX_IMAGE:Image Texture",
+        "BSDF_TRANSPARENT:Transparent BSDF",
+        "EMISSION:Emission",
+        "VALTORGB:ColorRamp",
+        "OUTPUT_MATERIAL:Material Output",
+        "MIX_SHADER:Mix Shader"
+      ]
+    }
+  ],
+  "images": [
+    {
+      "name": "Alas mariposa.jpg",
+      "size": [
+        0,
+        0
+      ],
+      "filepath": "//..\\Ninja\\Texture\\Alas mariposa.jpg",
+      "packed": false
+    },
+    {
+      "name": "Alas mariposa.jpg.001",
+      "size": [
+        2120,
+        3000
+      ],
+      "filepath": "//Texture\\Alas mariposa.jpg",
+      "packed": false
+    },
+    {
+      "name": "Render Result",
+      "size": [
+        0,
+        0
+      ],
+      "filepath": "",
+      "packed": false
+    }
+  ]
+}

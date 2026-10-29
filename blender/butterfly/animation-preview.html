@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>YoSite — Butterfly animation inspection</title><link rel="icon" href="data:,">
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#000;color:#b5b5b5;font:12px/1.5 system-ui,sans-serif;overflow:hidden}
+    canvas{display:block;width:100vw;height:100vh}header{position:absolute;top:28px;left:32px;pointer-events:none}
+    h1{margin:0;color:#ddd;font-size:15px;letter-spacing:.08em;font-weight:500}p{margin:6px 0}
+    nav{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-wrap:wrap;justify-content:center;gap:7px;max-width:95vw;width:max-content}
+    button{padding:8px 12px;border:1px solid #7776;border-radius:4px;background:#181818dd;color:#ddd;cursor:pointer;font:inherit}
+    button:hover,button[aria-pressed=true]{background:#ddd;color:#111}button:focus-visible{outline:2px solid #aaa;outline-offset:3px}
+    #status{position:absolute;right:28px;top:28px;text-align:right;pointer-events:none}.light{color:#555}.light h1{color:#222}
+    .qa header,.qa nav,.qa #status{display:none}
+    #animation-controls{position:absolute;left:50%;transform:translateX(-50%);bottom:82px;display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:center;width:min(90vw,650px)}
+    #seek{accent-color:#888;width:160px}select{font:inherit;color:#ddd;background:#222;padding:8px;border:1px solid #7776;border-radius:4px}.qa #animation-controls{display:none}
+    @media(max-width:600px){header{left:18px;top:18px}#status{right:18px;top:72px}nav{bottom:16px}}
+  </style>
+  <script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+</head>
+<body>
+<header><h1>YO / BUTTERFLY</h1><p>Six-bone rig · in-place animation inspection</p><p>Drag to orbit · scroll to zoom</p></header>
+<div id="status">Loading GLB…</div>
+<div id="animation-controls" aria-label="Animation controls">
+<button data-clip="IDLE">IDLE</button><button data-clip="FLY">FLY</button><button data-clip="GLIDE">GLIDE</button>
+<button id="play" aria-pressed="true">Pause</button>
+<select id="speed" aria-label="Playback speed"><option value=".25">¼ speed</option><option value=".5">½ speed</option><option value="1" selected>Real time</option></select>
+<input id="seek" type="range" min="0" max="1" step=".0001" value="0" aria-label="Clip position">
+</div>
+<nav aria-label="Model inspection">
+  <button data-view="three-quarter">¾ view</button><button data-view="top">Top</button><button data-view="front">Front</button>
+  <button data-view="side">Side</button><button data-view="underside">Underneath</button>
+  <button id="background" aria-pressed="false">White background</button><button id="wire" aria-pressed="false">Topology</button>
+</nav>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+import {createAnimationQA} from './animation-qa.js';
+const scene=new THREE.Scene(); scene.background=new THREE.Color(0x000000);
+const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(innerWidth,innerHeight);
+renderer.toneMapping=THREE.AgXToneMapping; renderer.toneMappingExposure=1;
+document.body.prepend(renderer.domElement);
+const aspect=innerWidth/innerHeight;
+const camera=new THREE.OrthographicCamera(-.067*aspect,.067*aspect,.067,-.067,.001,2);
+const controls=new OrbitControls(camera,renderer.domElement); controls.enableDamping=false; controls.minZoom=.45; controls.maxZoom=5;
+const pmrem=new THREE.PMREMGenerator(renderer); const room=new RoomEnvironment();
+const env=pmrem.fromScene(room,.04); scene.environment=env.texture; scene.environmentIntensity=.6;
+room.dispose(); pmrem.dispose();
+const hemi=new THREE.HemisphereLight(0xffffff,0xffffff,.3); scene.add(hemi);
+for(const [position,intensity] of [[[-.08,.15,-.07],2.4],[[.08,.07,.03],.7],[[.02,.05,.10],1.1],[[0,-.12,0],.7]]){
+  const l=new THREE.DirectionalLight(0xffffff,intensity); l.position.set(...position); scene.add(l);
+}
+let model; const mats=new Set();
+const views={'three-quarter':[.035,.175,.10],top:[0,.2,0],front:[0,.022,-.19],side:[.2,.012,0],underside:[0,-.2,0]};
+function render(){renderer.render(scene,camera)}
+function setView(name){
+  camera.up.set(0,1,0); if(name==='top'||name==='underside')camera.up.set(0,0,-1);
+  camera.position.set(...views[name]); camera.zoom=1; camera.updateProjectionMatrix(); controls.target.set(0,0,0); camera.lookAt(0,0,0); controls.update();render();
+  document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===name)));
+}
+function background(light){scene.background.set(light?0xffffff:0);document.body.classList.toggle('light',light);document.querySelector('#background').setAttribute('aria-pressed',String(light));render()}
+controls.addEventListener('change',render);
+document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));
+document.querySelector('#background').onclick=()=>background(!document.body.classList.contains('light'));
+document.querySelector('#wire').onclick=e=>{const on=e.currentTarget.getAttribute('aria-pressed')!=='true';mats.forEach(m=>m.wireframe=on);e.currentTarget.setAttribute('aria-pressed',String(on));render()};
+addEventListener('resize',()=>{const a=innerWidth/innerHeight;camera.left=-.067*a;camera.right=.067*a;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);render()});
+try{
+  const gltf=await new GLTFLoader().loadAsync('/public/models/butterfly-animated.glb');model=gltf.scene;scene.add(model);
+  const meshes=[];
+  model.traverse(o=>{if(o.isMesh){meshes.push(o);mats.add(o.material);o.frustumCulled=false;for(const key of ['map','normalMap','roughnessMap','transmissionMap'])if(o.material[key])o.material[key].anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy())}});
+  setView('three-quarter');
+  const box=new THREE.Box3().setFromObject(model);const size=box.getSize(new THREE.Vector3());
+  const triangles=meshes.reduce((s,o)=>s+o.geometry.index.count/3,0);
+  const mixer=new THREE.AnimationMixer(model);const clips=new Map(gltf.animations.map(c=>[c.name,c]));
+  for(const [name,clip] of clips){const btn=document.querySelector(`[data-clip="${name}"]`);if(btn)btn.textContent=`${name} · ${clip.duration.toFixed(0)}s`}
+  let playing=false,current='IDLE',active,last=performance.now(),speed=1;
+  function choose(name,draw=true){mixer.stopAllAction();current=name;active=mixer.clipAction(clips.get(name));active.reset().setLoop(THREE.LoopRepeat,Infinity).play();mixer.update(0);scene.updateMatrixWorld(true);document.querySelectorAll('[data-clip]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.clip===name)));if(draw)render()}
+  function setPose(name,time,draw=true){playing=false;choose(name,false);active.setLoop(THREE.LoopOnce,1);active.clampWhenFinished=true;active.time=Math.max(0,Math.min(time,clips.get(name).duration));mixer.update(0);scene.updateMatrixWorld(true);for(const m of meshes)m.skeleton?.update();if(draw)render()}
+  document.querySelectorAll('[data-clip]').forEach(b=>b.onclick=()=>{choose(b.dataset.clip);playing=true;document.querySelector('#play').textContent='Pause'});
+  document.querySelector('#play').onclick=e=>{if(!playing){active.setLoop(THREE.LoopRepeat,Infinity);active.paused=false;active.play()}playing=!playing;e.currentTarget.textContent=playing?'Pause':'Play';e.currentTarget.setAttribute('aria-pressed',String(playing))};
+  document.querySelector('#speed').onchange=e=>speed=Number(e.target.value);
+  document.querySelector('#seek').oninput=e=>{setPose(current,Number(e.target.value)*clips.get(current).duration);document.querySelector('#play').textContent='Play'};
+  const qa=createAnimationQA({THREE,gltf,mixer,meshes,setPose:(n,t)=>setPose(n,t,false),scene});
+  window.animationQA={...qa,setPose,choose,background,setView,render,model,camera,renderer,clips:gltf.animations,mixer,pause:()=>playing=false};
+  choose('FLY');playing=!new URLSearchParams(location.search).has('qa');
+  renderer.setAnimationLoop(()=>{const now=performance.now();const dt=Math.min((now-last)/1000,.05);last=now;if(playing){mixer.update(dt*speed);document.querySelector('#seek').value=active.time/clips.get(current).duration;render()}});
+  document.querySelector('#status').innerHTML=`IDLE 4s · FLY 2s · GLIDE 3s<br>6 bones · ${triangles.toLocaleString()} triangles<br>Root fixed at origin`;
+  window.butterflyReady=true;
+}catch(error){document.querySelector('#status').textContent='GLB failed to load';console.error(error);window.butterflyError=String(error)}
+if(new URLSearchParams(location.search).has('qa'))document.body.classList.add('qa');
+</script>
+</body></html>

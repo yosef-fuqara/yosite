@@ -5,7 +5,7 @@ export default function BackgroundEffects() {
   return (
     <div
       className="fixed inset-0 w-full h-full pointer-events-none z-0"
-      style={{ background: "var(--site-background, #ffffff)" }}
+      style={{ background: "var(--site-background, #F7F7F7)" }}
       aria-hidden
     />
   );

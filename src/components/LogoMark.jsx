@@ -351,7 +351,7 @@ function createInteractions(els, travel, anim) {
         if (!isMenu) {
           await play(
             returnEl,
-            { color: "#ffffff" },
+            { color: "#000000" },
             { duration: 0.16, ease: EASE }
           );
         } else if (lines) {
@@ -384,7 +384,7 @@ function createInteractions(els, travel, anim) {
       if (!isMenu) {
         await play(
           returnEl,
-          { color: "rgba(255, 255, 255, 0.55)" },
+          { color: "rgba(0, 0, 0, 0.55)" },
           { duration: 0.2, ease: EASE }
         );
         returnEl.style.color = "";

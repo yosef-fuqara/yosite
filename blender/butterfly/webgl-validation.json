@@ -1,0 +1,193 @@
+{
+  "meshes": [
+    {
+      "name": "Antenna_L",
+      "triangles": 720,
+      "position": [
+        -0.0008500000112690032,
+        0.0008999999845400453,
+        -0.009800000116229057
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "name": "Antenna_R",
+      "triangles": 720,
+      "position": [
+        0.0008500000112690032,
+        0.0008999999845400453,
+        -0.009800000116229057
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "name": "Body",
+      "triangles": 5648,
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "name": "Head",
+      "triangles": 1216,
+      "position": [
+        0,
+        0.00019999999494757503,
+        -0.00860000029206276
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "name": "Left_Forewing",
+      "triangles": 4160,
+      "position": [
+        -0.0015999999595806003,
+        0.0010499999625608325,
+        -0.002400000113993883
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "name": "Left_Hindwing",
+      "triangles": 3420,
+      "position": [
+        -0.0015999999595806003,
+        -0.00009999999747378752,
+        0.00139999995008111
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "name": "Right_Forewing",
+      "triangles": 4160,
+      "position": [
+        0.0015999999595806003,
+        0.0010499999625608325,
+        -0.002400000113993883
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "name": "Right_Hindwing",
+      "triangles": 3420,
+      "position": [
+        0.0015999999595806003,
+        -0.00009999999747378752,
+        0.00139999995008111
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ]
+    }
+  ],
+  "triangles": 23464,
+  "materials": 2,
+  "animations": 0,
+  "sizeMeters": [
+    0.10659062652848661,
+    0.012071720673702657,
+    0.07774738501757383
+  ],
+  "renderCalls": 12,
+  "textures": 8,
+  "pivotChecks": [
+    {
+      "name": "Left_Forewing",
+      "pivotFixed": true
+    },
+    {
+      "name": "Left_Hindwing",
+      "pivotFixed": true
+    },
+    {
+      "name": "Right_Forewing",
+      "pivotFixed": true
+    },
+    {
+      "name": "Right_Hindwing",
+      "pivotFixed": true
+    }
+  ],
+  "errors": []
+}

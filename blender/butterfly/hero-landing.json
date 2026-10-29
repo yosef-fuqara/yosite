@@ -1,0 +1,15 @@
+{
+  "hero": "HERO_ENTRY_H_LAND",
+  "perch": "PERCHED_IDLE_H",
+  "heroSeconds": 8.7,
+  "perchSeconds": 5.0,
+  "fps": 120,
+  "footThree": {
+    "x": 1.6791799062332302e-09,
+    "y": -0.010641341097652912,
+    "z": -0.01689787022769451
+  },
+  "landing": "H",
+  "face": "toward viewer",
+  "wings": "raised"
+}

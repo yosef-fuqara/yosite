@@ -1,0 +1,19 @@
+{
+  "hero": "HERO_ENTRY_H_LAND",
+  "perch": "PERCHED_IDLE_H",
+  "heroSeconds": 9.0,
+  "perchSeconds": 6.0,
+  "fps": 60,
+  "footThree": {
+    "x": -0.050100281834602356,
+    "y": -0.06286533176898956,
+    "z": -0.046153102070093155
+  },
+  "silhouette": {
+    "width": 0.5899045169353485,
+    "height": 0.3496357649564743
+  },
+  "landing": "H",
+  "view": "front-right three-quarter",
+  "source": "butterfly.blend"
+}

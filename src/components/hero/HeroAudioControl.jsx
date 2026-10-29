@@ -58,7 +58,9 @@ const SETTLE_EASE = [0.22, 1, 0.36, 1];
 
 export default function HeroAudioControl({ visible = true }) {
   const reducedMotion = useReducedMotion();
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(
+    () => Boolean(heroAudioSingleton && !heroAudioSingleton.paused && !heroAudioSingleton.ended),
+  );
   const ownedRef = useRef(false);
   const playingRef = useRef(false);
 
@@ -88,10 +90,6 @@ export default function HeroAudioControl({ visible = true }) {
     audio.addEventListener("ended", onEnded);
     audio.addEventListener("pause", onPause);
     audio.addEventListener("play", onPlay);
-
-    if (!audio.paused && !audio.ended) {
-      setPlaying(true);
-    }
 
     return () => {
       audio.removeEventListener("ended", onEnded);
@@ -142,9 +140,9 @@ export default function HeroAudioControl({ visible = true }) {
 
   return (
     <div
-      className="yo-hero__audio"
+      className="yo-hero__audio yo-chrome-invert"
       data-hero-chrome="audio"
-      data-entrance={visible ? undefined : "pending"}
+      data-entrance={visible ? "done" : "pending"}
       style={{ pointerEvents: visible ? "auto" : "none" }}
       aria-hidden={!visible}
     >

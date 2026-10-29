@@ -1,34 +1,25 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { useReducedMotion } from "framer-motion";
+import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
-import HeroAudioControl from "./HeroAudioControl";
+import { useReducedMotion } from "framer-motion";
 import { useI18n } from "../../i18n/I18nContext";
-import { isHeroMarksReady, isPageIntroReady, onHeroMarksReady } from "../../utils/pageIntroGate";
+import { onPageIntroComplete } from "../../utils/pageIntroGate";
+import HeroLiquidHeadline from "./HeroLiquidHeadline";
+import HeroRotatingWord, { WORDS } from "./HeroRotatingWord";
 import "../../styles/hero.css";
 
-const CHROME_EASE = "power3.out";
-const CHROME_FROM_X = 96;
-const CHROME_DURATION = 0.55;
 
-/** Set when the chrome timeline starts — blocks Strict Mode / remount replays. */
-let chromeEntrancePlayed = false;
-
-function exitStyle(delay) {
-  return { "--hero-exit-delay": delay };
-}
-
-function splitLetters(word, kind, exitStart = 0) {
+function splitLetters(word, kind) {
   return word.split("").map((ch, i) => {
     const isSpace = ch === " ";
+    // The landing butterfly still measures the W through data-hero-char="line1".
+    const heroChar = !isSpace && ch.toUpperCase() === "W" ? "line1" : kind;
 
     return (
       <span
-        key={`${kind}-${exitStart}-${i}`}
+        key={`${kind}-${i}`}
         className={`yo-hero__char-clip${isSpace ? " is-space" : ""}`}
-        style={exitStyle((exitStart + i) * 0.022)}
       >
-        <span className="yo-hero__char" data-hero-char={kind} data-hero-exit="">
+        <span className="yo-hero__char" data-hero-char={heroChar}>
           {isSpace ? (
             "\u00A0"
           ) : (
@@ -44,118 +35,127 @@ function splitLetters(word, kind, exitStart = 0) {
 
 export default function HeroSection() {
   const { t, dir } = useI18n();
-  const reducedMotion = useReducedMotion();
   const rootRef = useRef(null);
+  const reducedMotion = useReducedMotion();
+  const entrancePlayed = useRef(false);
 
-  const line1 = t("hero.headlineLine1");
-  const line2 = t("hero.headlineLine2");
+  const lines = [1, 2, 3].flatMap((n) => {
+    const key = `hero.headlineLine${n}`;
+    const value = t(key);
+    return value && value !== key ? [value] : [];
+  });
+  const headlineKey = `${lines.join("|")}|${WORDS[0]}`;
   const aria = t("hero.headlineAria");
 
-  const [chromeVisible, setChromeVisible] = useState(
-    () => Boolean(reducedMotion) || isHeroMarksReady() || isPageIntroReady(),
-  );
-
-  useEffect(() => {
-    if (reducedMotion || isHeroMarksReady() || isPageIntroReady()) {
-      setChromeVisible(true);
-      return undefined;
-    }
-    return onHeroMarksReady(() => setChromeVisible(true));
-  }, [reducedMotion]);
-
   useLayoutEffect(() => {
-    const aside = document.querySelector(".yo-hero__aside");
-    const audio = document.querySelector(".yo-hero__audio");
-    const chrome = [aside, audio].filter(Boolean);
-    if (!chrome.length) return undefined;
+    const root = rootRef.current;
+    if (!root) return undefined;
 
-    const applyDone = () => {
-      chrome.forEach((el) => {
-        gsap.set(el, {
-          clearProps: "transform,opacity,x,autoAlpha",
-        });
-        el.dataset.entrance = "done";
-      });
+    const lines = root.querySelectorAll(".yo-hero__line-reveal");
+    if (!lines.length) return undefined;
+
+    let anim;
+    let sideAnim;
+    let sideMarks = [];
+    const finish = () => {
+      entrancePlayed.current = true;
+      root.dataset.entrance = "done";
+      gsap.set(lines, { clearProps: "transform,visibility" });
     };
-
-    if (reducedMotion || chromeEntrancePlayed) {
-      applyDone();
-      return undefined;
-    }
-
-    if (!chromeVisible) {
-      chrome.forEach((el) => {
-        el.dataset.entrance = "pending";
+    root.dataset.entrance = "pending";
+    gsap.set(lines, { yPercent: 120, visibility: "hidden" });
+    const unsubscribe = onPageIntroComplete(() => {
+      if (reducedMotion || entrancePlayed.current) {
+        finish();
+        return;
+      }
+      root.dataset.entrance = "playing";
+      gsap.set(lines, { visibility: "visible" });
+      const year = root.querySelector(".yo-hero__year-mark");
+      const scrollCue = root.querySelector(".yo-hero__scroll-cue");
+      const audio = document.querySelector(".yo-hero__audio");
+      const aside = document.querySelector(".yo-hero__aside-body");
+      sideMarks = [year, scrollCue, audio, aside].filter(Boolean);
+      if (sideMarks.length) {
+        sideAnim = gsap.fromTo(
+          sideMarks,
+          {
+            x: (index, el) => (el === aside ? 34 : -34),
+            opacity: 0,
+          },
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.78,
+            stagger: 0.08,
+            ease: "power3.out",
+            clearProps: "transform,opacity",
+            overwrite: true,
+          },
+        );
+      }
+      anim = gsap.to(lines, {
+        yPercent: 0,
+        duration: 1.1,
+        stagger: 0.16,
+        ease: "power4.out",
+        onComplete: finish,
       });
-      return undefined;
-    }
-
-    const leftChrome = [audio].filter(Boolean);
-    const rightChrome = [aside].filter(Boolean);
-
-    chromeEntrancePlayed = true;
-    chrome.forEach((el) => {
-      el.dataset.entrance = "playing";
     });
 
-    if (leftChrome.length) {
-      gsap.set(leftChrome, {
-        x: -CHROME_FROM_X,
-        autoAlpha: 0,
-        force3D: true,
-      });
-    }
-    if (rightChrome.length) {
-      gsap.set(rightChrome, {
-        x: CHROME_FROM_X,
-        autoAlpha: 0,
-        force3D: true,
-      });
-    }
-
-    const tl = gsap.timeline({ onComplete: applyDone });
-
-    if (leftChrome.length) {
-      tl.to(
-        leftChrome,
-        {
-          x: 0,
-          autoAlpha: 1,
-          duration: CHROME_DURATION,
-          ease: CHROME_EASE,
-        },
-        0,
-      );
-    }
-    if (rightChrome.length) {
-      tl.to(
-        rightChrome,
-        {
-          x: 0,
-          autoAlpha: 1,
-          duration: CHROME_DURATION,
-          ease: CHROME_EASE,
-        },
-        0,
-      );
-    }
-
     return () => {
-      tl.kill();
+      unsubscribe();
+      anim?.kill();
+      sideAnim?.kill();
+      gsap.set(lines, { clearProps: "transform,visibility" });
+      if (sideMarks.length) gsap.set(sideMarks, { clearProps: "transform,opacity" });
     };
-  }, [chromeVisible, reducedMotion]);
+  }, [reducedMotion]);
 
   return (
     <section ref={rootRef} id="hero" className="yo-hero" aria-label="Hero">
+      <div className="yo-hero__field" aria-hidden="true">
+        <div className="yo-hero__field-grid" />
+        <div className="yo-hero__field-ring" />
+      </div>
+
       <div className="yo-hero__content">
-        <h1 className="yo-hero__title" aria-label={aria} dir={dir}>
-          <span className="yo-hero__line" aria-hidden="true">
-            {splitLetters(line1, "line1")}
+        <HeroLiquidHeadline
+          heroRef={rootRef}
+          contentKey={headlineKey}
+          className="yo-hero__title"
+          aria-label={aria}
+          dir={dir}
+        >
+          {lines.map((line, index) => {
+            const exitDelay = (index / 3 * 0.14).toFixed(2);
+
+            return (
+              <span className="yo-hero__line" aria-hidden="true" key={`${index}-${line}`}>
+                <span
+                  className="yo-hero__line-exit"
+                  style={index > 0 ? { "--hero-line-exit-delay": exitDelay } : undefined}
+                >
+                  <span className="yo-hero__line-reveal">
+                    {splitLetters(line, `line${index + 1}`)}
+                  </span>
+                </span>
+              </span>
+            );
+          })}
+          <span className="yo-hero__line yo-hero__line--rotate" aria-hidden="true">
+            <span className="yo-hero__line-exit" style={{ "--hero-line-exit-delay": "0.14" }}>
+              <span className="yo-hero__line-reveal">
+                <HeroRotatingWord heroRef={rootRef} reducedMotion={reducedMotion} />
+              </span>
+            </span>
           </span>
-          <span className="yo-hero__line yo-hero__line--soul" aria-hidden="true">
-            {splitLetters(line2, "line2", line1.length)}
-          </span>
-        </h1>
+        </HeroLiquidHeadline>
+
+        <div className="yo-hero__scroll-cue" aria-hidden="true">
+          <span className="yo-hero__scroll-line" />
+          <span className="yo-hero__scroll-dot" />
+        </div>
       </div>
 
       <aside className="yo-hero__year" aria-label="Established 2026">
@@ -168,29 +168,6 @@ export default function HeroSection() {
           </span>
         </div>
       </aside>
-
-      {typeof document !== "undefined" &&
-        createPortal(
-          <>
-            <aside className="yo-hero__aside" aria-label="Web experiences">
-              <div className="yo-hero__aside-body">
-                <span className="yo-hero__aside-track" aria-hidden="true">
-                  <span className="yo-hero__aside-rule" />
-                  <span className="yo-hero__aside-dot" />
-                </span>
-
-                <div className="yo-hero__aside-label-clip">
-                  <span className="yo-hero__aside-label-motion">
-                    <span className="yo-hero__aside-label">Web experiences</span>
-                  </span>
-                </div>
-              </div>
-            </aside>
-
-            <HeroAudioControl visible={chromeVisible} />
-          </>,
-          document.body,
-        )}
     </section>
   );
 }

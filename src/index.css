@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --site-background: #ffffff;
-  --services-sheet: #ffffff;
-  --services-ink: #111111;
+  --site-background: #F7F7F7;
+  --services-sheet: #000000;
+  --services-ink: #ffffff;
+  --services-spill-ink: #000000;
   --services-sans: "Familjen Grotesk Variable", Inter, system-ui, sans-serif;
 }
 
@@ -28,7 +29,7 @@
   --color-accent-cyan: #d4d4d4;
   --color-accent-cyan-glow: rgba(255, 255, 255, 0.1);
   --color-accent-pink: #a3a3a3;
-  --color-site-background: #ffffff;
+  --color-site-background: #F7F7F7;
 }
 
 /* Custom global styles & utility classes */
@@ -43,6 +44,8 @@ html {
   scroll-behavior: auto;
   /* Reserve the scrollbar track so locking scroll never shifts the layout. */
   scrollbar-gutter: stable;
+  /* Phone chrome resizes dvh/vh sections. Anchoring then yanks scroll position. */
+  overflow-anchor: none;
 }
 
 /* Overlay is viewport-fixed at width:100%. A stable gutter shrinks that
@@ -69,7 +72,8 @@ html.yo-intro-locked body {
 
 #about,
 #selected-work,
-#services {
+#services,
+#services-heading {
   scroll-margin-top: 5.5rem;
 }
 
@@ -138,7 +142,7 @@ h1, h2, h3, h4, h5, h6 {
 .grid-overlay::after,
 .galaxy-nebula-base,
 .galaxy-vignette {
-  background: var(--site-background, #ffffff);
+  background: var(--site-background, #F7F7F7);
   background-image: none;
 }
 
@@ -162,14 +166,14 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Glassmorphism base rules */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(247, 247, 247, 0.72);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .glass-panel-hover:hover {
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(247, 247, 247, 0.92);
   border-color: rgba(0, 0, 0, 0.14);
   box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.12), 0 0 50px -10px rgba(0, 0, 0, 0.06);
 }
@@ -289,22 +293,3 @@ h1, h2, h3, h4, h5, h6 {
   animation: twinkle 4s ease-in-out infinite;
 }
 
-/* Site-wide ink cursor trail. White pixels + difference = black on light, white on dark. */
-.yo-ink-trail {
-  position: fixed;
-  inset: 0;
-  z-index: 10040;
-  display: block;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  user-select: none;
-  background: transparent;
-  mix-blend-mode: difference;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .yo-ink-trail {
-    display: none !important;
-  }
-}

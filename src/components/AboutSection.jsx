@@ -163,8 +163,8 @@ function buildScrollTimeline(root, viewport, mode) {
     onUpdate: punch,
     scrollTrigger: {
       trigger: root,
-      start: "top 42%",
-      end: "bottom bottom",
+      start: compact ? "top bottom" : "top 95%",
+      end: compact ? "top 14%" : "top 8%",
       scrub: compact ? 0.35 : true,
       invalidateOnRefresh: true,
       fastScrollEnd: false,
@@ -283,7 +283,9 @@ export default function AboutSection({ sectionRef: sectionRefProp }) {
     }, root);
 
     const refresh = () => ScrollTrigger.refresh();
-    const onScroll = () => ScrollTrigger.update();
+    const onScroll = () => {
+      if (window.innerWidth > 767) ScrollTrigger.update();
+    };
     let lastWidth = window.innerWidth;
     const onResize = () => {
       const width = window.innerWidth;

@@ -1,0 +1,90 @@
+{
+  "Antenna_L": {
+    "duplicate_faces": 0,
+    "loose_vertices": 0,
+    "non_manifold_edges": 0,
+    "zero_area_uv_faces": 0,
+    "source_quads": 352,
+    "source_triangles": 16,
+    "ngons": 0,
+    "connected_shells": 1
+  },
+  "Antenna_R": {
+    "duplicate_faces": 0,
+    "loose_vertices": 0,
+    "non_manifold_edges": 0,
+    "zero_area_uv_faces": 0,
+    "source_quads": 352,
+    "source_triangles": 16,
+    "ngons": 0,
+    "connected_shells": 1
+  },
+  "Body": {
+    "duplicate_faces": 0,
+    "loose_vertices": 0,
+    "non_manifold_edges": 0,
+    "zero_area_uv_faces": 0,
+    "source_quads": 2683,
+    "source_triangles": 282,
+    "ngons": 0,
+    "connected_shells": 1
+  },
+  "Head": {
+    "duplicate_faces": 0,
+    "loose_vertices": 0,
+    "non_manifold_edges": 0,
+    "zero_area_uv_faces": 0,
+    "source_quads": 576,
+    "source_triangles": 64,
+    "ngons": 0,
+    "connected_shells": 1
+  },
+  "Left_Forewing": {
+    "duplicate_faces": 0,
+    "loose_vertices": 0,
+    "non_manifold_edges": 0,
+    "zero_area_uv_faces": 0,
+    "source_quads": 2016,
+    "source_triangles": 128,
+    "ngons": 0,
+    "connected_shells": 1,
+    "dorsal_inverted_faces": 0,
+    "ventral_inverted_faces": 0
+  },
+  "Left_Hindwing": {
+    "duplicate_faces": 0,
+    "loose_vertices": 0,
+    "non_manifold_edges": 0,
+    "zero_area_uv_faces": 0,
+    "source_quads": 1654,
+    "source_triangles": 112,
+    "ngons": 0,
+    "connected_shells": 1,
+    "dorsal_inverted_faces": 0,
+    "ventral_inverted_faces": 0
+  },
+  "Right_Forewing": {
+    "duplicate_faces": 0,
+    "loose_vertices": 0,
+    "non_manifold_edges": 0,
+    "zero_area_uv_faces": 0,
+    "source_quads": 2016,
+    "source_triangles": 128,
+    "ngons": 0,
+    "connected_shells": 1,
+    "dorsal_inverted_faces": 0,
+    "ventral_inverted_faces": 0
+  },
+  "Right_Hindwing": {
+    "duplicate_faces": 0,
+    "loose_vertices": 0,
+    "non_manifold_edges": 0,
+    "zero_area_uv_faces": 0,
+    "source_quads": 1654,
+    "source_triangles": 112,
+    "ngons": 0,
+    "connected_shells": 1,
+    "dorsal_inverted_faces": 0,
+    "ventral_inverted_faces": 0
+  }
+}

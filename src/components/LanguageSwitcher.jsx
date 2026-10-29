@@ -55,7 +55,7 @@ export default function LanguageSwitcher({
       <ul
         ref={menuRef}
         id={menuId}
-        className="yo-lang__menu"
+        className="yo-lang__menu yo-chrome-invert"
         role="listbox"
         aria-label={t("nav.languagesAria")}
         style={{ top: menuPos.top, left: menuPos.left }}
@@ -134,7 +134,7 @@ export default function LanguageSwitcher({
         const active = lang === code;
         const activeClass = light
           ? "bg-black text-white"
-          : "bg-white/90 text-black shadow-[0_0_12px_rgba(255,255,255,0.35)]";
+          : "bg-[#F7F7F7]/90 text-black shadow-[0_0_12px_rgba(255,255,255,0.35)]";
         const idleClass = light
           ? "text-neutral-400 hover:text-black hover:bg-black/[0.05]"
           : "text-gray-500 hover:text-gray-200 hover:bg-white/[0.06]";

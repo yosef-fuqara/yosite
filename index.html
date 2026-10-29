@@ -13,6 +13,39 @@
           history.replaceState(null, "", location.pathname + location.search);
         }
         window.scrollTo(0, 0);
+
+        /* Phone browser chrome changes innerHeight while scrolling. Freeze the
+           viewport unit so pinned sections don't reflow and shake. */
+        var yoWidth = window.innerWidth;
+        /* Pinned stages must cover the screen with the toolbar collapsed too,
+           or the section underneath shows through a strip at the bottom. */
+        var largeViewportHeight = function () {
+          var root = document.documentElement;
+          var probe = document.createElement("div");
+          probe.style.cssText =
+            "position:fixed;top:0;left:0;width:0;height:100vh;height:100lvh;visibility:hidden;pointer-events:none";
+          root.appendChild(probe);
+          var height = probe.offsetHeight;
+          root.removeChild(probe);
+          return Math.max(height || 0, window.innerHeight);
+        };
+        var syncYoViewport = function () {
+          var root = document.documentElement;
+          if (window.innerWidth > 767) {
+            root.style.removeProperty("--yo-vv");
+            root.style.removeProperty("--yo-lvh");
+            return;
+          }
+          root.style.setProperty("--yo-vv", Math.round(window.innerHeight) + "px");
+          root.style.setProperty("--yo-lvh", Math.round(largeViewportHeight()) + "px");
+        };
+        syncYoViewport();
+        window.addEventListener("resize", function () {
+          var next = window.innerWidth;
+          if (next <= 767 && Math.abs(next - yoWidth) <= 1) return;
+          yoWidth = next;
+          syncYoViewport();
+        });
       })();
     </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -74,9 +107,9 @@
       }
     </style>
   </head>
-  <body class="bg-white text-black antialiased overflow-x-clip selection:bg-black/15 selection:text-black">
+    <body class="bg-[#F7F7F7] text-black antialiased selection:bg-black/15 selection:text-black">
     <div id="yo-intro-boot" aria-hidden="true"></div>
-    <div id="root"></div>
+    <div id="root" class="overflow-x-clip"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

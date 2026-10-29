@@ -1,0 +1,151 @@
+.cta-contact {
+  position: relative;
+  z-index: 21;
+  background: #000000;
+  color: #F7F7F7;
+  font-family: var(--font-sans);
+}
+
+.cta-contact__intro { min-height: 100svh; }
+.cta-contact__intro-stage {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  text-align: center;
+  overflow: hidden;
+}
+.cta-contact__eyebrow {
+  margin: 0;
+  font-size: clamp(.65rem, 1.15vw, 1.2rem);
+  font-weight: 400;
+  line-height: 1.9;
+  letter-spacing: calc(var(--intro-tracking, .34) * 1em);
+}
+.cta-contact__main {
+  min-height: 100svh;
+  padding: clamp(5rem, 12svh, 9rem) clamp(1.25rem, 4vw, 5rem) 5rem;
+}
+.cta-contact__content { max-width: 1600px; margin-inline: auto; }
+.cta-contact__headline {
+  position: relative;
+  height: clamp(11rem, 19vw, 20rem);
+  margin: 0 0 clamp(2rem, 5svh, 4rem);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -.065em;
+  text-align: center;
+  isolation: isolate;
+}
+.cta-contact__phrase {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  font-size: clamp(2.5rem, var(--phrase-size), 12rem);
+  pointer-events: none;
+}
+.cta-contact__word { display: inline-block; white-space: nowrap; }
+.cta-contact__letter { display: inline-block; }
+.cta-contact__space { white-space: pre; }
+.cta-contact__form {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 32rem);
+  margin-inline: auto;
+  gap: 2.5rem;
+  scroll-margin-top: 5.5rem;
+}
+.cta-contact__field { display: block; }
+.cta-contact__field > span {
+  display: block;
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .25em;
+  text-align: center;
+  color: rgba(247,247,247,.7);
+  transition: color .3s;
+}
+.cta-contact__field:focus-within > span { color: #F7F7F7; }
+.cta-contact__field input,
+.cta-contact__field textarea {
+  display: block;
+  width: 100%;
+  padding: .65rem 0;
+  border: 0;
+  border-bottom: 1px solid rgba(247,247,247,.25);
+  border-radius: 0;
+  background: transparent;
+  color: #F7F7F7;
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  outline: none;
+  transition: border-color .35s;
+}
+.cta-contact__field input::placeholder {
+  color: rgba(247,247,247,.34);
+  opacity: 1;
+}
+.cta-contact__field textarea { resize: vertical; min-height: 4rem; }
+.cta-contact__field input:focus,
+.cta-contact__field textarea:focus { border-color: #F7F7F7; }
+.cta-contact__field--error input { border-color: rgba(247,247,247,.62); }
+.cta-contact__field-error {
+  display: block;
+  margin-top: .55rem;
+  color: rgba(247,247,247,.62);
+  font-size: .68rem;
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: .035em;
+  text-align: center;
+}
+.cta-contact__field input:autofill {
+  -webkit-text-fill-color: #F7F7F7;
+  box-shadow: 0 0 0 1000px #000 inset;
+  caret-color: #F7F7F7;
+}
+.cta-contact__send {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 1.1rem;
+  padding: .8rem 0;
+  margin-top: .4rem;
+  border: 0;
+  border-bottom: 1px solid rgba(247,247,247,.65);
+  border-radius: 0;
+  background: transparent;
+  color: #F7F7F7;
+  font: inherit;
+  font-size: .8rem;
+  font-weight: 600;
+  letter-spacing: .28em;
+  cursor: pointer;
+}
+.cta-contact__send > span { font-size: 1.15rem; transition: transform .3s; }
+.cta-contact__send:hover > span { transform: translate(3px, -3px); }
+.cta-contact__send:focus-visible { outline: 1px solid #F7F7F7; outline-offset: 8px; }
+.cta-contact__delivery,
+.cta-contact__notice {
+  margin: -1rem 0 0;
+  color: rgba(247,247,247,.55);
+  font-size: .7rem;
+  line-height: 1.7;
+  text-align: center;
+}
+.cta-contact__notice { min-height: 2.4em; }
+@media (max-width: 640px) {
+  .cta-contact__headline { height: 15rem; margin-bottom: 2rem; }
+  .cta-contact__phrase { font-size: clamp(2.25rem, 11.5vw, 4.5rem); line-height: 1.12; }
+  .cta-contact__main { padding-top: 4rem; padding-bottom: 3rem; }
+  .cta-contact__form { gap: 2rem; }
+  .cta-contact__eyebrow { max-width: 29em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cta-contact__send > span { transition: none; }
+}

@@ -1,9 +1,9 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import gsap from "gsap";
 import IntroModel from "./IntroModel";
 import {
   markHeroMarksReady,
+  markPageIntroComplete,
   markPageIntroReady,
   markStickyChromeReady,
 } from "../utils/pageIntroGate";
@@ -27,8 +27,7 @@ const LOGO_LIVE_CLASS = "yo-intro-logo-live";
 const STICKY_LIVE_CLASS = "yo-intro-sticky-live";
 const NAV_LIVE_CLASS = "yo-intro-nav-live";
 const HANDOFF_CLASS = "yo-intro-handoff";
-const NAV_CHROME_Y = -80;
-const NAV_CHROME_DUR = 0.8;
+const NAV_CHROME_DUR = 0.82;
 
 const TIMING = {
   PULSE: INTRO_PULSE,
@@ -90,21 +89,31 @@ function logoTarget() {
 }
 
 function navChrome() {
-  return [".yo-menu-trigger", ".yo-lang"]
+  return [".yo-menu-trigger", ".yo-lang", ".yo-nav__contact-link"]
     .map((selector) => document.querySelector(selector))
     .filter(Boolean);
 }
 
+function resetNavChrome() {
+  const items = navChrome();
+  if (!items.length) return;
+  gsap.killTweensOf(items);
+  gsap.set(items, {
+    clearProps: "transform,opacity,visibility,y,x,yPercent,pointerEvents",
+  });
+}
+
 function parkNavChrome() {
   const items = navChrome();
-  if (!items.length || navChromeParked) return items;
-  navChromeParked = true;
+  if (!items.length) return;
+  gsap.killTweensOf(items);
   gsap.set(items, {
-    y: NAV_CHROME_Y,
+    yPercent: -140,
+    y: 0,
     opacity: 0,
+    pointerEvents: "none",
     force3D: true,
   });
-  return items;
 }
 
 export default function PageIntro() {
@@ -134,10 +143,10 @@ export default function PageIntro() {
     let handoffLive = false;
 
     const parkLogo = () => {
-      setInvertIntroMaterials(true);
+      setInvertIntroMaterials(false);
       if (stage) {
         gsap.set(stage, {
-          filter: "none",
+          filter: "brightness(0)",
           mixBlendMode: "normal",
           lazy: false,
         });
@@ -179,12 +188,10 @@ export default function PageIntro() {
       removeBoot();
       markStickyChromeReady();
       markPageIntroReady();
+      if (!keepLogo || handoffLive) markPageIntroComplete();
       if (!navChromePlayed) {
         navChromePlayed = true;
-        const items = navChrome();
-        if (items.length) {
-          gsap.set(items, { clearProps: "transform,opacity,visibility,y" });
-        }
+        resetNavChrome();
       }
     };
 
@@ -242,36 +249,35 @@ export default function PageIntro() {
       if (navChromePlayed) return;
       navChromePlayed = true;
       const items = navChrome();
-      const menu = items.find((el) => el.classList.contains("yo-menu-trigger"));
-      const menuTransition = menu?.style.transition ?? "";
-
-      if (items.length) {
-        gsap.set(items, {
-          y: NAV_CHROME_Y,
-          opacity: 0,
-          force3D: true,
-        });
-      }
-
       html.classList.add(STICKY_LIVE_CLASS, NAV_LIVE_CLASS);
-
-      if (menu) {
-        menu.style.transition =
-          "background-color 280ms var(--yo-menu-ease), color 280ms var(--yo-menu-ease)";
-      }
 
       if (!items.length) return;
 
-      gsap.to(items, {
+      if (reduced) {
+        gsap.set(items, {
+          clearProps: "transform,opacity,visibility,y,x,yPercent,pointerEvents",
+        });
+        return;
+      }
+
+      gsap.killTweensOf(items);
+      gsap.set(items, {
+        yPercent: -140,
         y: 0,
+        opacity: 0,
+        pointerEvents: "none",
+        force3D: true,
+      });
+      gsap.to(items, {
+        yPercent: 0,
         opacity: 1,
         duration: NAV_CHROME_DUR,
         ease: "power3.out",
         overwrite: true,
         onComplete: () => {
-          if (menu) menu.style.transition = menuTransition;
           gsap.set(items, {
-            clearProps: "transform,opacity,y",
+            pointerEvents: "auto",
+            clearProps: "transform,opacity,y,yPercent",
           });
         },
       });
@@ -411,8 +417,8 @@ export default function PageIntro() {
             lazy: false,
             onUpdate: inkLogoWhenWhiteMeets,
             onComplete: () => {
-              setInvertIntroMaterials(true);
               handoffLive = true;
+              if (completed) markPageIntroComplete();
             },
           },
         );
@@ -475,8 +481,12 @@ export default function PageIntro() {
       if (!cancelled) playReducedExit();
     });
 
+    let lastViewportWidth = window.visualViewport?.width ?? window.innerWidth;
     const onViewportChange = () => {
       if (cancelled || !handoffLive) return;
+      const nextWidth = window.visualViewport?.width ?? window.innerWidth;
+      if (Math.abs(nextWidth - lastViewportWidth) <= 1) return;
+      lastViewportWidth = nextWidth;
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           if (cancelled || !handoffLive) return;
@@ -486,7 +496,6 @@ export default function PageIntro() {
     };
     window.addEventListener("resize", onViewportChange);
     window.addEventListener("orientationchange", onViewportChange);
-    window.visualViewport?.addEventListener("resize", onViewportChange);
 
     return () => {
       cancelled = true;
@@ -494,7 +503,6 @@ export default function PageIntro() {
       window.clearTimeout(loadTimer);
       window.removeEventListener("resize", onViewportChange);
       window.removeEventListener("orientationchange", onViewportChange);
-      window.visualViewport?.removeEventListener("resize", onViewportChange);
       tl?.kill();
       startPlaybackRef.current = null;
       failPlaybackRef.current = null;
@@ -505,6 +513,7 @@ export default function PageIntro() {
         gsap.killTweensOf(
           [curtain, stage, root, ...navChrome()].filter(Boolean),
         );
+        resetNavChrome();
         setPlaying(false);
         setUseModel(false);
         html.classList.remove(
@@ -523,7 +532,7 @@ export default function PageIntro() {
 
   if (!mounted) return null;
 
-  return createPortal(
+  return (
     <div
       ref={rootRef}
       className="yo-intro"
@@ -549,7 +558,6 @@ export default function PageIntro() {
         </div>
       </div>
       <div className="yo-intro__curtain" data-intro-curtain="" />
-    </div>,
-    document.body,
+    </div>
   );
 }

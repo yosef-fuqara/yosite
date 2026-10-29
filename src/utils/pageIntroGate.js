@@ -5,6 +5,26 @@ export const HERO_MARKS_START_MS = 0;
 let ready = false;
 const listeners = new Set();
 
+// Unlike `ready`, this fires only after the logo handoff has finished.
+let complete = false;
+const completeListeners = new Set();
+
+export function markPageIntroComplete() {
+  if (complete) return;
+  complete = true;
+  completeListeners.forEach((fn) => fn());
+  completeListeners.clear();
+}
+
+export function onPageIntroComplete(fn) {
+  if (complete) {
+    fn();
+    return () => {};
+  }
+  completeListeners.add(fn);
+  return () => completeListeners.delete(fn);
+}
+
 let marksReady = false;
 const marksListeners = new Set();
 let marksTimer = 0;

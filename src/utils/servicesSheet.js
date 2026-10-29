@@ -2,7 +2,7 @@ function clamp01(value) {
   return value < 0 ? 0 : value > 1 ? 1 : value;
 }
 
-/** Card sequence occupies this portion of the pin; the lead-word swap starts after. */
+/** Card sequence occupies this portion of the services scroll timeline; remainder is hold on final frame. */
 export const SHEET_START = 0.58;
 
 export function sheetLift(progress) {

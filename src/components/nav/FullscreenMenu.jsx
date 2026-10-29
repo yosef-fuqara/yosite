@@ -7,8 +7,10 @@ import { INERTIAL_SCROLL_TO } from "../../utils/inertialScroll";
 import { playMenuSound } from "../../utils/menuSound";
 import "../../styles/fullscreen-menu.css";
 
-const ICON_DUR = 0.4;
-const ICON_Y = 4;
+const STEM_LEN = 22;
+const DOT_CLOSED_X = 11.5;
+const DOT_CLOSED_Y = 9;
+const LINE_DUR = 0.54;
 const LINK_DUR = 0.26;
 const LINK_STAGGER = 0.05;
 const LINK_AT = 0.44;
@@ -22,14 +24,17 @@ function navItems(t) {
   return [
     { id: "home", label: t("nav.home"), href: "#" },
     { id: "work", label: t("nav.workShort"), href: "#selected-work" },
-    { id: "process", label: t("nav.process"), href: "#services" },
-    { id: "contact", label: t("nav.contact"), href: "#cta" },
+    { id: "about", label: t("nav.about"), href: "#about" },
+    { id: "services", label: t("nav.services"), href: "#services-heading" },
+    { id: "contact", label: t("nav.contact"), href: "#contact-form" },
   ];
 }
 
 function lineOriginLeft(slot) {
+  const stem = slot?.querySelector(".yo-menu-trigger__stem");
+  if (stem) return stem.getBoundingClientRect().left;
   const icon = slot?.querySelector(".yo-menu-trigger__icon");
-  if (icon) return icon.getBoundingClientRect().left + 3;
+  if (icon) return icon.getBoundingClientRect().left + 6.5;
   return (slot?.getBoundingClientRect().left ?? 24) + 13;
 }
 
@@ -83,8 +88,9 @@ export default function FullscreenMenu() {
 
   const slotRef = useRef(null);
   const triggerRef = useRef(null);
-  const topBarRef = useRef(null);
-  const bottomBarRef = useRef(null);
+  const originRef = useRef(null);
+  const stemRef = useRef(null);
+  const dotRef = useRef(null);
   const listRef = useRef(null);
   const itemsRef = useRef([]);
   const tlRef = useRef(null);
@@ -114,35 +120,34 @@ export default function FullscreenMenu() {
   }, []);
 
   const setClosedVisual = useCallback(() => {
-    const top = topBarRef.current;
-    const bottom = bottomBarRef.current;
+    const origin = originRef.current;
+    const stem = stemRef.current;
+    const dot = dotRef.current;
     const links = itemsRef.current.filter(Boolean);
-    if (!top || !bottom) return;
+    if (!origin || !stem || !dot) return;
 
-    gsap.set(top, {
-      y: -ICON_Y,
-      rotation: 0,
-      transformOrigin: "50% 50%",
+    gsap.set(origin, { rotation: 0, transformOrigin: "0px 0px" });
+    gsap.set(stem, {
+      scaleY: 1,
+      transformOrigin: "50% 100%",
       force3D: false,
     });
-    gsap.set(bottom, {
-      y: ICON_Y,
-      rotation: 0,
-      transformOrigin: "50% 50%",
-      force3D: false,
-    });
+    gsap.set(dot, { x: DOT_CLOSED_X, y: DOT_CLOSED_Y, force3D: false });
     if (links.length) gsap.set(links, { opacity: 0, y: 8, force3D: false });
   }, []);
 
   const buildTimeline = useCallback(
     ({ restore } = {}) => {
       tlRef.current?.kill();
-      const top = topBarRef.current;
-      const bottom = bottomBarRef.current;
+      const origin = originRef.current;
+      const stem = stemRef.current;
+      const dot = dotRef.current;
       const links = itemsRef.current.filter(Boolean);
-      if (!top || !bottom) return;
+      if (!origin || !stem || !dot) return;
 
-      applyExtent();
+      const extent = applyExtent();
+      const scale = extent / STEM_LEN;
+      const dotOpenX = extent - 1.5;
       const instant = Boolean(reducedMotion);
 
       setClosedVisual();
@@ -161,14 +166,38 @@ export default function FullscreenMenu() {
         },
       });
 
-      const iconTween = {
-        duration: instant ? 0 : ICON_DUR,
-        ease: "power3.inOut",
-        transformOrigin: "50% 50%",
-        force3D: false,
-      };
-      tl.to(top, { y: 0, rotation: 45, ...iconTween }, 0);
-      tl.to(bottom, { y: 0, rotation: -45, ...iconTween }, 0);
+      tl.to(
+        origin,
+        {
+          rotation: 90,
+          duration: instant ? 0 : LINE_DUR,
+          ease: "power3.inOut",
+          transformOrigin: "0px 0px",
+        },
+        0,
+      );
+      tl.to(
+        stem,
+        {
+          scaleY: scale,
+          duration: instant ? 0 : LINE_DUR,
+          ease: "power3.inOut",
+          transformOrigin: "50% 100%",
+          force3D: false,
+        },
+        0,
+      );
+      tl.to(
+        dot,
+        {
+          x: dotOpenX,
+          y: DOT_CLOSED_Y,
+          duration: instant ? 0 : LINE_DUR,
+          ease: "power3.inOut",
+          force3D: false,
+        },
+        0,
+      );
 
       if (links.length) {
         tl.set(listRef.current, { pointerEvents: "none" }, 0);
@@ -195,7 +224,8 @@ export default function FullscreenMenu() {
 
   const closeMenu = useCallback(({ restoreFocus = true } = {}) => {
     const tl = tlRef.current;
-    if (!tl || tl.progress() === 0) return;
+    if (!tl || (tl.progress() === 0 && !tl.isActive() && !openRef.current)) return;
+    if (tl.reversed() && tl.isActive()) return;
     openRef.current = false;
     setOpen(false);
     tl.reverse();
@@ -320,6 +350,21 @@ export default function FullscreenMenu() {
     };
   }, [closeMenu, open]);
 
+  useEffect(() => {
+    const onHeaderScrollDown = () => {
+      const tl = tlRef.current;
+      const transitioningOpen = tl?.isActive() && !tl.reversed();
+      if (!openRef.current && !transitioningOpen && !(tl && tl.progress() > 0)) return;
+
+      const active = document.activeElement;
+      if (active && slotRef.current?.contains(active)) active.blur();
+      closeMenu({ restoreFocus: false });
+    };
+
+    window.addEventListener("yo:header-scroll-down", onHeaderScrollDown);
+    return () => window.removeEventListener("yo:header-scroll-down", onHeaderScrollDown);
+  }, [closeMenu]);
+
   const onNavigate = (event, href) => {
     event.preventDefault();
     playMenuSound("close");
@@ -327,11 +372,15 @@ export default function FullscreenMenu() {
     const delay = reducedMotion ? 0 : 420;
     window.setTimeout(() => {
       if (!href || href === "#" || href === "#hero" || href === "#top") {
-        lenis?.scrollTo(0, INERTIAL_SCROLL_TO);
+        if (lenis) lenis.scrollTo(0, INERTIAL_SCROLL_TO);
+        else window.scrollTo({ top: 0, behavior: "smooth" });
         return;
       }
       const target = document.getElementById(href.slice(1));
-      if (target) lenis?.scrollTo(target, INERTIAL_SCROLL_TO);
+      if (target) {
+        if (lenis) lenis.scrollTo(target, INERTIAL_SCROLL_TO);
+        else target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }, delay);
   };
 
@@ -350,14 +399,16 @@ export default function FullscreenMenu() {
         onClick={toggleMenu}
       >
         <span className="yo-menu-trigger__icon" aria-hidden="true">
+          <span ref={originRef} className="yo-menu-trigger__origin">
+            <span
+              ref={stemRef}
+              className="yo-menu-trigger__stem"
+              data-yo-burger-line=""
+            />
+          </span>
           <span
-            ref={topBarRef}
-            className="yo-menu-trigger__bar yo-menu-trigger__bar--top"
-            data-yo-burger-line=""
-          />
-          <span
-            ref={bottomBarRef}
-            className="yo-menu-trigger__bar yo-menu-trigger__bar--bottom"
+            ref={dotRef}
+            className="yo-menu-trigger__dot"
             data-yo-burger-line=""
           />
         </span>

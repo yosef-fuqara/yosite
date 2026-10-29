@@ -1,0 +1,8 @@
+.yo-butterfly-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9200;
+  background: transparent;
+  display: block;
+}

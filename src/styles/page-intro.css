@@ -11,7 +11,7 @@ html.yo-intro-light,
 html.yo-intro-light body,
 html.yo-intro-active.yo-intro-light,
 html.yo-intro-active.yo-intro-light body {
-  background-color: #ffffff;
+  background-color: #F7F7F7;
 }
 
 #yo-intro-boot {
@@ -29,7 +29,7 @@ html.yo-intro-active.yo-intro-light body {
   display: grid;
   place-items: center;
   width: 100%;
-  height: 100%;
+  height: 100dvh;
   overflow: hidden;
   isolation: isolate;
   background: #000000;
@@ -43,6 +43,7 @@ html.yo-intro-active.yo-intro-light body {
   display: block;
   overflow: visible;
   isolation: auto;
+  mix-blend-mode: normal;
   background: transparent;
   pointer-events: none;
   width: 100vw;
@@ -108,7 +109,7 @@ html.yo-intro-handoff .yo-intro__stage {
 html.yo-intro-logo-live .yo-intro[data-state="done"] .yo-intro__stage {
   opacity: 1;
   mix-blend-mode: normal;
-  filter: none;
+  filter: brightness(0);
 }
 
 .yo-intro__canvas,
@@ -156,8 +157,8 @@ html.yo-intro-logo-live .yo-intro[data-state="done"] .yo-intro__stage {
   padding: 0;
   background: linear-gradient(
     to top,
-    #ffffff 0%,
-    #ffffff calc(100% - 4.5rem),
+    #F7F7F7 0%,
+    #F7F7F7 calc(100% - 4.5rem),
     rgba(255, 255, 255, 0) 100%
   );
   transform-origin: 50% 100%;
@@ -180,14 +181,12 @@ html.yo-intro-logo-live .yo-logo-mark {
 
 /* GSAP owns y/opacity for both. No CSS transform so they cannot enter twice. */
 html.yo-intro-active:not(.yo-intro-nav-live) .yo-menu-trigger,
-html.yo-intro-active:not(.yo-intro-nav-live) .yo-lang {
+html.yo-intro-active:not(.yo-intro-nav-live) .yo-lang,
+html.yo-intro-active:not(.yo-intro-nav-live) .yo-nav__contact-link {
   opacity: 0;
   pointer-events: none;
 }
 
-html.yo-intro-logo-live .yo-sticky-chrome {
-  z-index: 90;
-}
 
 html.yo-intro-active:not(.yo-intro-sticky-live) .yo-hero__aside,
 html.yo-intro-active:not(.yo-intro-sticky-live) .yo-hero__audio,
