@@ -16,22 +16,16 @@ export default function Footer() {
   };
 
   return (
-    <footer
-      className="relative z-10 border-t border-white/10 py-12 px-6 md:px-12 text-white"
-      style={{ background: "var(--services-sheet, #000000)" }}
-    >
+    <footer className="site-footer relative z-10 border-t border-white/10 py-12 px-6 md:px-12 text-white">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
         
-        <div className="flex flex-col items-center md:items-start text-center md:text-start gap-1">
+        <div className="flex flex-col items-center md:items-start text-center md:text-start">
           <a href="#" className="flex items-center gap-2 group">
             <span className="text-lg font-bold tracking-tight text-white font-heading">
               Yo<span className="text-white">Site</span>
             </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-white" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FF334E]" />
           </a>
-          <p className="text-[10px] text-neutral-400 font-light tracking-wide uppercase">
-            {t("footer.tagline")}
-          </p>
         </div>
 
         <div className="flex justify-center gap-8">
@@ -65,9 +59,17 @@ export default function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-start">
-        <p className="text-[10px] text-neutral-500 font-light uppercase tracking-wider">
-          {t("footer.copyright", { year: new Date().getFullYear() })}
-        </p>
+        <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-6">
+          <p className="text-[10px] text-neutral-500 font-light uppercase tracking-wider">
+            {t("footer.copyright", { year: new Date().getFullYear() })}
+          </p>
+          <a
+            href="/privacy-policy"
+            className="text-[10px] text-neutral-500 font-light uppercase tracking-wider hover:text-white transition-colors duration-300"
+          >
+            Privacy Policy
+          </a>
+        </div>
         <p className="text-[10px] text-neutral-500 font-light uppercase tracking-wider">
           {t("footer.studio")}
         </p>

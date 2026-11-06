@@ -36,6 +36,7 @@
 }
 
 .yo-nav__logo-inner {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;

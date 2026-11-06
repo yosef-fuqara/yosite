@@ -1,9 +1,13 @@
 /* Global left scroll rail — thin track + progress dot.
    Portaled to document.body; must stay above all page sections.
-   Visible while scrolling; fades out on inactivity (opacity only).
-   mix-blend-mode: difference → track/dot invert against page content
-   (white→black on light areas, black→white on dark). Avoid will-change /
-   isolation on this node so blending reaches the backdrop. */
+   Visible while scrolling; fades out on inactivity.
+
+   The line inverts like the music button (.yo-hero__audio):
+   mix-blend-mode: difference on the fixed element itself, solid white stroke.
+   White becomes black on light areas and stays white on dark ones.
+   Opacity stays on the stroke, never on .scroll-rail--line — opacity < 1
+   isolates the blend so it stops seeing the page. The red dot is a sibling
+   so it keeps its color. */
 
 .scroll-rail {
   --scroll-rail-fade-out: 850ms;
@@ -21,45 +25,67 @@
   max-height: calc(100dvh - 140px);
   margin-block: auto;
   pointer-events: none;
-  opacity: 0;
   visibility: hidden;
-  transition:
-    opacity var(--scroll-rail-fade-out) ease,
-    visibility var(--scroll-rail-fade-out) linear;
-  mix-blend-mode: difference;
+  transition: visibility var(--scroll-rail-fade-out) linear;
 }
 
 .scroll-rail[data-active="true"] {
-  opacity: 1;
   visibility: visible;
-  /* Reappear quickly when scrolling resumes */
-  transition:
-    opacity var(--scroll-rail-fade-in) ease,
-    visibility 0ms linear;
+  /* Reappear immediately so the stroke can fade in */
+  transition: visibility 0ms linear;
+}
+
+.scroll-rail--line {
+  color: #ffffff;
+  mix-blend-mode: difference;
+}
+
+.scroll-rail--dot {
+  z-index: 10001;
+}
+
+.scroll-rail__track,
+.scroll-rail__dot-wrap {
+  opacity: 0;
+  transition: opacity var(--scroll-rail-fade-out) ease;
+}
+
+.scroll-rail[data-active="true"] .scroll-rail__track,
+.scroll-rail[data-active="true"] .scroll-rail__dot-wrap {
+  opacity: 1;
+  transition: opacity var(--scroll-rail-fade-in) ease;
 }
 
 /* Instant show/hide — no fade when reduced motion is preferred */
 .scroll-rail[data-reduced-motion="true"],
-.scroll-rail[data-reduced-motion="true"][data-active="true"] {
+.scroll-rail[data-reduced-motion="true"][data-active="true"],
+.scroll-rail[data-reduced-motion="true"] .scroll-rail__track,
+.scroll-rail[data-reduced-motion="true"] .scroll-rail__dot-wrap,
+.scroll-rail[data-reduced-motion="true"][data-active="true"] .scroll-rail__track,
+.scroll-rail[data-reduced-motion="true"][data-active="true"] .scroll-rail__dot-wrap {
   transition: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .scroll-rail,
-  .scroll-rail[data-active="true"] {
+  .scroll-rail[data-active="true"],
+  .scroll-rail__track,
+  .scroll-rail__dot-wrap,
+  .scroll-rail[data-active="true"] .scroll-rail__track,
+  .scroll-rail[data-active="true"] .scroll-rail__dot-wrap {
     transition: none;
   }
 }
 
 .scroll-rail__track {
   position: absolute;
-  left: 50%;
   top: 0;
   bottom: 0;
+  left: 0;
+  right: 0;
   width: 1px;
-  transform: translateX(-50%);
-  /* White source → difference blend inverts against the page */
-  background: rgba(255, 255, 255, 0.4);
+  margin-inline: auto;
+  background: currentColor;
 }
 
 .scroll-rail__dot-wrap {
@@ -92,7 +118,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #ffffff;
+  background: #ff334e;
   transform: translate(-50%, -50%);
 }
 

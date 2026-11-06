@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useReducedMotion } from "framer-motion";
@@ -6,49 +6,15 @@ import "../styles/contact-cta.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const PHRASES = ["TELL ME ABOUT IT.", "LET'S TALK.", "COFFEE'S ON ME.", "LET'S MAKE SOMETHING.", "SAY HELLO."];
+const PHRASES = [
+  "TELL ME ABOUT IT.",
+  "LET'S TALK.",
+  "COFFEE'S ON ME.",
+  "LET'S MAKE SOMETHING.",
+  "SAY HELLO.",
+  "DON'T BE SHY.",
+];
 const WA_NUMBER = "972505114896";
-const PHONE_MIN_DIGITS = 7;
-const PHONE_MAX_DIGITS = 15;
-
-function validatePhone(value) {
-  const phone = value.trim().replace(/\s+/g, " ");
-  if (!phone) return "Please enter your phone number.";
-  if (/[^0-9+\s()-]/.test(phone)) return "Please enter a valid phone number.";
-
-  const plusCount = (phone.match(/\+/g) || []).length;
-  if (plusCount > 1 || (plusCount === 1 && !phone.startsWith("+"))) {
-    return "Please enter a valid phone number.";
-  }
-  if (
-    phone.startsWith("-") ||
-    phone.endsWith("-") ||
-    /--/.test(phone) ||
-    /\(\s*\)/.test(phone)
-  ) {
-    return "Please enter a valid phone number.";
-  }
-
-  let parentheses = 0;
-  for (const character of phone) {
-    if (character === "(") parentheses += 1;
-    if (character === ")") parentheses -= 1;
-    if (parentheses < 0 || parentheses > 1) {
-      return "Please enter a valid phone number.";
-    }
-  }
-  if (parentheses !== 0) return "Please enter a valid phone number.";
-
-  const digits = phone.replace(/\D/g, "");
-  if (digits.length < PHONE_MIN_DIGITS) {
-    return "Please enter a complete phone number.";
-  }
-  if (digits.length > PHONE_MAX_DIGITS) {
-    return "Please enter a valid phone number.";
-  }
-
-  return "";
-}
 
 function shuffled(items) {
   const result = [...items];
@@ -67,15 +33,14 @@ export default function ContactCTA() {
   const contentRef = useRef(null);
   const headlineRef = useRef(null);
   const reduced = useReducedMotion();
-  const [phone, setPhone] = useState("");
-  const [phoneError, setPhoneError] = useState("");
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
+      const phone = window.matchMedia("(max-width: 640px)").matches;
       gsap.fromTo(introTextRef.current,
         { autoAlpha: 0, y: reduced ? 0 : 12, filter: reduced ? "none" : "blur(5px)", "--intro-tracking": reduced ? .34 : .46 },
-        { autoAlpha: 1, y: 0, filter: "blur(0px)", "--intro-tracking": .34, duration: reduced ? .4 : 1.6, ease: "power2.out",
-          scrollTrigger: { trigger: introRef.current, start: "top 35%", toggleActions: "play none none none" } });
+        { autoAlpha: 1, y: 0, filter: "blur(0px)", "--intro-tracking": .34, duration: reduced ? .4 : phone ? .7 : 1.6, ease: "power2.out",
+          scrollTrigger: { trigger: introRef.current, start: phone ? "top 72%" : "top 35%", toggleActions: "play none none none" } });
       gsap.fromTo(contentRef.current, { autoAlpha: 0, y: reduced ? 0 : 26 }, {
         autoAlpha: 1, y: 0, duration: reduced ? .4 : 1.1, ease: "power2.out",
         scrollTrigger: { trigger: contactRef.current, start: "top 65%", toggleActions: "play none none reverse" },
@@ -173,29 +138,17 @@ export default function ContactCTA() {
 
   const send = (event) => {
     event.preventDefault();
-    const error = validatePhone(phone);
-    setPhoneError(error);
-    if (error) return;
-
     const form = event.currentTarget;
     if (!form.reportValidity()) return;
     const values = new FormData(form);
     const name = String(values.get("name")).trim();
-    const cleanPhone = phone.trim().replace(/\s+/g, " ");
     const projectDetails = String(values.get("projectDetails")).trim();
-    const message = `Hi, my name is ${name}. My phone number is ${cleanPhone}.\n\nHere’s what my project is about:\n${projectDetails}`;
+    const message = `Hi, my name is ${name}.\n\nHere’s what my project is about:\n${projectDetails}`;
     window.open(
       `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`,
       "_blank",
       "noopener,noreferrer",
     );
-  };
-
-  const updatePhone = (event) => {
-    const rawValue = event.target.value;
-    const nextValue = rawValue.replace(/\p{L}/gu, "").slice(0, 32);
-    setPhone(nextValue);
-    setPhoneError(validatePhone(nextValue));
   };
 
   return (
@@ -233,32 +186,6 @@ export default function ContactCTA() {
                 required
               />
             </label>
-            <label
-              className={`cta-contact__field${phoneError ? " cta-contact__field--error" : ""}`}
-              htmlFor="contact-phone"
-            >
-              <span>PHONE NUMBER</span>
-              <input
-                id="contact-phone"
-                name="phone"
-                type="tel"
-                inputMode="tel"
-                autoComplete="tel"
-                placeholder="Your phone number"
-                value={phone}
-                onChange={updatePhone}
-                onBlur={() => setPhoneError(validatePhone(phone))}
-                aria-invalid={Boolean(phoneError)}
-                aria-describedby={phoneError ? "contact-phone-error" : undefined}
-                maxLength={32}
-                required
-              />
-              {phoneError ? (
-                <small id="contact-phone-error" className="cta-contact__field-error" role="alert">
-                  {phoneError}
-                </small>
-              ) : null}
-            </label>
             <label className="cta-contact__field" htmlFor="contact-project-details">
               <span>PROJECT DETAILS</span>
               <textarea
@@ -270,8 +197,15 @@ export default function ContactCTA() {
                 required
               />
             </label>
-            <button type="submit" className="cta-contact__send">
-              LET&apos;S MAKE IT REAL <span aria-hidden="true">↗</span>
+            <p id="contact-privacy-notice" className="cta-contact__notice">
+              These details are voluntary. YoSite uses them only to reply to you. The button opens WhatsApp with them filled in, and WhatsApp may receive them before you send.{" "}
+              <a href="/privacy-policy#whatsapp-contact">Privacy Policy</a>
+            </p>
+            <button type="submit" className="cta-contact__send" aria-describedby="contact-privacy-notice">
+              LET&apos;S MAKE IT REAL{" "}
+              <span className="cta-contact__send-arrow" aria-hidden="true">
+                ↗
+              </span>
             </button>
             <p className="cta-contact__delivery">One click away from bringing your idea to life.</p>
           </form>

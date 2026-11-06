@@ -3,6 +3,10 @@ import { Canvas, useThree, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { AnimationMixer, LoopOnce, MeshBasicMaterial } from "three";
 import {
+  INTRO_BROKEN_POSE,
+  INTRO_DOT_COLOR,
+  INTRO_ENTRANCE,
+  INTRO_FRUSTUM,
   INTRO_MODEL_URL,
   clipTimeFromElapsed,
   fitIntroCamera,
@@ -31,6 +35,12 @@ const BLACK_MORPH = new MeshBasicMaterial({
   toneMapped: false,
   morphTargets: true,
 });
+const DOT = new MeshBasicMaterial({
+  color: INTRO_DOT_COLOR,
+  toneMapped: false,
+});
+
+const RISE_ENTRANCE = INTRO_ENTRANCE === "rise";
 
 function isCurtainName(name) {
   return isIntroCurtainName(name);
@@ -38,6 +48,21 @@ function isCurtainName(name) {
 
 function isBallFaceName(name) {
   return /^(?:Face_|Left_eye$|Right_eye$|Mouth_)/i.test(name || "");
+}
+
+function isLivingDotName(name) {
+  return /living[_\s]dot/i.test(name || "");
+}
+
+/** Paused actions ignore mixer.setTime, so the pose is applied while running. */
+function holdBrokenPose(mixer, actions) {
+  actions.forEach((action) => {
+    action.paused = false;
+  });
+  mixer.setTime(INTRO_BROKEN_POSE);
+  actions.forEach((action) => {
+    action.paused = true;
+  });
 }
 
 function isBlackMaterial(material) {
@@ -69,6 +94,12 @@ function prepareIntroRoot(scene) {
     obj.receiveShadow = false;
     obj.raycast = () => {};
 
+    if (isLivingDotName(obj.name)) {
+      obj.userData.introInk = "dot";
+      obj.material = DOT;
+      return;
+    }
+
     const morph = Boolean(obj.morphTargetInfluences?.length);
     if (isBlackMaterial(obj.material)) {
       obj.userData.introInk = "black";
@@ -85,6 +116,10 @@ function prepareIntroRoot(scene) {
 function applyIntroInk(root, invert) {
   root.traverse((obj) => {
     if (!obj.isMesh || isCurtainName(obj.name)) return;
+    if (obj.userData.introInk === "dot") {
+      obj.material = DOT;
+      return;
+    }
     const morph = Boolean(obj.morphTargetInfluences?.length);
     const black = invert || obj.userData.introInk === "black";
     obj.material = black
@@ -115,6 +150,25 @@ function FitCamera() {
   return null;
 }
 
+/** After the nav handoff, the canvas is a small box. Keep the original framing. */
+function ParkedZoom() {
+  const { camera, size, gl } = useThree();
+
+  useFrame(() => {
+    const stage = gl.domElement?.parentElement;
+    if (stage?.dataset.parked !== "true") return;
+    const baseW = Number(stage.dataset.baseWidth);
+    const baseH = Number(stage.dataset.baseHeight);
+    if (!baseW || !baseH || !size.width) return;
+    const next = (Math.min(baseW, baseH) / INTRO_FRUSTUM) * (size.width / baseW);
+    if (Math.abs(camera.zoom - next) < 0.01) return;
+    camera.zoom = next;
+    camera.updateProjectionMatrix();
+  });
+
+  return null;
+}
+
 function IntroRig({ playing, onReady, boundsApiRef }) {
   const { camera, gl } = useThree();
   const { scene, animations } = useGLTF(INTRO_MODEL_URL);
@@ -139,6 +193,7 @@ function IntroRig({ playing, onReady, boundsApiRef }) {
     });
 
     mixer.update(0);
+    if (RISE_ENTRANCE) holdBrokenPose(mixer, actions);
     mixerRef.current = mixer;
     actionsRef.current = actions;
     onReadyRef.current?.();
@@ -164,6 +219,12 @@ function IntroRig({ playing, onReady, boundsApiRef }) {
     const actions = actionsRef.current;
     if (!mixer || !actions.length) return;
 
+    if (RISE_ENTRANCE) {
+      holdBrokenPose(mixer, actions);
+      startedAtRef.current = 0;
+      return;
+    }
+
     mixer.setTime(0);
     actions.forEach((action) => {
       action.reset();
@@ -182,6 +243,8 @@ function IntroRig({ playing, onReady, boundsApiRef }) {
       invertedRef.current = invert;
       applyIntroInk(root, invert);
     }
+
+    if (RISE_ENTRANCE) return;
 
     const mixer = mixerRef.current;
     if (!playing || !mixer || !startedAtRef.current) return;
@@ -244,6 +307,7 @@ export default function IntroModel({ playing, onReady, onError, boundsApiRef }) 
         }}
       >
         <FitCamera />
+        <ParkedZoom />
         <Suspense fallback={null}>
           <IntroRig
             playing={playing}

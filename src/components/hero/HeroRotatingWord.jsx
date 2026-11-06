@@ -17,17 +17,35 @@ const FADE_MS = 280;
 
 function renderWordText(word, useLetters) {
   if (!word) return null;
-  if (!useLetters) return word;
-  return [...word].map((char, index) => (
-    <span
-      key={`${word}-${index}`}
-      className="yo-hero__word-rotate-letter"
-      style={{ "--i": index }}
-      aria-hidden="true"
-    >
-      {char}
-    </span>
-  ));
+  const hasPeriod = word.endsWith(".");
+  const text = hasPeriod ? word.slice(0, -1) : word;
+  const chars = hasPeriod ? `${text}.` : text;
+
+  if (useLetters) {
+    return [...chars].map((char, index) => (
+      <span
+        key={`${word}-${index}`}
+        className={`yo-hero__word-rotate-letter${
+          char === "." ? " yo-hero__word-rotate-period" : ""
+        }`}
+        style={{ "--i": index }}
+        aria-hidden="true"
+      >
+        {char}
+      </span>
+    ));
+  }
+
+  if (!hasPeriod) return word;
+
+  return (
+    <>
+      {text}
+      <span className="yo-hero__word-rotate-period" aria-hidden="true">
+        .
+      </span>
+    </>
+  );
 }
 
 export default function HeroRotatingWord({ heroRef, reducedMotion }) {

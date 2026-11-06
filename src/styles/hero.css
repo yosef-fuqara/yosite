@@ -423,6 +423,14 @@ html[dir="rtl"] .yo-hero__title {
   display: inline-block;
 }
 
+.yo-hero__word-rotate-period {
+  color: #ff334e;
+}
+
+.yo-hero__word-rotate-letter.yo-hero__word-rotate-period {
+  display: inline-block;
+}
+
 .yo-hero__word-rotate[data-fx="flip"] .yo-hero__word-rotate-letter {
   transform-style: preserve-3d;
   backface-visibility: hidden;

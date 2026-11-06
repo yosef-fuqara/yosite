@@ -109,6 +109,12 @@
   </head>
     <body class="bg-[#F7F7F7] text-black antialiased selection:bg-black/15 selection:text-black">
     <div id="yo-intro-boot" aria-hidden="true"></div>
+    <script>
+      if ((location.pathname.replace(/\/+$/, "") || "/") === "/privacy-policy") {
+        document.documentElement.classList.remove("yo-intro-pending");
+        document.getElementById("yo-intro-boot")?.remove();
+      }
+    </script>
     <div id="root" class="overflow-x-clip"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

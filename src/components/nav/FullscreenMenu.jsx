@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import gsap from "gsap";
 import { useLenis } from "lenis/react";
 import { useReducedMotion } from "framer-motion";
@@ -14,10 +15,61 @@ const LINE_DUR = 0.54;
 const LINK_DUR = 0.26;
 const LINK_STAGGER = 0.05;
 const LINK_AT = 0.44;
-const MOBILE_MQ = "(max-width: 767px)";
+const LOGO_GAP = 20;
+const MIN_ROW_EXTENT = 132;
 
-function isMobileMenu() {
-  return typeof window !== "undefined" && window.matchMedia(MOBILE_MQ).matches;
+function measureRowNavWidth(list) {
+  if (!list || typeof window === "undefined") return MIN_ROW_EXTENT;
+
+  const saved = {
+    position: list.style.position,
+    flexDirection: list.style.flexDirection,
+    width: list.style.width,
+    visibility: list.style.visibility,
+    pointerEvents: list.style.pointerEvents,
+    top: list.style.top,
+    left: list.style.left,
+  };
+
+  list.style.position = "absolute";
+  list.style.flexDirection = "row";
+  list.style.width = "max-content";
+  list.style.visibility = "hidden";
+  list.style.pointerEvents = "none";
+  list.style.top = "0";
+  list.style.left = "0";
+
+  const width = list.scrollWidth;
+
+  list.style.position = saved.position;
+  list.style.flexDirection = saved.flexDirection;
+  list.style.width = saved.width;
+  list.style.visibility = saved.visibility;
+  list.style.pointerEvents = saved.pointerEvents;
+  list.style.top = saved.top;
+  list.style.left = saved.left;
+
+  return width;
+}
+
+/** Row when all links fit beside the logo; otherwise a left drawer. */
+function getMenuLayout(slot, list) {
+  if (typeof window === "undefined" || !slot) return "row";
+
+  const required = measureRowNavWidth(list ?? slot.querySelector(".yo-fsmenu__list"));
+  const slotLeft = slot.getBoundingClientRect().left;
+  const start = slotLeft + 8;
+  let maxRight = window.innerWidth * 0.46;
+
+  const logo = document.querySelector(".yo-nav__logo");
+  if (logo) {
+    const logoLeft = logo.getBoundingClientRect().left;
+    if (logoLeft > start) maxRight = Math.min(maxRight, logoLeft - LOGO_GAP);
+  }
+
+  const available = maxRight - start;
+  if (available >= required && available >= MIN_ROW_EXTENT) return "row";
+  return "drawer";
 }
 
 function navItems(t) {
@@ -33,34 +85,26 @@ function navItems(t) {
 function lineOriginLeft(slot) {
   const stem = slot?.querySelector(".yo-menu-trigger__stem");
   if (stem) return stem.getBoundingClientRect().left;
+  const burger = slot?.querySelector(".yo-menu-trigger__burger");
+  if (burger) return burger.getBoundingClientRect().left;
   const icon = slot?.querySelector(".yo-menu-trigger__icon");
   if (icon) return icon.getBoundingClientRect().left + 6.5;
   return (slot?.getBoundingClientRect().left ?? 24) + 13;
 }
 
-function mobileLineExtent(slot) {
-  const start = lineOriginLeft(slot);
-  const nav = slot?.closest(".yo-nav");
-  const navPad = nav
-    ? Number.parseFloat(getComputedStyle(nav).paddingInlineEnd) || 20
-    : 20;
-  const viewportRight =
-    window.visualViewport != null
-      ? window.visualViewport.offsetLeft + window.visualViewport.width
-      : window.innerWidth;
-  const safeRight = Math.max(navPad, 20);
-  let maxRight = viewportRight - safeRight;
-  const lang = document.querySelector(".yo-nav__end");
-  if (lang) {
-    const langLeft = lang.getBoundingClientRect().left;
-    if (langLeft > start + 64) maxRight = Math.min(maxRight, langLeft - 12);
-  }
-  return Math.max(0, Math.round(maxRight - start));
+function applyDrawerAnchor(trigger, list) {
+  if (!trigger || !list) return;
+  const icon =
+    trigger.querySelector(".yo-menu-trigger__burger") ||
+    trigger.querySelector(".yo-menu-trigger__icon");
+  const rect = (icon ?? trigger).getBoundingClientRect();
+  list.style.setProperty("--yo-drawer-left", `${Math.round(rect.left)}px`);
+  list.style.setProperty("--yo-drawer-top", `${Math.round(trigger.getBoundingClientRect().bottom + 6)}px`);
 }
 
-function lineExtent(slot) {
+function lineExtent(slot, list) {
   if (typeof window === "undefined") return 220;
-  if (isMobileMenu()) return mobileLineExtent(slot);
+  if (getMenuLayout(slot, list) === "drawer") return STEM_LEN;
 
   const logo = document.querySelector(".yo-nav__logo");
   const slotLeft = slot?.getBoundingClientRect().left ?? 24;
@@ -68,9 +112,9 @@ function lineExtent(slot) {
   let maxRight = window.innerWidth * 0.46;
   if (logo) {
     const logoLeft = logo.getBoundingClientRect().left;
-    if (logoLeft > start) maxRight = Math.min(maxRight, logoLeft - 20);
+    if (logoLeft > start) maxRight = Math.min(maxRight, logoLeft - LOGO_GAP);
   }
-  return Math.round(gsap.utils.clamp(132, 268, maxRight - start));
+  return Math.round(gsap.utils.clamp(MIN_ROW_EXTENT, 268, maxRight - start));
 }
 
 function focusablesIn(root) {
@@ -91,12 +135,14 @@ export default function FullscreenMenu() {
   const originRef = useRef(null);
   const stemRef = useRef(null);
   const dotRef = useRef(null);
+  const backdropRef = useRef(null);
   const listRef = useRef(null);
   const itemsRef = useRef([]);
   const tlRef = useRef(null);
   const openRef = useRef(false);
 
   const [open, setOpen] = useState(false);
+  const [layoutMode, setLayoutMode] = useState("row");
   const [returnKey, setReturnKey] = useState(() =>
     typeof window !== "undefined" &&
     window.matchMedia("(min-width: 768px)").matches
@@ -108,32 +154,53 @@ export default function FullscreenMenu() {
 
   const applyExtent = useCallback(() => {
     const slot = slotRef.current;
+    const list = listRef.current;
     if (slot) {
       const originLeft = lineOriginLeft(slot);
       const inset = originLeft - slot.getBoundingClientRect().left;
       slot.style.setProperty("--yo-menu-line-origin", `${Math.round(inset)}px`);
-      slot.dataset.yoMenuLayout = isMobileMenu() ? "stack" : "row";
+      const layout = getMenuLayout(slot, list);
+      slot.dataset.yoMenuLayout = layout;
+      setLayoutMode(layout);
+      if (layout === "drawer") applyDrawerAnchor(triggerRef.current, list);
     }
-    const extent = lineExtent(slot);
+    const extent = lineExtent(slot, list);
     slot?.style.setProperty("--yo-menu-extent", `${extent}px`);
     return extent;
   }, []);
 
   const setClosedVisual = useCallback(() => {
-    const origin = originRef.current;
-    const stem = stemRef.current;
-    const dot = dotRef.current;
+    const list = listRef.current;
+    const layout = getMenuLayout(slotRef.current, list);
     const links = itemsRef.current.filter(Boolean);
-    if (!origin || !stem || !dot) return;
+    const backdrop = backdropRef.current;
 
-    gsap.set(origin, { rotation: 0, transformOrigin: "0px 0px" });
-    gsap.set(stem, {
-      scaleY: 1,
-      transformOrigin: "50% 100%",
-      force3D: false,
-    });
-    gsap.set(dot, { x: DOT_CLOSED_X, y: DOT_CLOSED_Y, force3D: false });
-    if (links.length) gsap.set(links, { opacity: 0, y: 8, force3D: false });
+    if (layout !== "drawer") {
+      const origin = originRef.current;
+      const stem = stemRef.current;
+      const dot = dotRef.current;
+      if (origin && stem && dot) {
+        gsap.set(origin, { rotation: 0, transformOrigin: "0px 0px" });
+        gsap.set(stem, {
+          clearProps: "height",
+          scaleY: 1,
+          transformOrigin: "50% 100%",
+          force3D: false,
+        });
+        gsap.set(dot, { opacity: 1, x: DOT_CLOSED_X, y: DOT_CLOSED_Y, force3D: false });
+      }
+    }
+
+    if (backdrop) gsap.set(backdrop, { opacity: 0, pointerEvents: "none" });
+    if (list) gsap.set(list, { x: layout === "drawer" ? -36 : 0, force3D: false });
+    if (links.length) {
+      gsap.set(links, {
+        opacity: 0,
+        x: layout === "drawer" ? -12 : 0,
+        y: layout === "drawer" ? 0 : 8,
+        force3D: false,
+      });
+    }
   }, []);
 
   const buildTimeline = useCallback(
@@ -143,12 +210,17 @@ export default function FullscreenMenu() {
       const stem = stemRef.current;
       const dot = dotRef.current;
       const links = itemsRef.current.filter(Boolean);
-      if (!origin || !stem || !dot) return;
+      const listEl = listRef.current;
 
       const extent = applyExtent();
+      const layout = getMenuLayout(slotRef.current, listEl);
       const scale = extent / STEM_LEN;
       const dotOpenX = extent - 1.5;
       const instant = Boolean(reducedMotion);
+      const backdrop = backdropRef.current;
+
+      if (layout === "row" && (!origin || !stem || !dot)) return;
+      if (layout === "drawer" && !listEl) return;
 
       setClosedVisual();
 
@@ -163,41 +235,76 @@ export default function FullscreenMenu() {
           openRef.current = false;
           setOpen(false);
           setClosedVisual();
+          slotRef.current?.removeAttribute("data-yo-menu-open");
         },
       });
 
-      tl.to(
-        origin,
-        {
-          rotation: 90,
-          duration: instant ? 0 : LINE_DUR,
-          ease: "power3.inOut",
-          transformOrigin: "0px 0px",
-        },
-        0,
-      );
-      tl.to(
-        stem,
-        {
-          scaleY: scale,
-          duration: instant ? 0 : LINE_DUR,
-          ease: "power3.inOut",
-          transformOrigin: "50% 100%",
-          force3D: false,
-        },
-        0,
-      );
-      tl.to(
-        dot,
-        {
-          x: dotOpenX,
-          y: DOT_CLOSED_Y,
-          duration: instant ? 0 : LINE_DUR,
-          ease: "power3.inOut",
-          force3D: false,
-        },
-        0,
-      );
+      slotRef.current?.setAttribute("data-yo-menu-open", "true");
+
+      if (layout === "drawer") {
+        applyDrawerAnchor(triggerRef.current, listEl);
+
+        if (backdrop) {
+          gsap.set(backdrop, { opacity: 0, pointerEvents: "none" });
+          tl.to(
+            backdrop,
+            {
+              opacity: 1,
+              duration: instant ? 0 : 0.42,
+              ease: "power2.out",
+              onStart: () => {
+                backdrop.style.pointerEvents = "auto";
+              },
+            },
+            0,
+          );
+        }
+
+        gsap.set(listEl, { x: -36, force3D: false });
+        tl.to(
+          listEl,
+          {
+            x: 0,
+            duration: instant ? 0 : 0.5,
+            ease: "power3.out",
+            force3D: false,
+          },
+          0,
+        );
+      } else {
+        tl.to(
+          origin,
+          {
+            rotation: 90,
+            duration: instant ? 0 : LINE_DUR,
+            ease: "power3.inOut",
+            transformOrigin: "0px 0px",
+          },
+          0,
+        );
+        tl.to(
+          stem,
+          {
+            scaleY: scale,
+            duration: instant ? 0 : LINE_DUR,
+            ease: "power3.inOut",
+            transformOrigin: "50% 100%",
+            force3D: false,
+          },
+          0,
+        );
+        tl.to(
+          dot,
+          {
+            x: dotOpenX,
+            y: DOT_CLOSED_Y,
+            duration: instant ? 0 : LINE_DUR,
+            ease: "power3.inOut",
+            force3D: false,
+          },
+          0,
+        );
+      }
 
       if (links.length) {
         tl.set(listRef.current, { pointerEvents: "none" }, 0);
@@ -205,6 +312,7 @@ export default function FullscreenMenu() {
           links,
           {
             opacity: 1,
+            x: 0,
             y: 0,
             duration: instant ? 0 : LINK_DUR,
             stagger: instant ? 0 : LINK_STAGGER,
@@ -279,14 +387,16 @@ export default function FullscreenMenu() {
       tlRef.current?.kill();
       tlRef.current = null;
     };
-  }, [applyExtent, buildTimeline, setClosedVisual, items.length]);
+  }, [applyExtent, buildTimeline, setClosedVisual, items.length, layoutMode]);
 
   useEffect(() => {
-    const desktop = window.matchMedia("(min-width: 768px)");
-    const sync = () => setReturnKey(desktop.matches ? "home" : "menu");
+    const sync = () => {
+      const layout = getMenuLayout(slotRef.current, listRef.current);
+      setReturnKey(layout === "row" ? "home" : "menu");
+    };
     sync();
-    desktop.addEventListener("change", sync);
-    return () => desktop.removeEventListener("change", sync);
+    window.addEventListener("resize", sync);
+    return () => window.removeEventListener("resize", sync);
   }, []);
 
   useEffect(() => {
@@ -310,7 +420,8 @@ export default function FullscreenMenu() {
 
     const onPointer = (event) => {
       const slot = slotRef.current;
-      if (slot && !slot.contains(event.target)) {
+      const layout = getMenuLayout(slot, listRef.current);
+      if (layout !== "drawer" && slot && !slot.contains(event.target)) {
         playMenuSound("close");
         closeMenu({ restoreFocus: false });
       }
@@ -384,6 +495,24 @@ export default function FullscreenMenu() {
     }, delay);
   };
 
+  const drawerChrome =
+    typeof document !== "undefined"
+      ? createPortal(
+          <button
+            ref={backdropRef}
+            type="button"
+            className="yo-menu-drawer__backdrop"
+            aria-label={t("nav.closeAria")}
+            tabIndex={-1}
+            onClick={() => {
+              playMenuSound("close");
+              closeMenu();
+            }}
+          />,
+          document.body,
+        )
+      : null;
+
   return (
     <div ref={slotRef} data-yo-nav-links className="yo-menu-slot">
       <button
@@ -391,6 +520,7 @@ export default function FullscreenMenu() {
         type="button"
         className="yo-menu-trigger"
         data-open={open ? "true" : "false"}
+        data-yo-menu-variant={layoutMode === "drawer" ? "drawer" : "row"}
         aria-expanded={open}
         aria-controls={listId}
         aria-label={open ? t("nav.closeAria") : t("nav.openAria")}
@@ -398,7 +528,7 @@ export default function FullscreenMenu() {
         data-yo-menu-trigger=""
         onClick={toggleMenu}
       >
-        <span className="yo-menu-trigger__icon" aria-hidden="true">
+        <span className="yo-menu-trigger__icon yo-menu-trigger__icon--row" aria-hidden="true">
           <span ref={originRef} className="yo-menu-trigger__origin">
             <span
               ref={stemRef}
@@ -412,31 +542,47 @@ export default function FullscreenMenu() {
             data-yo-burger-line=""
           />
         </span>
+        <span className="yo-nav-burger yo-menu-trigger__burger" aria-hidden="true">
+          <span className="yo-nav-burger__line" data-yo-burger-line="" />
+          <span className="yo-nav-burger__line" data-yo-burger-line="" />
+          <span className="yo-nav-burger__line" data-yo-burger-line="" />
+        </span>
       </button>
 
-      <ul
-        ref={listRef}
-        id={listId}
-        className="yo-fsmenu__list"
-        data-yo-fsmenu=""
-        aria-hidden={open ? "false" : "true"}
-      >
-        {items.map((item, index) => (
-          <li key={item.id} className="yo-fsmenu__item">
-            <a
-              ref={(node) => {
-                itemsRef.current[index] = node;
-              }}
-              href={item.href}
-              className="yo-fsmenu__link"
-              tabIndex={open ? 0 : -1}
-              onClick={(event) => onNavigate(event, item.href)}
-            >
-              {item.label}
-            </a>
-          </li>
-        ))}
-      </ul>
+      {(() => {
+        const list = (
+          <ul
+            ref={listRef}
+            id={listId}
+            className="yo-fsmenu__list"
+            data-yo-fsmenu=""
+            data-yo-menu-layout={layoutMode}
+            aria-hidden={open ? "false" : "true"}
+          >
+            {items.map((item, index) => (
+              <li key={item.id} className="yo-fsmenu__item">
+                <a
+                  ref={(node) => {
+                    itemsRef.current[index] = node;
+                  }}
+                  href={item.href}
+                  className="yo-fsmenu__link"
+                  tabIndex={open ? 0 : -1}
+                  onClick={(event) => onNavigate(event, item.href)}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        );
+
+        if (layoutMode === "drawer" && typeof document !== "undefined") {
+          return createPortal(list, document.body);
+        }
+        return list;
+      })()}
+      {drawerChrome}
     </div>
   );
 }

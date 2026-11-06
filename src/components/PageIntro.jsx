@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import gsap from "gsap";
 import IntroModel from "./IntroModel";
 import {
@@ -8,11 +9,14 @@ import {
   markStickyChromeReady,
 } from "../utils/pageIntroGate";
 import {
+  INTRO_ENTRANCE,
   INTRO_HANDOFF,
-  INTRO_HANDOFF_AT_WALL,
+  INTRO_HANDOFF_SIZE,
   INTRO_LOAD_TIMEOUT_MS,
   INTRO_PULSE,
+  INTRO_RISE_IN,
   hasWebGL,
+  introHandoffAt,
   measureIntroHandoff,
   prefersReducedMotion,
 } from "../utils/introModel";
@@ -31,15 +35,19 @@ const NAV_CHROME_DUR = 0.82;
 
 const TIMING = {
   PULSE: INTRO_PULSE,
-  HANDOFF_AT: INTRO_HANDOFF_AT_WALL,
   LOGO: INTRO_HANDOFF,
   CURTAIN_AT: 0.1,
   CURTAIN: 0.5,
-  /* ~80% through the logo rise (LOGO = 0.82). */
+  /* ~80% through the logo rise (LOGO = 0.82), before the object lead. */
   UI_AT: 0.66,
   REDUCED_HOLD: 0.2,
   REDUCED_EXIT: 0.36,
 };
+
+/** Hero, nav, and side chrome keep their motion and start this much sooner.
+ *  The rise eases out, so a short clock lead still lands the logo.
+ *  0.55s starts the other elements while it is still clearly below the nav. */
+const OBJECTS_LEAD = 0.55;
 
 const PULSE_EASE = "power2.out";
 const HANDOFF_EASE = "power3.out";
@@ -88,6 +96,51 @@ function logoTarget() {
   return document.querySelector("[data-intro-logo-target]");
 }
 
+function readStageScale(stage) {
+  const raw = getComputedStyle(stage).transform;
+  if (!raw || raw === "none") return Number(gsap.getProperty(stage, "scale")) || 1;
+  const matrix = new DOMMatrix(raw);
+  return Math.hypot(matrix.a, matrix.b) || 1;
+}
+
+function readTranslateY(el) {
+  const raw = getComputedStyle(el).transform;
+  if (!raw || raw === "none") return 0;
+  return new DOMMatrix(raw).f || 0;
+}
+
+function placeParkedStage(stage, scale) {
+  const baseW = Number(stage.dataset.baseWidth);
+  const baseH = Number(stage.dataset.baseHeight);
+  const parkScale = Number(stage.dataset.parkScale) || scale;
+  const shiftX = Number(stage.dataset.markShiftX) || 0;
+  const shiftY = Number(stage.dataset.markShiftY) || 0;
+  const w = Math.max(1, Math.round(baseW * scale));
+  const h = Math.max(1, Math.round(baseH * scale));
+  const grow = parkScale ? scale / parkScale : 1;
+  const target = logoTarget();
+  if (target) {
+    const chrome = target.closest(".yo-sticky-chrome");
+    const headerShift = chrome ? readTranslateY(chrome) : 0;
+    const rect = target.getBoundingClientRect();
+    stage.style.setProperty("left", `${rect.left + rect.width / 2}px`, "important");
+    stage.style.setProperty("top", `${rect.top + rect.height / 2 - headerShift}px`, "important");
+  }
+  stage.style.setProperty("width", `${w}px`, "important");
+  stage.style.setProperty("height", `${h}px`, "important");
+  stage.style.setProperty("margin-left", `${-Math.round(w / 2 + shiftX * grow)}px`, "important");
+  stage.style.setProperty("margin-top", `${-Math.round(h / 2 + shiftY * grow)}px`, "important");
+}
+
+const RISE_ENTRANCE = INTRO_ENTRANCE === "rise";
+
+/** Push the centered mark fully below the viewport before it rises. */
+function offscreenRiseY() {
+  const vmin = Math.min(window.innerWidth, window.innerHeight);
+  const mark = Math.min(Math.max(vmin * 0.3, 160), 260);
+  return Math.round(window.innerHeight * 0.5 + mark * 0.7 + 80);
+}
+
 function navChrome() {
   return [".yo-menu-trigger", ".yo-lang", ".yo-nav__contact-link"]
     .map((selector) => document.querySelector(selector))
@@ -121,6 +174,13 @@ export default function PageIntro() {
   const startPlaybackRef = useRef(null);
   const failPlaybackRef = useRef(null);
   const boundsApiRef = useRef(null);
+  const stageHostRef = useRef(null);
+  if (stageHostRef.current == null) {
+    const el = document.createElement("div");
+    el.className = "yo-intro__stage";
+    el.setAttribute("data-intro-stage", "");
+    stageHostRef.current = el;
+  }
   const [mounted, setMounted] = useState(() => !introPlayed);
   const [useModel, setUseModel] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -139,14 +199,75 @@ export default function PageIntro() {
     const abort = new AbortController();
     const { signal } = abort;
     const curtain = root.querySelector("[data-intro-curtain]");
-    const stage = root.querySelector("[data-intro-stage]");
+    const stage = stageHostRef.current;
+    const logoMount = root.querySelector("[data-intro-logo]");
+    if (
+      stage &&
+      logoMount &&
+      stage.dataset.parked !== "true" &&
+      stage.parentElement !== logoMount
+    ) {
+      logoMount.appendChild(stage);
+    }
     let handoffLive = false;
+    let parkObserver = null;
+
+    const syncParkedStage = () => {
+      if (!stage || stage.dataset.parked !== "true") return;
+      const target = logoTarget();
+      const markH = Number(stage.dataset.markHeight);
+      if (!target || !markH) return;
+      const targetH = target.getBoundingClientRect().height;
+      if (targetH < 1) return;
+      const scale = Math.min(
+        Math.max((targetH / markH) * INTRO_HANDOFF_SIZE, 0.04),
+        1,
+      );
+      placeParkedStage(stage, scale);
+    };
+
+    const adoptStageIntoNav = () => {
+      if (!stage || stage.dataset.parked === "true") return true;
+      const target = logoTarget();
+      if (!target) return false;
+      const scale = readStageScale(stage);
+      if (scale > 0.92) return false;
+
+      const baseW = stage.offsetWidth || window.innerWidth;
+      const baseH = stage.offsetHeight || window.innerHeight;
+      const visual = boundsApiRef.current?.();
+      const stageRect = stage.getBoundingClientRect();
+      const markH = visual?.height ? visual.height / scale : baseH * 0.28;
+      const markCx = visual ? visual.left + visual.width / 2 : stageRect.left + stageRect.width / 2;
+      const markCy = visual ? visual.top + visual.height / 2 : stageRect.top + stageRect.height / 2;
+      const shiftX = markCx - (stageRect.left + stageRect.width / 2);
+      const shiftY = markCy - (stageRect.top + stageRect.height / 2);
+
+      gsap.killTweensOf(stage);
+      stage.dataset.parked = "true";
+      stage.dataset.baseWidth = String(baseW);
+      stage.dataset.baseHeight = String(baseH);
+      stage.dataset.markHeight = String(markH);
+      stage.dataset.markShiftX = String(shiftX);
+      stage.dataset.markShiftY = String(shiftY);
+      stage.dataset.parkScale = String(scale);
+      stage.classList.add("is-parked");
+      placeParkedStage(stage, scale);
+      document.body.appendChild(stage);
+      root.dataset.parked = "true";
+      handoffLive = true;
+
+      parkObserver?.disconnect();
+      parkObserver = new ResizeObserver(syncParkedStage);
+      parkObserver.observe(target);
+      return true;
+    };
 
     const parkLogo = () => {
-      setInvertIntroMaterials(false);
-      if (stage) {
+      setInvertIntroMaterials(RISE_ENTRANCE);
+      if (stage && stage.dataset.parked !== "true") {
         gsap.set(stage, {
-          filter: "brightness(0)",
+          filter: RISE_ENTRANCE ? "none" : "brightness(0)",
           mixBlendMode: "normal",
           lazy: false,
         });
@@ -357,11 +478,14 @@ export default function PageIntro() {
       markStickyChromeReady();
       parkNavChrome();
 
+      const handoffAt = introHandoffAt();
+      const startY = RISE_ENTRANCE ? offscreenRiseY() : 0;
+
       if (stage) {
         gsap.set(stage, {
-          opacity: 0.5,
+          opacity: RISE_ENTRANCE ? 1 : 0.5,
           x: 0,
-          y: 0,
+          y: startY,
           scale: 1,
           transformOrigin: "50% 50%",
           force3D: true,
@@ -426,7 +550,19 @@ export default function PageIntro() {
 
       tl?.kill();
       tl = gsap.timeline();
-      if (stage) {
+      if (stage && RISE_ENTRANCE) {
+        tl.to(
+          stage,
+          {
+            y: 0,
+            duration: INTRO_RISE_IN,
+            ease: "power3.out",
+            overwrite: false,
+            force3D: true,
+          },
+          0,
+        );
+      } else if (stage) {
         tl.to(
           stage,
           {
@@ -438,7 +574,7 @@ export default function PageIntro() {
           0,
         );
       }
-      tl.add(startHandoff, TIMING.HANDOFF_AT);
+      tl.add(startHandoff, handoffAt);
       tl.to(
         curtain,
         {
@@ -448,15 +584,30 @@ export default function PageIntro() {
           force3D: true,
           onUpdate: inkLogoWhenWhiteMeets,
         },
-        TIMING.HANDOFF_AT + TIMING.CURTAIN_AT,
+        handoffAt + TIMING.CURTAIN_AT,
       );
-      tl.add(cueHeroUi, TIMING.HANDOFF_AT + TIMING.UI_AT);
-      tl.add(revealHeroLayer, TIMING.HANDOFF_AT + TIMING.LOGO);
-      tl.add(revealNavChrome, TIMING.HANDOFF_AT + TIMING.LOGO);
+      tl.add(cueHeroUi, handoffAt + Math.max(0, TIMING.UI_AT - OBJECTS_LEAD));
+      const revealSiteObjects = () => {
+        if (cancelled) return;
+        gsap.set(root, { backgroundColor: "transparent" });
+        if (curtain) gsap.set(curtain, { autoAlpha: 0, pointerEvents: "none" });
+        revealNavChrome();
+        markPageIntroComplete();
+      };
+      tl.add(revealSiteObjects, handoffAt + Math.max(0, TIMING.LOGO - OBJECTS_LEAD));
+      tl.add(() => {
+        const parked = adoptStageIntoNav();
+        if (!parked) {
+          requestAnimationFrame(() => {
+            if (!adoptStageIntoNav()) requestAnimationFrame(adoptStageIntoNav);
+          });
+        }
+      }, handoffAt + TIMING.LOGO);
+      tl.add(revealHeroLayer, handoffAt + TIMING.LOGO);
       tl.add(() => {
         finish({ keepLogo: true });
         handoffLive = true;
-      }, TIMING.HANDOFF_AT + TIMING.LOGO);
+      }, handoffAt + TIMING.LOGO);
     };
 
     startPlaybackRef.current = playModelSequence;
@@ -484,6 +635,10 @@ export default function PageIntro() {
     let lastViewportWidth = window.visualViewport?.width ?? window.innerWidth;
     const onViewportChange = () => {
       if (cancelled || !handoffLive) return;
+      if (stage?.dataset.parked === "true") {
+        syncParkedStage();
+        return;
+      }
       const nextWidth = window.visualViewport?.width ?? window.innerWidth;
       if (Math.abs(nextWidth - lastViewportWidth) <= 1) return;
       lastViewportWidth = nextWidth;
@@ -501,6 +656,7 @@ export default function PageIntro() {
       cancelled = true;
       abort.abort();
       window.clearTimeout(loadTimer);
+      parkObserver?.disconnect();
       window.removeEventListener("resize", onViewportChange);
       window.removeEventListener("orientationchange", onViewportChange);
       tl?.kill();
@@ -538,25 +694,22 @@ export default function PageIntro() {
       className="yo-intro"
       data-state="playing"
       data-handoff="false"
+      data-entrance={INTRO_ENTRANCE}
       role="presentation"
       aria-hidden="true"
     >
-      <div className="yo-intro__logo" data-intro-logo="">
-        <div
-          className="yo-intro__stage"
-          data-intro-stage=""
-          data-intro-playing={playing ? "true" : "false"}
-        >
-          {useModel ? (
-            <IntroModel
-              playing={playing}
-              boundsApiRef={boundsApiRef}
-              onReady={() => startPlaybackRef.current?.()}
-              onError={() => failPlaybackRef.current?.()}
-            />
-          ) : null}
-        </div>
-      </div>
+      <div className="yo-intro__logo" data-intro-logo="" />
+      {createPortal(
+        useModel ? (
+          <IntroModel
+            playing={playing}
+            boundsApiRef={boundsApiRef}
+            onReady={() => startPlaybackRef.current?.()}
+            onError={() => failPlaybackRef.current?.()}
+          />
+        ) : null,
+        stageHostRef.current,
+      )}
       <div className="yo-intro__curtain" data-intro-curtain="" />
     </div>
   );

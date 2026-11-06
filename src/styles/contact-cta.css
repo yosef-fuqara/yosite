@@ -1,14 +1,14 @@
 .cta-contact {
   position: relative;
   z-index: 21;
-  background: #000000;
+  background: var(--services-sheet, #000000);
   color: #F7F7F7;
   font-family: var(--font-sans);
 }
 
-.cta-contact__intro { min-height: 100svh; }
+.cta-contact__intro { min-height: var(--work-screen, 100svh); }
 .cta-contact__intro-stage {
-  min-height: 100svh;
+  min-height: var(--work-screen, 100svh);
   display: grid;
   place-items: center;
   padding: 1.25rem;
@@ -23,8 +23,11 @@
   letter-spacing: calc(var(--intro-tracking, .34) * 1em);
 }
 .cta-contact__main {
-  min-height: 100svh;
-  padding: clamp(5rem, 12svh, 9rem) clamp(1.25rem, 4vw, 5rem) 5rem;
+  --cta-headline-offset: clamp(5rem, 12svh, 9rem);
+  --cta-intro-overlap: 0.25;
+  min-height: var(--work-screen, 100svh);
+  margin-top: calc((50svh + var(--cta-headline-offset)) * var(--cta-intro-overlap) * -1);
+  padding: var(--cta-headline-offset) clamp(1.25rem, 4vw, 5rem) 5rem;
 }
 .cta-contact__content { max-width: 1600px; margin-inline: auto; }
 .cta-contact__headline {
@@ -93,20 +96,9 @@
 .cta-contact__field textarea { resize: vertical; min-height: 4rem; }
 .cta-contact__field input:focus,
 .cta-contact__field textarea:focus { border-color: #F7F7F7; }
-.cta-contact__field--error input { border-color: rgba(247,247,247,.62); }
-.cta-contact__field-error {
-  display: block;
-  margin-top: .55rem;
-  color: rgba(247,247,247,.62);
-  font-size: .68rem;
-  font-weight: 400;
-  line-height: 1.45;
-  letter-spacing: .035em;
-  text-align: center;
-}
 .cta-contact__field input:autofill {
   -webkit-text-fill-color: #F7F7F7;
-  box-shadow: 0 0 0 1000px #000 inset;
+  box-shadow: 0 0 0 1000px var(--services-sheet, #000000) inset;
   caret-color: #F7F7F7;
 }
 .cta-contact__send {
@@ -128,23 +120,67 @@
   cursor: pointer;
 }
 .cta-contact__send > span { font-size: 1.15rem; transition: transform .3s; }
+.cta-contact__send-arrow { color: #ff334e; }
 .cta-contact__send:hover > span { transform: translate(3px, -3px); }
 .cta-contact__send:focus-visible { outline: 1px solid #F7F7F7; outline-offset: 8px; }
-.cta-contact__delivery,
-.cta-contact__notice {
+.cta-contact__delivery {
   margin: -1rem 0 0;
   color: rgba(247,247,247,.55);
   font-size: .7rem;
   line-height: 1.7;
   text-align: center;
 }
-.cta-contact__notice { min-height: 2.4em; }
+.cta-contact__notice {
+  margin: -1.35rem 0 -1.5rem;
+  color: rgba(247,247,247,.42);
+  font-size: .68rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: .01em;
+  text-align: center;
+  text-wrap: pretty;
+}
+.cta-contact__notice a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
 @media (max-width: 640px) {
+  .cta-contact {
+    /* 75% of the desktop intro rhythm. The line sits higher; the contact block keeps the previous anchor. */
+    --cta-intro-stage-min: 75svh;
+    --cta-intro-eyebrow-inset: 22svh;
+    --cta-intro-overlap-anchor: 37.5svh;
+  }
+
+  .cta-contact__intro {
+    min-height: var(--cta-intro-stage-min);
+  }
+
+  .cta-contact__intro-stage {
+    min-height: var(--cta-intro-stage-min);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: max(1.25rem, calc(var(--cta-intro-eyebrow-inset) - 0.6em)) 1.25rem 1.25rem;
+  }
+
   .cta-contact__headline { height: 15rem; margin-bottom: 2rem; }
   .cta-contact__phrase { font-size: clamp(2.25rem, 11.5vw, 4.5rem); line-height: 1.12; }
-  .cta-contact__main { padding-top: 4rem; padding-bottom: 3rem; }
+  .cta-contact__main {
+    --cta-headline-offset: 4rem;
+    --cta-intro-overlap: 0.4375;
+    min-height: 88svh;
+    margin-top: calc(
+      (var(--cta-intro-overlap-anchor) + var(--cta-headline-offset)) * var(--cta-intro-overlap) * -1
+    );
+    padding-top: var(--cta-headline-offset);
+    padding-bottom: 2.25rem;
+  }
   .cta-contact__form { gap: 2rem; }
   .cta-contact__eyebrow { max-width: 29em; }
+  .cta-contact__notice { padding-inline: 1.5rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   .cta-contact__send > span { transition: none; }

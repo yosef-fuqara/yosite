@@ -40,15 +40,50 @@ html.yo-intro-active.yo-intro-light body {
 }
 
 .yo-intro[data-state="done"] {
+  /* Parked 3D mark must scroll/hide with `.yo-sticky-chrome`, not the viewport.
+     Nested `position: fixed` (especially on mobile) escapes the header transform. */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: auto;
   display: block;
   overflow: visible;
   isolation: auto;
   mix-blend-mode: normal;
   background: transparent;
   pointer-events: none;
-  width: 100vw;
-  left: 0;
-  right: auto;
+  width: 100%;
+  max-width: 100vw;
+  height: 100dvh;
+  z-index: 1;
+}
+
+.yo-intro[data-parked="true"] {
+  display: none !important;
+}
+
+.yo-intro__stage.is-parked {
+  position: fixed !important;
+  z-index: 10000 !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: translate3d(0, var(--yo-header-shift, 0px), 0) !important;
+  translate: none !important;
+  scale: none !important;
+  transition: transform 0.52s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  will-change: auto !important;
+  filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+  pointer-events: none !important;
+  overflow: visible !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yo-intro__stage.is-parked {
+    transition: none !important;
+  }
 }
 
 .yo-intro[data-handoff="true"] {
@@ -110,6 +145,13 @@ html.yo-intro-logo-live .yo-intro[data-state="done"] .yo-intro__stage {
   opacity: 1;
   mix-blend-mode: normal;
   filter: brightness(0);
+}
+
+/* Rise entrance keeps the ball's accent red, so the parked mark is inked
+   by materials instead of a canvas-wide black filter. */
+html.yo-intro-logo-live .yo-intro[data-entrance="rise"][data-state="done"] .yo-intro__stage,
+.yo-intro[data-entrance="rise"][data-state="done"] .yo-intro__stage {
+  filter: none;
 }
 
 .yo-intro__canvas,

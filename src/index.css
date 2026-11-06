@@ -77,6 +77,36 @@ html.yo-intro-locked body {
   scroll-margin-top: 5.5rem;
 }
 
+/* One black canvas from Services (“what we build”) through contact + footer. */
+.site-dark-continuum {
+  --work-screen: 100svh;
+  position: relative;
+  isolation: isolate;
+  background-color: var(--services-sheet);
+  color: var(--services-ink);
+}
+
+.site-dark-continuum::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--services-sheet);
+  pointer-events: none;
+  box-shadow: 0 0 0 100vmax var(--services-sheet);
+  clip-path: inset(0 -100vmax);
+}
+
+.site-dark-continuum .site-footer {
+  background: var(--services-sheet);
+}
+
+@media (max-width: 767px) {
+  .site-dark-continuum {
+    --work-screen: var(--yo-lvh, 100vh);
+  }
+}
+
 body {
   font-family: var(--font-sans);
 }

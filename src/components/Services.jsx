@@ -11,8 +11,6 @@ import { useI18n } from "../i18n/I18nContext";
 
 import { SERVICE_CARDS, SERVICE_CARD_KEYS } from "../data/serviceCards";
 import { stableViewportHeight } from "../utils/stableViewport";
-import { createMagnoliaSequence } from "../utils/magnoliaSequence";
-
 import { SHEET_START } from "../utils/servicesSheet";
 
 import "../styles/services.css";
@@ -185,8 +183,91 @@ function smoothstep(value) {
   return t * t * (3 - 2 * t);
 }
 
-function applyCorner(track, corner, viewport) {
+/** public/flower/magnolia.webp — width / height. */
+const FLOWER_ASPECT = 568 / 915;
+
+function flowerMetrics(vw, vh) {
+  const tall = vh > vw * 1.02;
+  let dw = vw * (tall ? 1 : 0.62);
+  let dh = dw / FLOWER_ASPECT;
+  const minH = vh * (tall ? 1.34 : 1.58);
+  if (dh < minH) {
+    dh = minH;
+    dw = dh * FLOWER_ASPECT;
+  }
+  if (!tall && dw > vw * 0.7) {
+    dw = vw * 0.7;
+    dh = dw / FLOWER_ASPECT;
+  }
+  return { dw, dh };
+}
+
+/** Full branch, left aligned, at the size the pinned pan used to paint. */
+function sizeFlower(img, viewport) {
+  if (!img) return;
+  const vw = viewport?.clientWidth || window.innerWidth;
+  const vh = window.innerWidth <= 767
+    ? stableViewportHeight()
+    : (viewport?.clientHeight || window.innerHeight);
+  const { dw } = flowerMetrics(vw, vh);
+  img.style.width = `${dw}px`;
+  img.style.height = "auto";
+  img.style.transform = "none";
+  img.style.opacity = "1";
+  img.style.visibility = "visible";
+
+  const headline = viewport?.querySelector(".services-headline");
+  const pad = headline ? parseFloat(getComputedStyle(headline).paddingBottom) || 0 : 0;
+  if (img.parentElement) {
+    img.parentElement.style.marginTop = pad ? `${-Math.round(pad)}px` : "0px";
+    img.parentElement.style.setProperty("--magnolia-w", `${Math.round(dw)}px`);
+  }
+}
+
+function clearFlower(img) {
+  if (!img) return;
+  img.style.width = "";
+  img.style.height = "";
+  img.style.transform = "";
+  img.style.opacity = "";
+  img.style.visibility = "";
+  if (img.parentElement) {
+    img.parentElement.style.marginTop = "";
+    img.parentElement.style.removeProperty("--magnolia-w");
+  }
+}
+
+function MagnoliaCaption() {
+  return (
+    <div className="services-magnolia__aside" dir="ltr">
+      <figure className="services-magnolia__caption">
+        <blockquote className="services-magnolia__quote">
+          Not everything grows in a <strong>garden.</strong>
+        </blockquote>
+        <figcaption className="services-magnolia__attribution">
+          <cite>Yosef Fuqara</cite>
+        </figcaption>
+      </figure>
+    </div>
+  );
+}
+
+function measureTrack(viewport, track) {
   const viewH = viewport?.clientHeight || window.innerHeight;
+  const cards = [];
+  for (const card of track.querySelectorAll(".services-card")) {
+    cards.push({
+      card,
+      top: card.offsetTop,
+      height: card.offsetHeight || 1,
+    });
+  }
+  return { viewH, cards };
+}
+
+function applyCorner(track, corner, metrics) {
+  if (!metrics?.cards?.length) return;
+  const { viewH, cards } = metrics;
   const trackY = Number(gsap.getProperty(track, "y")) || 0;
   const fromRight = corner.includes("right");
   const fromTop = corner.startsWith("top");
@@ -200,10 +281,9 @@ function applyCorner(track, corner, viewport) {
       ? "right bottom"
       : "left bottom";
 
-  for (const card of track.querySelectorAll(".services-card")) {
-    const height = card.offsetHeight || 1;
-    const center = trackY + card.offsetTop + height * 0.5;
+  for (const { card, top, height } of cards) {
     let amount = 0;
+    const center = trackY + top + height * 0.5;
 
     if (fromTop) {
       const settle = viewH * 0.46;
@@ -220,38 +300,76 @@ function applyCorner(track, corner, viewport) {
       rotation: tilt * k,
       transformOrigin: origin,
       force3D: true,
+      lazy: false,
     });
   }
 }
 
-function buildDesktopSequence(root, viewport, leftTrack, rightTrack, headlineVisual, headlineReveal, magnoliaCanvas) {
+/** How much scroll (× viewport height) completes the headline line-exit. Lower = faster vs scroll. */
+const HEADLINE_EXIT_SCROLL_VH = 0.34;
+
+function headlineExitScrollPx() {
+  const vh = stableViewportHeight();
+  return Math.max(120, Math.round(vh * HEADLINE_EXIT_SCROLL_VH));
+}
+
+/**
+ * The line-exit plays while the pin itself leaves the screen, so the sentence
+ * keeps its current rise-and-clip and the page scrolls instead of holding it.
+ */
+function bindHeadlineExit(pin, headlineVisual) {
+  if (!pin || !headlineVisual) return () => {};
+
+  const tween = gsap.fromTo(
+    headlineVisual,
+    { "--services-headline-exit-t": 0 },
+    {
+      "--services-headline-exit-t": 1.12,
+      ease: "none",
+      immediateRender: false,
+      scrollTrigger: {
+        trigger: pin,
+        start: "bottom bottom",
+        end: () => `bottom+=${headlineExitScrollPx()} bottom`,
+        scrub: true,
+        invalidateOnRefresh: true,
+        fastScrollEnd: false,
+      },
+    },
+  );
+
+  return () => {
+    tween.scrollTrigger?.kill();
+    tween.kill();
+  };
+}
+
+function buildDesktopSequence(root, viewport, leftTrack, rightTrack, headlineVisual, headlineReveal, flowerImg) {
   if (!leftTrack || !rightTrack) return undefined;
 
-  const magnolia = magnoliaCanvas ? createMagnoliaSequence(magnoliaCanvas) : null;
-
+  let leftMetrics;
+  let rightMetrics;
   const layout = () => {
     syncServicesPinHeight(root, viewport, {
       isMobile: false,
       leftTrack,
       rightTrack,
     });
+    leftMetrics = measureTrack(viewport, leftTrack);
+    rightMetrics = measureTrack(viewport, rightTrack);
   };
   const pose = () => {
-    applyCorner(leftTrack, "bottom-left", viewport);
-    applyCorner(rightTrack, "top-right", viewport);
+    applyCorner(leftTrack, "bottom-left", leftMetrics);
+    applyCorner(rightTrack, "top-right", rightMetrics);
   };
 
   layout();
-  if (magnolia) {
-    magnolia.resize(false);
-    magnolia.draw(0);
-  }
   gsap.set(leftTrack, { y: trackRange(viewport, leftTrack, true).from, force3D: true });
   gsap.set(rightTrack, { y: trackRange(viewport, rightTrack, false).from, force3D: true });
   pose();
 
   const tl = gsap.timeline({
-    defaults: { ease: "none" },
+    defaults: { ease: "none", lazy: false },
     scrollTrigger: {
       trigger: root,
       start: () => `top+=${servicesStartOffset(root)} top`,
@@ -266,7 +384,7 @@ function buildDesktopSequence(root, viewport, leftTrack, rightTrack, headlineVis
       onRefresh: () => {
         layout();
         pose();
-        magnolia?.resize(false);
+        sizeFlower(flowerImg, viewport);
       },
     },
   });
@@ -298,43 +416,21 @@ function buildDesktopSequence(root, viewport, leftTrack, rightTrack, headlineVis
 
   tl.to({}, { duration: revealDuration }, revealStart);
 
-  // Outro transition: headline rises away while the magnolia branch grows in.
-  const transitionStart = (SHEET_START + QUICK_REVEAL_FRACTION) * SEQ_SCALE;
-  const transitionDuration = TRANSITION_FRACTION * SEQ_SCALE;
-
-  if (headlineVisual) {
-    tl.fromTo(
-      headlineVisual,
-      { "--services-headline-exit-t": 0 },
-      { "--services-headline-exit-t": 1.12, duration: transitionDuration * HEADLINE_EXIT_SHARE },
-      transitionStart,
-    );
-  }
-
-  if (magnolia) {
-    const branch = { progress: 0 };
-    tl.fromTo(
-      branch,
-      { progress: 0 },
-      {
-        progress: 1,
-        duration: transitionDuration,
-        onUpdate: () => magnolia.draw(branch.progress),
-      },
-      transitionStart,
-    );
-  }
+  const releaseExit = bindHeadlineExit(root, headlineVisual);
+  sizeFlower(flowerImg, viewport);
 
   return () => {
+    releaseExit();
     viewport.classList.remove("is-pinned");
     root.style.removeProperty("height");
-    magnolia?.destroy();
+    clearFlower(flowerImg);
     gsap.set(
       [
         leftTrack,
         rightTrack,
         headlineVisual,
         headlineReveal,
+        flowerImg,
         ...leftTrack.querySelectorAll(".services-card"),
         ...rightTrack.querySelectorAll(".services-card"),
       ].filter(Boolean),
@@ -345,199 +441,103 @@ function buildDesktopSequence(root, viewport, leftTrack, rightTrack, headlineVis
   };
 }
 
-function buildStackedSequence(root, viewport, stack, headlineVisual, headlineReveal, magnoliaCanvas) {
-
+function buildStackedSequence(root, viewport, stack, headlineVisual, headlineReveal, flowerImg) {
   if (!stack) return undefined;
 
-  const magnolia = magnoliaCanvas ? createMagnoliaSequence(magnoliaCanvas) : null;
-
   const layout = () => {
-
     syncServicesPinHeight(root, viewport, {
-
       isMobile: true,
-
       leftTrack: stack,
-
       rightTrack: stack,
-
     });
-
   };
 
-
-
   layout();
-  if (magnolia) {
-    magnolia.resize(true);
-    magnolia.draw(0);
-  }
+
+  const stackFrom = () => Math.round(trackRange(viewport, stack, true).from);
+  const stackTo = () => Math.round(trackRange(viewport, stack, true).to);
 
   gsap.set(stack, {
-
-    y: trackRange(viewport, stack, true).from,
-
+    y: stackFrom(),
     force3D: true,
-
     autoAlpha: 0,
-
   });
 
   const isMobileLayout = () => (viewport.clientWidth || window.innerWidth) <= 767;
 
-
-
   const tl = gsap.timeline({
-
-    defaults: { ease: "none" },
-
+    defaults: { ease: "none", lazy: false },
     scrollTrigger: {
-
       trigger: root,
-
       start: () => `top+=${servicesStartOffset(root)} top`,
-
       end: "bottom bottom",
-
       scrub: true,
-
       invalidateOnRefresh: true,
-
       fastScrollEnd: false,
-
       onToggle: (self) => {
-
         viewport.classList.toggle("is-pinned", self.isActive);
-
         gsap.set(stack, { autoAlpha: self.isActive ? 1 : 0 });
-
       },
-
       onRefresh: () => {
-
         layout();
-
-        magnolia?.resize(true);
-
         if (isMobileLayout()) {
-
           if (headlineVisual) gsap.set(headlineVisual, { y: 0, force3D: true });
-
           if (headlineReveal) gsap.set(headlineReveal, { height: "0.82em" });
-
         }
-
+        sizeFlower(flowerImg, viewport);
       },
-
     },
-
   });
 
-
-
   tl.fromTo(
-
     stack,
-
-    { y: () => trackRange(viewport, stack, true).from },
-
-    { y: () => trackRange(viewport, stack, true).to, duration: SHEET_START * SEQ_SCALE },
-
+    { y: stackFrom },
+    {
+      y: stackTo,
+      duration: SHEET_START * SEQ_SCALE,
+      modifiers: {
+        y: (value) => `${Math.round(parseFloat(value))}px`,
+      },
+    },
     0,
-
   );
 
-
-
   const revealStart = SHEET_START * SEQ_SCALE;
-
   const revealDuration = QUICK_REVEAL_FRACTION * SEQ_SCALE;
 
-
-
   if (headlineVisual) {
-
     if (isMobileLayout()) {
-
       gsap.set(headlineVisual, { y: 0, force3D: true });
-
     } else {
-
       tl.fromTo(
-
         headlineVisual,
-
         { y: () => parseFloat(getComputedStyle(headlineVisual).fontSize) * 0.18 },
-
         { y: 0, duration: revealDuration },
-
         revealStart,
-
       );
-
     }
-
   }
-
-
 
   if (headlineReveal && isMobileLayout()) {
-
     gsap.set(headlineReveal, { height: "auto" });
-
   }
-
-
 
   tl.to({}, { duration: revealDuration }, revealStart);
 
-  // Outro transition: headline rises away while the magnolia branch grows in.
-  const transitionStart = (SHEET_START + QUICK_REVEAL_FRACTION) * SEQ_SCALE;
-  const transitionDuration = TRANSITION_FRACTION * SEQ_SCALE;
-
-  if (headlineVisual) {
-    tl.fromTo(
-      headlineVisual,
-      { "--services-headline-exit-t": 0 },
-      { "--services-headline-exit-t": 1.12, duration: transitionDuration * HEADLINE_EXIT_SHARE },
-      transitionStart,
-    );
-  }
-
-  if (magnolia) {
-    const branch = { progress: 0 };
-    tl.fromTo(
-      branch,
-      { progress: 0 },
-      {
-        progress: 1,
-        duration: transitionDuration,
-        onUpdate: () => magnolia.draw(branch.progress),
-      },
-      transitionStart,
-    );
-  }
+  const releaseExit = bindHeadlineExit(root, headlineVisual);
+  sizeFlower(flowerImg, viewport);
 
   return () => {
-
+    releaseExit();
     viewport.classList.remove("is-pinned");
-
     root.style.removeProperty("height");
-
-    magnolia?.destroy();
-
-    gsap.set([stack, headlineVisual, headlineReveal].filter(Boolean), {
-
+    clearFlower(flowerImg);
+    gsap.set([stack, headlineVisual, headlineReveal, flowerImg].filter(Boolean), {
       clearProps: "transform,x,y,rotation,opacity,visibility,height,--services-headline-exit-t",
-
     });
-
     tl.scrollTrigger?.kill();
-
     tl.kill();
-
   };
-
 }
 
 
@@ -546,17 +546,8 @@ const SEQ_SCALE = 4.4;
 
 const QUICK_REVEAL_FRACTION = 0.06;
 
-/**
- * Outro transition that runs right after the cards + headline reveal: the
- * headline rises away while the magnolia branch grows in. It adds real scroll
- * range to the Services section (no pin, no empty spacer) and keeps the card
- * scrub-rate identical, because the extra timeline duration and the extra
- * scroll distance grow together (see syncServicesPinHeight).
- */
-const TRANSITION_FRACTION = 0.92;
-
-/** Portion of the transition over which the headline finishes leaving. */
-const HEADLINE_EXIT_SHARE = 0.5;
+/** Cards and the short reveal. The sentence exit rides the pin's release, not extra stuck scroll. */
+const PINNED_SCROLL_FRACTION = SHEET_START + QUICK_REVEAL_FRACTION;
 
 /** Same stagger as the hero sentence: line index / 3 * 0.14. */
 function servicesLineExitDelay(index) {
@@ -571,6 +562,10 @@ function servicesStartOffset(root) {
 
   const workBottom = pageTop(work) + work.offsetHeight;
   const rootTop = pageTop(root);
+  if (window.innerWidth <= 767) {
+    // Last stacked project must leave the screen before the service cards rise.
+    return Math.max(0, workBottom - rootTop) + beat;
+  }
   const holdPx = Math.max(0, workBottom - vh - rootTop);
   return holdPx + beat;
 }
@@ -599,12 +594,7 @@ function syncServicesPinHeight(root, viewport, { isMobile = false, leftTrack, ri
   const originalPinHeight = (configuredPinVh / 100) * viewportHeight;
   const startOffset = servicesStartOffset(root);
   const originalScrollRange = Math.max(0, originalPinHeight - startOffset - viewportHeight);
-  // Keep the cards' existing scroll distance (SHEET_START), a short reveal, then
-  // the magnolia transition. Adding TRANSITION_FRACTION here extends the scroll
-  // range by exactly the same proportion the timeline grows, so the cards keep
-  // their original scrub-rate while the branch gets real room to grow.
-  let shortenedScrollRange =
-    originalScrollRange * (SHEET_START + QUICK_REVEAL_FRACTION + TRANSITION_FRACTION);
+  let shortenedScrollRange = originalScrollRange * PINNED_SCROLL_FRACTION;
   if (isMobile) {
     shortenedScrollRange *= mobileScrollSpanScale(viewport, leftTrack, rightTrack);
   }
@@ -636,9 +626,7 @@ export default function Services() {
 
   const headlineRevealRef = useRef(null);
 
-  const magnoliaRef = useRef(null);
-
-
+  const flowerRef = useRef(null);
 
   useLayoutEffect(() => {
 
@@ -666,7 +654,7 @@ export default function Services() {
         rightTrackRef.current,
         headlineVisualRef.current,
         headlineRevealRef.current,
-        magnoliaRef.current,
+        flowerRef.current,
       ),
     );
 
@@ -677,7 +665,7 @@ export default function Services() {
         stackRef.current,
         headlineVisualRef.current,
         headlineRevealRef.current,
-        magnoliaRef.current,
+        flowerRef.current,
       ),
     );
 
@@ -685,10 +673,6 @@ export default function Services() {
 
     const refresh = () => {
       ScrollTrigger.refresh();
-    };
-
-    const onScroll = () => {
-      ScrollTrigger.update();
     };
 
     let lastWidth = window.innerWidth;
@@ -705,8 +689,6 @@ export default function Services() {
 
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-
     window.addEventListener("resize", onResize);
 
     const fontsReady = document.fonts?.ready?.then(refresh);
@@ -720,8 +702,6 @@ export default function Services() {
 
 
     return () => {
-
-      window.removeEventListener("scroll", onScroll);
 
       window.removeEventListener("resize", onResize);
 
@@ -766,10 +746,6 @@ export default function Services() {
         <div ref={viewportRef} className="services-viewport">
 
           <div ref={sheetRef} className="services-sheet">
-
-            {reduced ? null : (
-              <canvas ref={magnoliaRef} className="services-magnolia" aria-hidden="true" />
-            )}
 
             <h2 id="services-heading" className="services-headline">
 
@@ -833,6 +809,21 @@ export default function Services() {
 
               </div>
 
+            ) : null}
+
+            {reduced ? (
+              <div className="services-magnolia">
+                <img
+                  className="services-magnolia__img"
+                  src="/flower/magnolia.webp"
+                  alt=""
+                  width={568}
+                  height={915}
+                  draggable="false"
+                  decoding="async"
+                />
+                <MagnoliaCaption />
+              </div>
             ) : null}
 
           </div>
@@ -900,6 +891,22 @@ export default function Services() {
         </div>
 
       </div>
+
+      {reduced ? null : (
+        <div className="services-magnolia">
+          <img
+            ref={flowerRef}
+            className="services-magnolia__img"
+            src="/flower/magnolia.webp"
+            alt=""
+            width={568}
+            height={915}
+            draggable="false"
+            decoding="async"
+          />
+          <MagnoliaCaption />
+        </div>
+      )}
 
     </section>
 

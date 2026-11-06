@@ -37,6 +37,7 @@
   overflow: clip;
   isolation: isolate;
   background: var(--services-sheet);
+  transform: translateZ(0);
 }
 
 
@@ -58,18 +59,149 @@
   overflow: hidden;
 }
 
-/* Magnolia branch — scroll-driven frame sequence drawn over the black sheet.
-   The frames carry a black background, which is identical to the sheet, so the
-   cropped padding is invisible; `screen` blending also dissolves any residual
-   dark edge so only the lit branch and flowers read against the black. */
+/* Full magnolia in normal flow, directly under the headline.
+   No clip, fade, or pan — the page scroll carries the branch. */
 .services-magnolia {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
+  --magnolia-w: 62vw;
+  position: relative;
+  z-index: 4;
   width: 100%;
-  height: 100%;
+  margin: 0;
+  overflow: visible;
+  line-height: 0;
   pointer-events: none;
-  mix-blend-mode: screen;
+}
+
+.services-magnolia__img {
+  position: relative;
+  display: block;
+  top: auto;
+  left: 0;
+  width: 62vw;
+  max-width: none;
+  height: auto;
+  margin-left: 0;
+  margin-right: auto;
+  opacity: 1;
+  transform: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+/* Sentence sits in the black field to the right of the branch.
+   The artwork only fills the left of the portrait, so the line
+   starts inside that black, clear of the petals. */
+.services-magnolia__aside {
+  position: absolute;
+  z-index: 2;
+  top: 38%;
+  left: calc(var(--magnolia-w) * 0.56);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding-inline: clamp(1.5rem, 4vw, 5.5rem);
+  transform: translateY(-50%);
+  pointer-events: none;
+  container-type: inline-size;
+}
+
+.services-magnolia__caption {
+  margin: 0;
+  width: max-content;
+  max-width: 100%;
+  color: #ffffff;
+  font-family: Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-synthesis: none;
+  text-align: center;
+}
+
+.services-magnolia__quote {
+  margin: 0;
+  font-weight: 300;
+  font-size: clamp(0.72rem, min(1.35vw, 3.55cqi), 1.28rem);
+  line-height: 1.15;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  /* Tracking adds space after the last glyph; pull it back so the line centers. */
+  margin-inline-end: -0.3em;
+}
+
+.services-magnolia__quote strong {
+  font-weight: 700;
+  letter-spacing: inherit;
+}
+
+.services-magnolia__attribution {
+  margin: 0.75em 0 0;
+  font-weight: 300;
+  font-size: clamp(0.58rem, min(1.05vw, 2.65cqi), 0.92rem);
+  line-height: 1;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.82;
+}
+
+.services-magnolia__attribution cite {
+  font-style: normal;
+}
+
+.services-magnolia__attribution cite::before {
+  content: "— ";
+  letter-spacing: 0.12em;
+  opacity: 0.9;
+}
+
+@media (max-width: 767px) {
+  /* Sit in the portrait’s left black field, hugging the branch (desktop keeps the right field). */
+  .services-magnolia__aside {
+    position: absolute;
+    z-index: 3;
+    top: 62%;
+    left: clamp(0.55rem, 3vw, 1.05rem);
+    right: auto;
+    width: max-content;
+    max-width: none;
+    transform: translateY(-50%);
+    padding: 0;
+    align-items: flex-start;
+    justify-content: center;
+    line-height: 1;
+    container-type: normal;
+  }
+
+  .services-magnolia__quote {
+    max-width: none;
+    font-size: clamp(0.62rem, 2.85vw, 0.84rem);
+    line-height: 1.05;
+    letter-spacing: 0.16em;
+    text-align: start;
+    margin-inline-end: -0.16em;
+    white-space: normal;
+  }
+
+  .services-magnolia__caption {
+    text-align: start;
+  }
+
+  .services-magnolia__attribution {
+    text-align: start;
+    font-size: clamp(0.52rem, 2.35vw, 0.68rem);
+    letter-spacing: 0.14em;
+    margin-top: 0.55em;
+  }
+}
+
+@media (max-width: 340px) {
+  .services-magnolia__quote {
+    font-size: clamp(0.56rem, 2.6vw, 0.72rem);
+    letter-spacing: 0.1em;
+    margin-inline-end: -0.1em;
+  }
 }
 
 .services-headline,
@@ -152,7 +284,7 @@
 }
 
 .services-headline__line-exit {
-  --services-headline-exit-span: 0.86;
+  --services-headline-exit-span: 0.72;
   --line-exit: clamp(
     0,
     (var(--services-headline-exit-t, 0) - var(--services-line-exit-delay, 0)) / var(--services-headline-exit-span),
@@ -446,8 +578,13 @@ html[lang="ru"] .services-mosaic__ink {
 
 @media (max-width: 767px) {
   .work-services-run {
-    overflow: clip;
-    contain: layout style;
+    overflow: visible;
+    contain: none;
+  }
+
+  /* Stacked projects have no peel overlap — don't pull this section under the last image. */
+  .services-scroll {
+    margin-top: 0;
   }
 
   .services-pin {
@@ -463,8 +600,8 @@ html[lang="ru"] .services-mosaic__ink {
 
   .services-headline {
     padding-inline: 0.18rem;
-    /* One full headline line, plus the iPhone home indicator. */
-    padding-bottom: calc(1.45em + env(safe-area-inset-bottom, 0px));
+    /* Flush with the viewport, same as desktop, so the last line crops. */
+    padding-bottom: 0;
   }
 
   .services-headline-spill {
@@ -483,8 +620,11 @@ html[lang="ru"] .services-mosaic__ink {
   }
 
   .services-headline__visual {
-    gap: 0.32em;
+    gap: 0;
     max-width: 100%;
+    /* GSAP pins translateY at 0 on mobile, so the desktop 0.18em drop
+       never applies. This pulls the last line into the viewport clip. */
+    margin-bottom: -0.28em;
     transform: none;
   }
 
@@ -565,7 +705,7 @@ html[lang="ru"] .services-mosaic__ink {
   }
 }
 
-.selected-work.is-stacked + .services-scroll,
+.work-services-run:has(.selected-work.is-stacked) .services-scroll,
 .services-scroll.is-static {
   margin-top: 0;
 }
@@ -593,6 +733,38 @@ html[lang="ru"] .services-mosaic__ink {
   mix-blend-mode: normal;
   pointer-events: auto;
   padding: calc(var(--services-nav) + 2rem) 1.25rem 3.5rem;
+}
+
+.services-scroll.is-static .services-magnolia {
+  --magnolia-w: min(64vw, 46rem);
+  position: relative;
+  inset: auto;
+  z-index: 1;
+  height: 62svh;
+  margin-top: 2.5rem;
+  margin-inline: -1.25rem;
+  overflow: hidden;
+}
+
+.services-scroll.is-static .services-magnolia__img {
+  opacity: 1;
+  width: min(64vw, 46rem);
+  height: auto;
+  transform: none;
+}
+
+@media (max-width: 767px) {
+  .services-scroll.is-static .services-magnolia {
+    height: auto;
+    overflow: visible;
+  }
+
+  .services-scroll.is-static .services-magnolia__img {
+    width: 100vw;
+    max-height: 52svh;
+    object-fit: cover;
+    object-position: left top;
+  }
 }
 
 .services-scroll.is-static .services-col {

@@ -42,13 +42,13 @@ function App() {
           <HeroAboutZone />
           <div className="work-services-run">
             <SelectedWork />
-            <Services />
+            <div className="site-dark-continuum">
+              <Services />
+              <ContactCTA />
+              <Footer />
+            </div>
           </div>
-          <ContactCTA />
         </main>
-
-        {/* Elegant Studio Footer */}
-        <Footer />
       </div>
     </InertialScroll>
   );

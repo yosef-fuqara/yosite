@@ -14,6 +14,27 @@ export const INTRO_JUMP_SPEED_BOOST = 1.5;
 /** Clip time: second landing has settled and the mark has broken. */
 export const INTRO_JUMP_END = 0.8;
 
+/**
+ * Opening in use.
+ * "jump" is the original baked bounce — ball hops, letter splits, then the
+ * mark rises. Frozen here, not deleted. Set this back to "jump" to play it.
+ * "rise" holds the broken letter and brings that pose up from below the screen,
+ * then the original rise into the nav plays unchanged.
+ */
+export const INTRO_ENTRANCE = "rise";
+
+/** Clip time: arms have split, the center is gone, and the ball is back at rest. */
+export const INTRO_BROKEN_POSE = 0.85;
+
+/** Broken mark travels from below the viewport to the center. */
+export const INTRO_RISE_IN = 1.15;
+
+/** Beat in the center before the original nav rise. */
+export const INTRO_RISE_SETTLE = 0.28;
+
+/** Site accent. The intro ball keeps this color. */
+export const INTRO_DOT_COLOR = "#ff334e";
+
 /** Clip time: gaze has returned to center / looking forward. */
 export const INTRO_GAZE_END = 1.217;
 
@@ -39,6 +60,12 @@ export const INTRO_HANDOFF = 0.82;
 export const INTRO_HANDOFF_SIZE = 0.85;
 
 export const INTRO_HANDOFF_AT_WALL = INTRO_TAIL_START_WALL;
+
+/** When the nav rise starts. The jump clock stays intact for the frozen opening. */
+export function introHandoffAt() {
+  if (INTRO_ENTRANCE === "rise") return INTRO_RISE_IN + INTRO_RISE_SETTLE;
+  return INTRO_HANDOFF_AT_WALL;
+}
 
 const _markBox = new Box3();
 const _markVec = new Vector3();

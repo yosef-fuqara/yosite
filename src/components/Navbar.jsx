@@ -34,6 +34,13 @@ export default function Navbar() {
     const measure = () => {
       heroEnd = hero ? hero.getBoundingClientRect().bottom + window.scrollY : window.innerHeight;
     };
+    const applyShift = (isHidden) => {
+      const height = bar?.offsetHeight || 0;
+      document.documentElement.style.setProperty(
+        "--yo-header-shift",
+        isHidden ? `${-height}px` : "0px",
+      );
+    };
     const onScroll = () => {
       const y = Math.max(0, Math.min(window.scrollY, document.documentElement.scrollHeight - window.innerHeight));
       const delta = y - lastY;
@@ -45,6 +52,7 @@ export default function Navbar() {
       if (y < heroEnd || focused) {
         travel = 0;
         direction = 0;
+        applyShift(false);
         setHidden(false);
         return;
       }
@@ -54,7 +62,9 @@ export default function Navbar() {
       direction = nextDirection;
       travel += Math.abs(delta);
       if (travel >= 12) {
-        setHidden(direction > 0);
+        const nextHidden = direction > 0;
+        applyShift(nextHidden);
+        setHidden(nextHidden);
         travel = 0;
       }
     };
@@ -105,7 +115,10 @@ export default function Navbar() {
         ref={barRef}
         className="yo-sticky-chrome fixed inset-x-0 top-0 z-[9999] overflow-visible"
         data-hidden={hidden}
-        onFocusCapture={() => setHidden(false)}
+        onFocusCapture={() => {
+          document.documentElement.style.setProperty("--yo-header-shift", "0px");
+          setHidden(false);
+        }}
         initial={false}
         animate={{ y: hidden ? "-100%" : "0%" }}
         style={{

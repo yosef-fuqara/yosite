@@ -13,7 +13,7 @@ const HEADING_SETTLE_BUFFER_MS = 160;
 const START_HOLD = 0.04;
 const END_HOLD = 0.05;
 const RISE_DESKTOP = 0.32;
-const RISE_MOBILE = 0.18;
+const PEEL_HOLD = 0.1;
 
 function incomingAmount(slot, visible) {
   const incoming = slot - (visible - 1);
@@ -92,7 +92,15 @@ function FocusLine({ plan, lineIndex, active, reduced }) {
   if (reduced) {
     return (
       <span className="selected-work__heading-line">
-        {plan.map((letter) => letter.ch).join("")}
+        {plan.map((letter, index) =>
+          letter.ch === "&" ? (
+            <span key={`${lineIndex}-${index}-&`} className="selected-work__glyph--accent">
+              &
+            </span>
+          ) : (
+            letter.ch
+          ),
+        )}
       </span>
     );
   }
@@ -112,7 +120,13 @@ function FocusLine({ plan, lineIndex, active, reduced }) {
           }}
         >
           <span className="selected-work__char-motion">
-            <span className="selected-work__glyph">{letter.ch}</span>
+            <span
+            className={`selected-work__glyph${
+              letter.ch === "&" ? " selected-work__glyph--accent" : ""
+            }`}
+          >
+            {letter.ch}
+          </span>
           </span>
         </span>
       ))}
@@ -181,8 +195,20 @@ export default function SelectedWork() {
   const reducedMotion = useReducedMotion();
   const { t, dir } = useI18n();
   const [headingSettled, setHeadingSettled] = useState(false);
+  const [mobileLayout, setMobileLayout] = useState(() =>
+    typeof window !== "undefined" ? isMobileViewport() : false,
+  );
 
-  const pinned = !reducedMotion;
+  /** Desktop: pinned horizontal reel. Phone: vertical stack (native scroll, no jitter). */
+  const pinned = !reducedMotion && !mobileLayout;
+
+  useLayoutEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const sync = () => setMobileLayout(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   const headingInView = useInView(headingRef, { amount: 0.4, once: true });
   const headingActive = Boolean(headingInView && !reducedMotion);
@@ -218,9 +244,13 @@ export default function SelectedWork() {
     const travelled = progress * (steps + peelDistance);
     const camera = Math.min(travelled, steps);
     const peelRaw = travelled <= steps ? 0 : clamp01((travelled - steps) / peelDistance);
-    const peelHold = 0.1;
     const peel =
-      peelRaw <= peelHold ? 0 : clamp01((peelRaw - peelHold) / (1 - peelHold));
+      peelRaw <= PEEL_HOLD ? 0 : clamp01((peelRaw - PEEL_HOLD) / (1 - PEEL_HOLD));
+
+    blanket.classList.toggle("is-off", peel >= 0.995);
+    stage.classList.toggle("is-peeling", peel > 0.002 && peel < 0.995);
+    syncActiveIndex(steps <= 0 ? 1 : camera / steps);
+
     const x = isMobile ? -snapTransformPx(camera * panelW) : -camera * panelW;
     const next = isMobile
       ? `translate3d(${x}px, 0, 0)`
@@ -242,8 +272,6 @@ export default function SelectedWork() {
     if (blanket.style.transform !== blanketNext) {
       blanket.style.transform = blanketNext;
     }
-    blanket.classList.toggle("is-off", peel >= 0.995);
-    stage.classList.toggle("is-peeling", peel > 0.002 && peel < 0.995);
 
     const rise = isMobile ? 0 : RISE_DESKTOP * vh;
     for (let i = 0; i < panels.length; i += 1) {
@@ -260,8 +288,9 @@ export default function SelectedWork() {
         el.style.transform = panelNext;
       }
     }
+  };
 
-    const workProgress = steps <= 0 ? 1 : camera / steps;
+  const syncActiveIndex = (workProgress) => {
     const nextIndex = Math.round(workProgress * (PROJECT_COUNT - 1));
     if (activeRef.current !== nextIndex) {
       activeRef.current = nextIndex;
@@ -298,6 +327,8 @@ export default function SelectedWork() {
   }, [pinned, dir]);
 
   useEffect(() => {
+    if (!pinned) return undefined;
+
     const stage = stageRef.current;
     const section = sectionRef.current;
     const track = trackRef.current;

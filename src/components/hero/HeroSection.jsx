@@ -114,11 +114,6 @@ export default function HeroSection() {
 
   return (
     <section ref={rootRef} id="hero" className="yo-hero" aria-label="Hero">
-      <div className="yo-hero__field" aria-hidden="true">
-        <div className="yo-hero__field-grid" />
-        <div className="yo-hero__field-ring" />
-      </div>
-
       <div className="yo-hero__content">
         <HeroLiquidHeadline
           heroRef={rootRef}

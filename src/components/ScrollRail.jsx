@@ -71,23 +71,35 @@ export default function ScrollRail() {
     };
   }, []);
 
+  const active = isActive ? "true" : "false";
+  const reduced = reducedMotion ? "true" : "false";
+
   return createPortal(
-    <div
-      ref={railRef}
-      className="scroll-rail"
-      aria-hidden="true"
-      data-active={isActive ? "true" : "false"}
-      data-reduced-motion={reducedMotion ? "true" : "false"}
-    >
-      <span className="scroll-rail__track" />
-      <motion.div
-        className="scroll-rail__dot-wrap"
-        style={{ y: dotY }}
+    <>
+      <div
+        ref={railRef}
+        className="scroll-rail scroll-rail--line"
+        aria-hidden="true"
+        data-active={active}
+        data-reduced-motion={reduced}
       >
-        <span className="scroll-rail__glow" />
-        <span className="scroll-rail__dot" />
-      </motion.div>
-    </div>,
+        <span className="scroll-rail__track" />
+      </div>
+      <div
+        className="scroll-rail scroll-rail--dot"
+        aria-hidden="true"
+        data-active={active}
+        data-reduced-motion={reduced}
+      >
+        <motion.div
+          className="scroll-rail__dot-wrap"
+          style={{ y: dotY }}
+        >
+          <span className="scroll-rail__glow" />
+          <span className="scroll-rail__dot" />
+        </motion.div>
+      </div>
+    </>,
     document.body,
   );
 }

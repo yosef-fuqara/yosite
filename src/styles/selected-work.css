@@ -290,6 +290,13 @@ html[lang="ru"] .selected-work__heading {
   background: none;
 }
 
+.selected-work__glyph--accent,
+.selected-work__glyph.selected-work__glyph--accent {
+  color: #ff334e;
+  background: none;
+  -webkit-text-fill-color: #ff334e;
+}
+
 @media (min-width: 1200px) {
   .selected-work__heading {
     font-size: clamp(5.15rem, 6.9vw, 9.25rem);
@@ -481,6 +488,21 @@ html[lang="ru"] .selected-work__heading {
 
   .selected-work__blanket {
     box-shadow: none;
+  }
+
+  .selected-work.is-stacked .selected-work__panel--intro {
+    padding-top: calc(var(--work-nav) + 1.25rem);
+    padding-bottom: 2rem;
+  }
+
+  .selected-work.is-stacked .selected-work__panel--project {
+    padding-top: 1.5rem;
+    padding-bottom: 1.65rem;
+  }
+
+  .selected-work.is-stacked .selected-work__frame {
+    max-height: none;
+    aspect-ratio: 16 / 10.4;
   }
 
   .selected-work__reveal-stack {
