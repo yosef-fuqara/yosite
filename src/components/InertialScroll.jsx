@@ -8,6 +8,7 @@ import {
   consumeStartHash,
   isTopHash,
 } from "../utils/inertialScroll";
+import { servicesIntroScrollY, contactScreenScrollY } from "../utils/pageGeometry";
 import { onPageIntroReady } from "../utils/pageIntroGate";
 
 function isIntroLocked() {
@@ -23,8 +24,9 @@ function sectionFromHash(hash) {
   if (isTopHash(hash)) return null;
   const id = hash.startsWith("#") ? hash.slice(1) : hash;
   if (!id) return null;
+  const resolved = id === "services" || id === "services-heading" ? "services-intro" : id;
   try {
-    return document.getElementById(id);
+    return document.getElementById(resolved) || document.getElementById(id);
   } catch {
     return null;
   }
@@ -39,6 +41,15 @@ function releaseToStartPosition(lenis) {
   }
 
   history.replaceState(null, "", hash);
+  const id = hash.startsWith("#") ? hash.slice(1) : hash;
+  if (id === "contact" || id === "contact-form" || id === "contact-screen") {
+    lenis.scrollTo(contactScreenScrollY(), INERTIAL_SCROLL_TO);
+    return;
+  }
+  if (id === "services" || id === "services-heading" || id === "services-intro") {
+    lenis.scrollTo(servicesIntroScrollY(), INERTIAL_SCROLL_TO);
+    return;
+  }
   const target = sectionFromHash(hash);
   if (target) {
     lenis.scrollTo(target, INERTIAL_SCROLL_TO);

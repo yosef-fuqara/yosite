@@ -48,15 +48,12 @@ html {
   overflow-anchor: none;
 }
 
-/* Overlay is viewport-fixed at width:100%. A stable gutter shrinks that
-   box by the scrollbar track and leaves a side gap in the curtain. */
+/* Keep the scrollbar gutter for the whole intro. Switching it on mid-rise
+   steps the centered mark sideways. The overlay is 100vw so the gutter
+   does not open a gap in the black field. */
 html.yo-intro-pending,
 html.yo-intro-active,
-html.yo-intro-locked {
-  scrollbar-gutter: auto;
-}
-
-/* Rest gutter before the mark lands so the rise ends on the final top-center. */
+html.yo-intro-locked,
 html.yo-intro-active.yo-intro-handoff,
 html.yo-intro-active.yo-intro-logo-live {
   scrollbar-gutter: stable;

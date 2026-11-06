@@ -309,11 +309,14 @@ html[dir="rtl"] .yo-hero__title {
   text-align: center;
 }
 
-/* The entrance clip would slice 3D motion and falling letters. */
-.yo-hero__line--rotate:has(.yo-hero__word-rotate.is-run[data-fx="cube"]),
-.yo-hero__line--rotate:has(.yo-hero__word-rotate.is-run[data-fx="flip"]),
-.yo-hero__line--rotate:has(.yo-hero__word-rotate.is-run[data-fx="fall"]),
-.yo-hero__line--rotate:has(.yo-hero__word-rotate.is-run[data-fx="magnetic"]) {
+/* The line window would slice 3D motion and falling letters, so it opens
+   while the word is still fully on screen. Once scroll has started sliding
+   this line under the window, the window stays shut — a word swap must not
+   flash the hidden part back into view. */
+.hero-about-zone:not([data-rotate-line-covered]) .yo-hero__line--rotate:has(.yo-hero__word-rotate.is-run[data-fx="cube"]),
+.hero-about-zone:not([data-rotate-line-covered]) .yo-hero__line--rotate:has(.yo-hero__word-rotate.is-run[data-fx="flip"]),
+.hero-about-zone:not([data-rotate-line-covered]) .yo-hero__line--rotate:has(.yo-hero__word-rotate.is-run[data-fx="fall"]),
+.hero-about-zone:not([data-rotate-line-covered]) .yo-hero__line--rotate:has(.yo-hero__word-rotate.is-run[data-fx="magnetic"]) {
   overflow: visible;
   clip-path: none;
 }
@@ -771,14 +774,6 @@ html[dir="rtl"] .yo-hero__word-rotate[data-fx="scan"].is-run .is-next {
   mix-blend-mode: difference;
 }
 
-@media (max-width: 767px) {
-  .yo-hero__aside,
-  .yo-hero__audio {
-    mix-blend-mode: normal;
-    color: #111111;
-  }
-}
-
 .yo-hero__audio-btn {
   display: inline-flex;
   align-items: flex-end;
@@ -937,6 +932,7 @@ html[dir="rtl"] .yo-hero__word-rotate[data-fx="scan"].is-run .is-next {
   align-items: flex-start;
   justify-content: flex-end;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .yo-hero__aside-label-motion {
@@ -1040,7 +1036,8 @@ html[dir="rtl"] .yo-hero__word-rotate[data-fx="scan"].is-run .is-next {
 
   .yo-hero__aside {
     right: max(0.4rem, env(safe-area-inset-right, 0px));
-    width: 2rem;
+    width: auto;
+    min-width: 2.75rem;
   }
 
   .yo-hero__aside-body {
@@ -1049,9 +1046,15 @@ html[dir="rtl"] .yo-hero__word-rotate[data-fx="scan"].is-run .is-next {
     min-height: 7.5rem;
   }
 
+  .yo-hero__aside-label-clip {
+    overflow: visible;
+  }
+
   .yo-hero__aside-label {
-    font-size: 0.5rem;
-    letter-spacing: 0.08em;
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   .yo-hero__audio {

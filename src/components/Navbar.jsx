@@ -4,6 +4,7 @@ import { useLenis } from "lenis/react";
 import { useI18n } from "../i18n/I18nContext";
 import { isHeroMarksReady, onHeroMarksReady } from "../utils/pageIntroGate";
 import { INERTIAL_SCROLL_TO } from "../utils/inertialScroll";
+import { contactScreenScrollY } from "../utils/pageGeometry";
 import PageIntro from "./PageIntro";
 import LogoMark from "./LogoMark";
 import FullscreenMenu from "./nav/FullscreenMenu";
@@ -103,10 +104,9 @@ export default function Navbar() {
 
   const showFinal = entered || reducedMotion || navEntrancePlayed;
   const scrollToContact = () => {
-    const target = document.getElementById("contact-form");
-    if (!target) return;
-    if (lenis) lenis.scrollTo(target, INERTIAL_SCROLL_TO);
-    else target.scrollIntoView({ behavior: "smooth", block: "start" });
+    const top = contactScreenScrollY();
+    if (lenis) lenis.scrollTo(top, INERTIAL_SCROLL_TO);
+    else window.scrollTo({ top, behavior: "smooth" });
   };
 
   return (

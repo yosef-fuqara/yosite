@@ -30,7 +30,7 @@ export default function Footer() {
 
         <div className="flex justify-center gap-8">
           <a href="#" className="text-xs font-semibold uppercase tracking-wider text-neutral-400 hover:text-white transition-colors duration-300">{t("footer.home")}</a>
-          <a href="#services" className="text-xs font-semibold uppercase tracking-wider text-neutral-400 hover:text-white transition-colors duration-300">{t("footer.services")}</a>
+          <a href="#services-intro" className="text-xs font-semibold uppercase tracking-wider text-neutral-400 hover:text-white transition-colors duration-300">{t("footer.services")}</a>
         </div>
 
         <div className="flex items-center gap-6">

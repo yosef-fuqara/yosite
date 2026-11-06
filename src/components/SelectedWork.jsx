@@ -14,6 +14,17 @@ const START_HOLD = 0.04;
 const END_HOLD = 0.05;
 const RISE_DESKTOP = 0.32;
 const PEEL_HOLD = 0.1;
+/** Phone only: how far past the last project the white sheet keeps rising. */
+const CURTAIN_PEEL = 1.08;
+
+function sheetHem(progress) {
+  const hang = Math.sin(Math.min(progress, 1) * Math.PI) * 26;
+  if (hang < 1.5) return "";
+  const h = hang.toFixed(1);
+  const a = (hang * 0.72).toFixed(1);
+  const b = (hang * 0.28).toFixed(1);
+  return `polygon(0 0, 100% 0, 100% calc(100% - ${h}px), 84% calc(100% - ${a}px), 68% calc(100% - ${b}px), 50% 100%, 32% calc(100% - ${b}px), 16% calc(100% - ${a}px), 0 calc(100% - ${h}px))`;
+}
 
 function incomingAmount(slot, visible) {
   const incoming = slot - (visible - 1);
@@ -199,8 +210,9 @@ export default function SelectedWork() {
     typeof window !== "undefined" ? isMobileViewport() : false,
   );
 
-  /** Desktop: pinned horizontal reel. Phone: vertical stack (native scroll, no jitter). */
+  /** Desktop: pinned horizontal reel. Phone: vertical stack, then the stack rises like a sheet. */
   const pinned = !reducedMotion && !mobileLayout;
+  const curtain = mobileLayout && !reducedMotion;
 
   useLayoutEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
@@ -393,6 +405,107 @@ export default function SelectedWork() {
     };
   }, [pinned]);
 
+  // After the last project, the white stack sticks and lifts off like a bedsheet.
+  // Services are already composed underneath: cards up top, sentence at the bottom.
+  useEffect(() => {
+    if (!curtain) return undefined;
+
+    const section = sectionRef.current;
+    const stage = stageRef.current;
+    const blanket = blanketRef.current;
+    if (!section || !stage || !blanket) return undefined;
+
+    let raf = 0;
+    const metrics = { stageH: 0, stickStart: 0, peelPx: 1, vh: 1 };
+
+    const measure = () => {
+      const vh = stableViewportHeight();
+      const stageH = blanket.offsetHeight;
+      const peelUnits = Number.parseFloat(
+        getComputedStyle(section).getPropertyValue("--work-peel"),
+      );
+      const peel = Number.isFinite(peelUnits) && peelUnits > 0 ? peelUnits : CURTAIN_PEEL;
+      metrics.vh = vh;
+      metrics.stageH = stageH;
+      metrics.peelPx = peel * vh;
+      metrics.stickStart = pageTop(section) + stageH - vh;
+    };
+
+    const releaseSheet = () => {
+      section.classList.remove("is-lift-hold");
+      section.style.removeProperty("--work-hold");
+      section.style.removeProperty("--work-sheet-h");
+      blanket.style.transform = "";
+      blanket.style.clipPath = "";
+    };
+
+    const apply = () => {
+      const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+      const p =
+        metrics.peelPx <= 1 ? 0 : clamp01((scrollY - metrics.stickStart) / metrics.peelPx);
+
+      if (p <= 0 || p >= 0.995) {
+        releaseSheet();
+        stage.classList.toggle("is-off", p >= 0.995);
+        stage.classList.remove("is-peeling");
+        return;
+      }
+
+      section.classList.add("is-lift-hold");
+      section.style.setProperty("--work-hold", `${metrics.stageH}px`);
+      section.style.setProperty("--work-sheet-h", `${metrics.vh}px`);
+      stage.classList.add("is-peeling");
+      stage.classList.remove("is-off");
+
+      // Freeze the screen that was showing, then lift that slice. Content
+      // above the fold stays clipped instead of scrolling in.
+      const base = Math.max(0, metrics.stageH - metrics.vh);
+      const y = snapTransformPx(base + p * (metrics.vh + 28));
+      const next = `translate3d(0, ${-y}px, 0)`;
+      if (blanket.style.transform !== next) blanket.style.transform = next;
+
+      const hem = sheetHem(p);
+      if ((blanket.style.clipPath || "") !== hem) blanket.style.clipPath = hem;
+    };
+
+    const schedule = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(() => {
+        raf = 0;
+        apply();
+      });
+    };
+
+    const onResize = () => {
+      if (Math.abs(window.innerWidth - pageWidthRef.current) > 1) {
+        pageWidthRef.current = window.innerWidth;
+      }
+      measure();
+      apply();
+    };
+
+    measure();
+    apply();
+
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", onResize);
+    const ro = new ResizeObserver(onResize);
+    ro.observe(blanket);
+
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", onResize);
+      ro.disconnect();
+      if (raf) window.cancelAnimationFrame(raf);
+      section.classList.remove("is-lift-hold");
+      section.style.removeProperty("--work-hold");
+      section.style.removeProperty("--work-sheet-h");
+      stage.classList.remove("is-off", "is-peeling");
+      blanket.style.transform = "";
+      blanket.style.clipPath = "";
+    };
+  }, [curtain]);
+
   const heading = `${t("work.headingLine1")} ${t("work.headingLine2")}`;
   const line1 = t("work.headingLine1");
   const line2 = t("work.headingLine2");
@@ -415,8 +528,8 @@ export default function SelectedWork() {
       ref={sectionRef}
       id="selected-work"
       className={`selected-work${pinned ? "" : " is-stacked"}${
-        headingIsSettled ? " is-settled" : ""
-      }`}
+        curtain ? " is-curtain" : ""
+      }${headingIsSettled ? " is-settled" : ""}`}
       aria-labelledby="selected-work-heading"
     >
       <div ref={stageRef} className="selected-work__stage">
@@ -464,6 +577,8 @@ export default function SelectedWork() {
           </div>
         </div>
       </div>
+
+      <div className="selected-work__lift" aria-hidden="true" />
 
       <span ref={liveRef} className="selected-work__sr-only" aria-live="polite">
         {padIndex(0)} / {TOTAL_PADDED}

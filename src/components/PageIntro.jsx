@@ -31,13 +31,14 @@ const LOGO_LIVE_CLASS = "yo-intro-logo-live";
 const STICKY_LIVE_CLASS = "yo-intro-sticky-live";
 const NAV_LIVE_CLASS = "yo-intro-nav-live";
 const HANDOFF_CLASS = "yo-intro-handoff";
-const NAV_CHROME_DUR = 0.82;
+const NAV_CHROME_DUR = 0.92;
 
 const TIMING = {
   PULSE: INTRO_PULSE,
   LOGO: INTRO_HANDOFF,
   CURTAIN_AT: 0.1,
-  CURTAIN: 0.5,
+  /** White sheet rising over the black field — GSAP duration (seconds). */
+  CURTAIN: 0.92,
   /* ~80% through the logo rise (LOGO = 0.82), before the object lead. */
   UI_AT: 0.66,
   REDUCED_HOLD: 0.2,
@@ -46,8 +47,8 @@ const TIMING = {
 
 /** Hero, nav, and side chrome keep their motion and start this much sooner.
  *  The rise eases out, so a short clock lead still lands the logo.
- *  0.55s starts the other elements while it is still clearly below the nav. */
-const OBJECTS_LEAD = 0.55;
+ *  Larger value = peripheral UI (year, rail, audio, nav) enters earlier vs the handoff/closing beat. */
+const OBJECTS_LEAD = 0.78;
 
 const PULSE_EASE = "power2.out";
 const HANDOFF_EASE = "power3.out";
@@ -161,8 +162,8 @@ function parkNavChrome() {
   if (!items.length) return;
   gsap.killTweensOf(items);
   gsap.set(items, {
-    yPercent: -140,
-    y: 0,
+    yPercent: 0,
+    y: -18,
     opacity: 0,
     pointerEvents: "none",
     force3D: true,
@@ -341,7 +342,7 @@ export default function PageIntro() {
       x: 0,
       xPercent: 0,
       y: 0,
-      yPercent: reduced || !webgl ? 0 : 100,
+      yPercent: reduced || !webgl || RISE_ENTRANCE ? 0 : 100,
       opacity: 1,
       force3D: true,
     });
@@ -383,17 +384,17 @@ export default function PageIntro() {
 
       gsap.killTweensOf(items);
       gsap.set(items, {
-        yPercent: -140,
-        y: 0,
+        yPercent: 0,
+        y: -18,
         opacity: 0,
         pointerEvents: "none",
         force3D: true,
       });
       gsap.to(items, {
-        yPercent: 0,
+        y: 0,
         opacity: 1,
         duration: NAV_CHROME_DUR,
-        ease: "power3.out",
+        ease: "power2.out",
         overwrite: true,
         onComplete: () => {
           gsap.set(items, {
@@ -411,6 +412,23 @@ export default function PageIntro() {
       setUseModel(false);
       setPlaying(false);
       if (stage) gsap.set(stage, { opacity: 0 });
+      if (RISE_ENTRANCE) {
+        gsap.set(curtain, { y: 0, yPercent: 0, opacity: 1, force3D: true });
+        tl?.kill();
+        tl = gsap.timeline({ onComplete: () => finish({ keepLogo: false }) });
+        tl.add(lightOn, TIMING.REDUCED_HOLD);
+        tl.to(
+          root,
+          { backgroundColor: "transparent", duration: TIMING.REDUCED_EXIT, ease: EXIT_EASE },
+          TIMING.REDUCED_HOLD,
+        );
+        tl.to(
+          curtain,
+          { opacity: 0, duration: TIMING.REDUCED_EXIT, ease: EXIT_EASE },
+          TIMING.REDUCED_HOLD,
+        );
+        return;
+      }
       gsap.set(curtain, { y: 0, yPercent: 0, opacity: 0, force3D: true });
       tl?.kill();
       tl = gsap.timeline({ onComplete: () => finish({ keepLogo: false }) });
@@ -465,8 +483,185 @@ export default function PageIntro() {
     };
 
     const syncHandoffPose = () => {
-      if (!stage || !handoffLive) return;
+      if (!stage || !handoffLive || RISE_ENTRANCE) return;
       applyHandoffPose();
+    };
+
+    const featherPx = () => {
+      const raw = getComputedStyle(root).getPropertyValue("--yo-intro-feather").trim();
+      const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+      const value = Number.parseFloat(raw);
+      if (!Number.isFinite(value)) return 7.5 * rem;
+      return raw.endsWith("rem") ? value * rem : value;
+    };
+
+    /** Logo stays white on the black field, then inks once the field has passed it. */
+    const inkWhenVeilPasses = () => {
+      const mark = boundsApiRef.current?.();
+      if (!mark || !curtain) return;
+      const solidEdge = curtain.getBoundingClientRect().bottom - featherPx();
+      const flipLine = mark.top + mark.height * 0.68;
+      if (flipLine > solidEdge) setInvertIntroMaterials(true);
+    };
+
+    const playRiseSequence = async () => {
+      if (stage) {
+        gsap.set(stage, {
+          opacity: 0,
+          x: 0,
+          y: 0,
+          scale: 1,
+          transformOrigin: "50% 50%",
+          force3D: true,
+        });
+      }
+      gsap.set(curtain, {
+        x: 0,
+        xPercent: 0,
+        y: 0,
+        yPercent: 0,
+        opacity: 1,
+        force3D: true,
+      });
+
+      let previous = null;
+      let mark = null;
+      for (let i = 0; i < 24; i += 1) {
+        if (cancelled || signal.aborted) return;
+        const next = boundsApiRef.current?.();
+        if (
+          next &&
+          previous &&
+          next.width > 8 &&
+          Math.abs(next.left - previous.left) < 0.5 &&
+          Math.abs(next.width - previous.width) < 0.5
+        ) {
+          mark = next;
+          break;
+        }
+        previous = next;
+        await nextFrame(signal);
+      }
+      if (cancelled || completed || !root.isConnected) return;
+      mark = mark || boundsApiRef.current?.() || null;
+
+      const stageRect = stage?.getBoundingClientRect();
+      let origin = "50% 50%";
+      if (mark && stageRect && stageRect.width > 1 && stageRect.height > 1) {
+        const ox = ((mark.left + mark.width / 2 - stageRect.left) / stageRect.width) * 100;
+        const oy = ((mark.top + mark.height / 2 - stageRect.top) / stageRect.height) * 100;
+        origin = `${ox}% ${oy}%`;
+      }
+
+      const targetRect = logoTarget()?.getBoundingClientRect();
+      const markCx = mark ? mark.left + mark.width / 2 : window.innerWidth / 2;
+      const toCx =
+        targetRect && targetRect.width > 1
+          ? targetRect.left + targetRect.width / 2
+          : window.innerWidth / 2;
+      const lockX = toCx - markCx;
+
+      let destY = -(window.innerHeight * 0.5 - 40);
+      let destScale = 0.09;
+      if (mark && targetRect && targetRect.height > 1 && mark.height > 1) {
+        const markCy = mark.top + mark.height / 2;
+        const toCy = targetRect.top + targetRect.height / 2;
+        destScale = Math.min(
+          Math.max((targetRect.height / mark.height) * INTRO_HANDOFF_SIZE, 0.04),
+          1,
+        );
+        destY = toCy - markCy;
+        const visualTop = markCy + destY - (mark.height * destScale) / 2;
+        if (visualTop < 8) destY += 8 - visualTop;
+      }
+
+      const startY = mark
+        ? Math.round(window.innerHeight * 0.5 + mark.height * 0.55 + 36)
+        : offscreenRiseY();
+
+      if (stage) {
+        gsap.set(stage, {
+          opacity: 1,
+          x: lockX,
+          y: startY,
+          scale: 1,
+          transformOrigin: origin,
+          force3D: true,
+        });
+      }
+
+      const handoffAt = introHandoffAt();
+      const handoffDur = TIMING.LOGO;
+      const veilDelay = 0.08;
+      const veilAt = handoffAt + veilDelay;
+
+      const beginLift = () => {
+        if (cancelled) return;
+        lightOn();
+        html.classList.add(LOGO_LIVE_CLASS);
+        gsap.set(root, { backgroundColor: "transparent" });
+      };
+
+      tl?.kill();
+      tl = gsap.timeline();
+      if (stage) {
+        tl.to(
+          stage,
+          {
+            y: 0,
+            duration: INTRO_RISE_IN,
+            ease: "power3.out",
+            force3D: true,
+            overwrite: false,
+          },
+          0,
+        );
+        tl.to(
+          stage,
+          {
+            y: destY,
+            scale: destScale,
+            duration: handoffDur,
+            ease: "power2.inOut",
+            force3D: true,
+            overwrite: false,
+          },
+          handoffAt,
+        );
+      }
+      tl.add(beginLift, handoffAt);
+      tl.to(
+        curtain,
+        {
+          yPercent: -100,
+          duration: handoffDur,
+          ease: "power2.inOut",
+          force3D: true,
+          onUpdate: inkWhenVeilPasses,
+        },
+        veilAt,
+      );
+      tl.add(() => {
+        if (cancelled) return;
+        cueHeroUi();
+        markPageIntroComplete();
+      }, veilAt + handoffDur * 0.4);
+      tl.add(revealNavChrome, veilAt + handoffDur * 0.66);
+      tl.add(() => {
+        if (cancelled) return;
+        setInvertIntroMaterials(true);
+        html.classList.add(HANDOFF_CLASS);
+        root.dataset.handoff = "true";
+        const parked = adoptStageIntoNav();
+        if (!parked) {
+          requestAnimationFrame(() => {
+            if (!adoptStageIntoNav()) requestAnimationFrame(adoptStageIntoNav);
+          });
+        }
+        revealHeroLayer();
+        finish({ keepLogo: true });
+        handoffLive = true;
+      }, veilAt + handoffDur);
     };
 
     const playModelSequence = () => {
@@ -478,8 +673,25 @@ export default function PageIntro() {
       markStickyChromeReady();
       parkNavChrome();
 
+      if (RISE_ENTRANCE) {
+        playRiseSequence();
+        return;
+      }
+
       const handoffAt = introHandoffAt();
+      const curtainEnd = TIMING.CURTAIN_AT + TIMING.CURTAIN;
+      /** Don’t cut the curtain tween short; stay synced when the sheet outlasts the logo. */
+      const handoffComplete = Math.max(TIMING.LOGO, curtainEnd);
       const startY = RISE_ENTRANCE ? offscreenRiseY() : 0;
+
+      /* GSAP x that puts the mark on the nav slot's x while scale is still 1.
+         Call only from an untransformed stage (x = 0, scale = 1). */
+      const readAlignX = () => {
+        const mark = boundsApiRef.current?.();
+        const target = logoTarget()?.getBoundingClientRect();
+        if (!mark || !target || target.width < 1 || mark.width < 1) return 0;
+        return target.left + target.width / 2 - (mark.left + mark.width / 2);
+      };
 
       if (stage) {
         gsap.set(stage, {
@@ -490,6 +702,17 @@ export default function PageIntro() {
           transformOrigin: "50% 50%",
           force3D: true,
         });
+        /* Line the mark up with the nav before it is on screen, so the
+           rise stays vertical instead of sliding right as it lands. */
+        const aligned = readAlignX();
+        gsap.set(stage, { x: aligned });
+        if (!boundsApiRef.current?.()) {
+          requestAnimationFrame(() => {
+            if (cancelled || stage.dataset.parked === "true") return;
+            gsap.set(stage, { x: 0, scale: 1 });
+            gsap.set(stage, { x: readAlignX() });
+          });
+        }
       }
       gsap.set(curtain, {
         x: 0,
@@ -520,14 +743,29 @@ export default function PageIntro() {
         root.dataset.handoff = "true";
         void html.offsetHeight;
 
+        /* Measure from identity. Scaling around the stage center would drag
+           the mark sideways; x runs from alignX to destX so its screen x stays put. */
+        const prevVis = stage.style.visibility;
+        stage.style.visibility = "hidden";
+        gsap.set(stage, {
+          x: 0,
+          y: 0,
+          scale: 1,
+          transformOrigin: "50% 50%",
+          force3D: true,
+          lazy: false,
+        });
         const handoff = readHandoff();
-        const destX = handoff?.x ?? 0;
+        const alignX = readAlignX();
+        stage.style.visibility = prevVis;
+
+        const destX = handoff?.x ?? alignX;
         const destY = handoff?.y ?? -(window.innerHeight * 0.5 - 40);
         const destScale = handoff?.scale ?? 0.09;
 
         gsap.fromTo(
           stage,
-          { x: 0, y: 0, scale: 1, opacity: 1 },
+          { x: alignX, y: 0, scale: 1, opacity: 1 },
           {
             x: destX,
             y: destY,
@@ -587,14 +825,27 @@ export default function PageIntro() {
         handoffAt + TIMING.CURTAIN_AT,
       );
       tl.add(cueHeroUi, handoffAt + Math.max(0, TIMING.UI_AT - OBJECTS_LEAD));
-      const revealSiteObjects = () => {
+      /** Nav drop + transparent intro root — early so chrome can animate while the sheet still reads. */
+      const startPeripheralUi = () => {
         if (cancelled) return;
         gsap.set(root, { backgroundColor: "transparent" });
-        if (curtain) gsap.set(curtain, { autoAlpha: 0, pointerEvents: "none" });
         revealNavChrome();
+      };
+      /** Curtain off + intro complete — after the white sheet motion finishes. */
+      const endIntroOverlay = () => {
+        if (cancelled) return;
+        if (curtain) gsap.set(curtain, { autoAlpha: 0, pointerEvents: "none" });
         markPageIntroComplete();
       };
-      tl.add(revealSiteObjects, handoffAt + Math.max(0, TIMING.LOGO - OBJECTS_LEAD));
+      tl.add(
+        startPeripheralUi,
+        handoffAt + Math.max(0, TIMING.LOGO - OBJECTS_LEAD),
+      );
+      tl.add(
+        endIntroOverlay,
+        handoffAt +
+          Math.max(Math.max(0, TIMING.LOGO - OBJECTS_LEAD), curtainEnd),
+      );
       tl.add(() => {
         const parked = adoptStageIntoNav();
         if (!parked) {
@@ -602,12 +853,12 @@ export default function PageIntro() {
             if (!adoptStageIntoNav()) requestAnimationFrame(adoptStageIntoNav);
           });
         }
-      }, handoffAt + TIMING.LOGO);
-      tl.add(revealHeroLayer, handoffAt + TIMING.LOGO);
+      }, handoffAt + handoffComplete);
+      tl.add(revealHeroLayer, handoffAt + handoffComplete);
       tl.add(() => {
         finish({ keepLogo: true });
         handoffLive = true;
-      }, handoffAt + TIMING.LOGO);
+      }, handoffAt + handoffComplete);
     };
 
     startPlaybackRef.current = playModelSequence;

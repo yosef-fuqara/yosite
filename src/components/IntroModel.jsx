@@ -1,9 +1,10 @@
-import { Component, Suspense, useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { Component, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useThree, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { AnimationMixer, LoopOnce, MeshBasicMaterial } from "three";
 import {
   INTRO_BROKEN_POSE,
+  INTRO_HOLD_POSE,
   INTRO_DOT_COLOR,
   INTRO_ENTRANCE,
   INTRO_FRUSTUM,
@@ -59,7 +60,7 @@ function holdBrokenPose(mixer, actions) {
   actions.forEach((action) => {
     action.paused = false;
   });
-  mixer.setTime(INTRO_BROKEN_POSE);
+  mixer.setTime(INTRO_HOLD_POSE);
   actions.forEach((action) => {
     action.paused = true;
   });
@@ -160,6 +161,7 @@ function ParkedZoom() {
     const baseW = Number(stage.dataset.baseWidth);
     const baseH = Number(stage.dataset.baseHeight);
     if (!baseW || !baseH || !size.width) return;
+
     const next = (Math.min(baseW, baseH) / INTRO_FRUSTUM) * (size.width / baseW);
     if (Math.abs(camera.zoom - next) < 0.01) return;
     camera.zoom = next;
@@ -196,6 +198,9 @@ function IntroRig({ playing, onReady, boundsApiRef }) {
     if (RISE_ENTRANCE) holdBrokenPose(mixer, actions);
     mixerRef.current = mixer;
     actionsRef.current = actions;
+    if (boundsApiRef) {
+      boundsApiRef.current = () => measureIntroMarkScreen(root, camera, gl);
+    }
     onReadyRef.current?.();
 
     return () => {
@@ -278,6 +283,23 @@ class IntroErrorBoundary extends Component {
 export default function IntroModel({ playing, onReady, onError, boundsApiRef }) {
   const onErrorRef = useRef(onError);
   onErrorRef.current = onError;
+  const [parked, setParked] = useState(false);
+
+  useEffect(() => {
+    const stage = document.querySelector("[data-intro-stage]");
+    if (!stage) return undefined;
+    const sync = () => setParked(stage.dataset.parked === "true");
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(stage, { attributes: true, attributeFilter: ["data-parked"] });
+    return () => observer.disconnect();
+  }, []);
+
+  /* Parked, the letter is a sliver of the old viewport canvas. Draw it
+     above the screen density so the nav mark stays sharp. */
+  const dpr = parked
+    ? Math.min(4, Math.max(3, window.devicePixelRatio * 2))
+    : [1, 2];
 
   return (
     <IntroErrorBoundary onError={onError}>
@@ -285,7 +307,7 @@ export default function IntroModel({ playing, onReady, onError, boundsApiRef }) 
         className="yo-intro__canvas"
         orthographic
         camera={{ position: [0, 0, 8], near: 0.1, far: 1000, zoom: 1 }}
-        dpr={[1, 2]}
+        dpr={dpr}
         resize={{ offsetSize: true }}
         gl={{
           antialias: true,

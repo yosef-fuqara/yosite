@@ -1,4 +1,4 @@
-/* Page-load intro — black field, 3D mark, rising white curtain + nav handoff. */
+/* Page-load intro — black field, mark rises on a fixed x, then the field lifts. */
 
 html.yo-intro-pending,
 html.yo-intro-pending body,
@@ -23,12 +23,17 @@ html.yo-intro-active.yo-intro-light body {
 }
 
 .yo-intro {
+  --yo-intro-feather: 7.5rem;
   position: fixed;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: auto;
   z-index: 100000;
   display: grid;
   place-items: center;
-  width: 100%;
+  width: 100vw;
+  max-width: none;
   height: 100dvh;
   overflow: hidden;
   isolation: isolate;
@@ -87,8 +92,9 @@ html.yo-intro-active.yo-intro-light body {
 }
 
 .yo-intro[data-handoff="true"] {
-  overflow: visible;
-  /* Keep the 3D stage on the viewport box so landing does not resize it. */
+  /* Stay clipped so the lifting field does not reveal its feather early,
+     and so a width change cannot shove the mark sideways. */
+  overflow: hidden;
   width: 100vw;
   left: 0;
   right: auto;
@@ -108,9 +114,9 @@ html.yo-intro-active.yo-intro-light body {
   top: 0;
   left: 50%;
   z-index: 3;
-  width: 100%;
+  width: 100vw;
   height: 100%;
-  max-width: 100vw;
+  max-width: none;
   overflow: visible;
   pointer-events: none;
   transform: translateX(-50%);
@@ -137,7 +143,6 @@ html.yo-intro-handoff .yo-intro__logo {
 .yo-intro[data-handoff="true"] .yo-intro__stage,
 html.yo-intro-handoff .yo-intro__stage {
   opacity: 1;
-  will-change: transform;
 }
 
 .yo-intro[data-state="done"] .yo-intro__stage,
@@ -185,8 +190,7 @@ html.yo-intro-logo-live .yo-intro[data-entrance="rise"][data-state="done"] .yo-i
   shape-rendering: geometricPrecision;
 }
 
-/* Extra height parks the feathered leading edge above the viewport
-   once the sheet has settled, so the hero stays solid white. */
+/* Jump entrance: white sheet rises over the black field. */
 .yo-intro__curtain {
   position: absolute;
   left: 0;
@@ -206,6 +210,21 @@ html.yo-intro-logo-live .yo-intro[data-entrance="rise"][data-state="done"] .yo-i
   transform-origin: 50% 100%;
   will-change: transform;
   pointer-events: none;
+}
+
+/* Rise entrance: the black field itself lifts. The soft edge hangs below
+   the fold until the field moves, so the hold stays solid black. */
+.yo-intro[data-entrance="rise"] .yo-intro__curtain {
+  top: 0;
+  bottom: auto;
+  height: calc(100% + var(--yo-intro-feather));
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0) 0%,
+    #000000 var(--yo-intro-feather),
+    #000000 100%
+  );
+  transform-origin: 50% 0%;
 }
 
 html.yo-intro-active .yo-sticky-chrome,

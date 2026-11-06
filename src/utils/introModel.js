@@ -18,18 +18,22 @@ export const INTRO_JUMP_END = 0.8;
  * Opening in use.
  * "jump" is the original baked bounce — ball hops, letter splits, then the
  * mark rises. Frozen here, not deleted. Set this back to "jump" to play it.
- * "rise" holds the broken letter and brings that pose up from below the screen,
+ * "rise" holds one clip pose and brings it up from below the screen,
  * then the original rise into the nav plays unchanged.
  */
 export const INTRO_ENTRANCE = "rise";
 
+/** Clip time held during the rise entrance. 0 is the connected Y (center intact,
+ *  ball at rest). 0.85 is the broken letter after the second landing. */
+export const INTRO_HOLD_POSE = 0;
+
 /** Clip time: arms have split, the center is gone, and the ball is back at rest. */
 export const INTRO_BROKEN_POSE = 0.85;
 
-/** Broken mark travels from below the viewport to the center. */
-export const INTRO_RISE_IN = 1.15;
+/** Mark travels from below the viewport and settles in the center. */
+export const INTRO_RISE_IN = 0.98;
 
-/** Beat in the center before the original nav rise. */
+/** Stillness in the center before the mark and the black field rise together. */
 export const INTRO_RISE_SETTLE = 0.28;
 
 /** Site accent. The intro ball keeps this color. */
@@ -50,11 +54,10 @@ export const INTRO_TAIL_START_WALL =
   INTRO_JUMP_WALL + INTRO_GAZE_WALL + INTRO_FORWARD_HOLD;
 
 /**
- * After the character holds looking forward, fly the mark into the nav logo
- * while a white sheet rises from the bottom. Logo travel is slightly longer
- * than the sheet so the hero can overlap the last stretch.
+ * Second rise: the mark leaves the center for the nav on a fixed x,
+ * and the black field lifts with it to uncover the page.
  */
-export const INTRO_HANDOFF = 0.82;
+export const INTRO_HANDOFF = 0.88;
 
 /** Parked nav size vs matching the target 1:1. ~15% smaller than a full fit. */
 export const INTRO_HANDOFF_SIZE = 0.85;

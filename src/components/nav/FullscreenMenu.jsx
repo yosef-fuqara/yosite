@@ -5,6 +5,7 @@ import { useLenis } from "lenis/react";
 import { useReducedMotion } from "framer-motion";
 import { useI18n } from "../../i18n/I18nContext";
 import { INERTIAL_SCROLL_TO } from "../../utils/inertialScroll";
+import { contactScreenScrollY, servicesIntroScrollY } from "../../utils/pageGeometry";
 import { playMenuSound } from "../../utils/menuSound";
 import "../../styles/fullscreen-menu.css";
 
@@ -77,8 +78,8 @@ function navItems(t) {
     { id: "home", label: t("nav.home"), href: "#" },
     { id: "work", label: t("nav.workShort"), href: "#selected-work" },
     { id: "about", label: t("nav.about"), href: "#about" },
-    { id: "services", label: t("nav.services"), href: "#services-heading" },
-    { id: "contact", label: t("nav.contact"), href: "#contact-form" },
+    { id: "services", label: t("nav.services"), href: "#services-intro" },
+    { id: "contact", label: t("nav.contact"), href: "#contact-screen" },
   ];
 }
 
@@ -485,6 +486,19 @@ export default function FullscreenMenu() {
       if (!href || href === "#" || href === "#hero" || href === "#top") {
         if (lenis) lenis.scrollTo(0, INERTIAL_SCROLL_TO);
         else window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+      if (href === "#contact-form" || href === "#contact" || href === "#contact-screen") {
+        const top = contactScreenScrollY();
+        if (lenis) lenis.scrollTo(top, INERTIAL_SCROLL_TO);
+        else window.scrollTo({ top, behavior: "smooth" });
+        return;
+      }
+      const servicesIntro = href === "#services-intro" || href === "#services" || href === "#services-heading";
+      if (servicesIntro) {
+        const top = servicesIntroScrollY();
+        if (lenis) lenis.scrollTo(top, INERTIAL_SCROLL_TO);
+        else window.scrollTo({ top, behavior: "smooth" });
         return;
       }
       const target = document.getElementById(href.slice(1));

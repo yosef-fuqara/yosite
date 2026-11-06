@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from "react";
-import { pageTop } from "../utils/pageGeometry";
+import { pageTop, servicesIntroScrollY } from "../utils/pageGeometry";
 
 import gsap from "gsap";
 
@@ -242,7 +242,7 @@ function MagnoliaCaption() {
     <div className="services-magnolia__aside" dir="ltr">
       <figure className="services-magnolia__caption">
         <blockquote className="services-magnolia__quote">
-          Not everything grows in a <strong>garden.</strong>
+          THE BEST THINGS BEGIN UNSEEN.
         </blockquote>
         <figcaption className="services-magnolia__attribution">
           <cite>Yosef Fuqara</cite>
@@ -380,6 +380,7 @@ function buildDesktopSequence(root, viewport, leftTrack, rightTrack, headlineVis
       onUpdate: () => pose(),
       onToggle: (self) => {
         viewport.classList.toggle("is-pinned", self.isActive);
+        gsap.set(stack, { autoAlpha: self.isActive ? 1 : 0 });
       },
       onRefresh: () => {
         layout();
@@ -405,14 +406,7 @@ function buildDesktopSequence(root, viewport, leftTrack, rightTrack, headlineVis
   const revealStart = SHEET_START * SEQ_SCALE;
   const revealDuration = QUICK_REVEAL_FRACTION * SEQ_SCALE;
 
-  if (headlineVisual) {
-    tl.fromTo(
-      headlineVisual,
-      { y: () => parseFloat(getComputedStyle(headlineVisual).fontSize) * 0.18 },
-      { y: 0, duration: revealDuration },
-      revealStart,
-    );
-  }
+  if (headlineVisual) gsap.set(headlineVisual, { y: 0, force3D: true });
 
   tl.to({}, { duration: revealDuration }, revealStart);
 
@@ -505,18 +499,7 @@ function buildStackedSequence(root, viewport, stack, headlineVisual, headlineRev
   const revealStart = SHEET_START * SEQ_SCALE;
   const revealDuration = QUICK_REVEAL_FRACTION * SEQ_SCALE;
 
-  if (headlineVisual) {
-    if (isMobileLayout()) {
-      gsap.set(headlineVisual, { y: 0, force3D: true });
-    } else {
-      tl.fromTo(
-        headlineVisual,
-        { y: () => parseFloat(getComputedStyle(headlineVisual).fontSize) * 0.18 },
-        { y: 0, duration: revealDuration },
-        revealStart,
-      );
-    }
-  }
+  if (headlineVisual) gsap.set(headlineVisual, { y: 0, force3D: true });
 
   if (headlineReveal && isMobileLayout()) {
     gsap.set(headlineReveal, { height: "auto" });
@@ -563,8 +546,10 @@ function servicesStartOffset(root) {
   const workBottom = pageTop(work) + work.offsetHeight;
   const rootTop = pageTop(root);
   if (window.innerWidth <= 767) {
-    // Last stacked project must leave the screen before the service cards rise.
-    return Math.max(0, workBottom - rootTop) + beat;
+    // Black frame holds after the sheet lifts. Cards then rise from below.
+    const lift = document.querySelector(".selected-work.is-curtain .selected-work__lift");
+    const peelPx = lift?.offsetHeight || Math.round(vh * 1.08);
+    return peelPx + beat;
   }
   const holdPx = Math.max(0, workBottom - vh - rootTop);
   return holdPx + beat;
@@ -597,6 +582,12 @@ function syncServicesPinHeight(root, viewport, { isMobile = false, leftTrack, ri
   let shortenedScrollRange = originalScrollRange * PINNED_SCROLL_FRACTION;
   if (isMobile) {
     shortenedScrollRange *= mobileScrollSpanScale(viewport, leftTrack, rightTrack);
+  }
+
+  const anchor = root.querySelector(".services-intro-anchor");
+  if (anchor) {
+    const introY = servicesIntroScrollY();
+    anchor.style.top = `${Math.round(introY - pageTop(root))}px`;
   }
 
   root.style.height = `${startOffset + viewportHeight + shortenedScrollRange}px`;
@@ -742,6 +733,8 @@ export default function Services() {
     >
 
       <div ref={pinRef} className="services-pin">
+
+        <div id="services-intro" className="services-intro-anchor" aria-hidden="true" />
 
         <div ref={viewportRef} className="services-viewport">
 

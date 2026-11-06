@@ -1,4 +1,4 @@
-const MEDIA_SRC = "/hero/hero-architecture.webp";
+const MEDIA_SRC = "/hero/hero-architecture.jpg";
 
 /**
  * Right-hand architectural plate plus the diagonal folded sheet that covers it.
@@ -19,7 +19,7 @@ export default function HeroFoldStage({ alt }) {
             src={MEDIA_SRC}
             alt={alt}
             width={1024}
-            height={1536}
+            height={682}
             sizes="(max-width: 767px) 62vw, 26vw"
             decoding="async"
             fetchPriority="high"

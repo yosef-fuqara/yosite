@@ -155,10 +155,13 @@ export default function ContactCTA() {
     <section ref={sectionRef} className="cta-contact" id="cta" dir="ltr" aria-label="Contact">
       <div ref={introRef} className="cta-contact__intro">
         <div className="cta-contact__intro-stage">
-          <p ref={introTextRef} className="cta-contact__eyebrow">HAVE SOMETHING IN MIND?</p>
+          <div ref={introTextRef} className="cta-contact__intro-eyebrow">
+            <p className="cta-contact__eyebrow">So ...</p>
+            <p className="cta-contact__eyebrow">HAVE SOMETHING IN MIND?</p>
+          </div>
         </div>
       </div>
-      <div ref={contactRef} className="cta-contact__main">
+      <div ref={contactRef} id="contact-screen" className="cta-contact__main">
         <div ref={contentRef} className="cta-contact__content">
           <h2 ref={headlineRef} className="cta-contact__headline" aria-label="Let's talk about your project.">
             {PHRASES.map((phrase, index) => (

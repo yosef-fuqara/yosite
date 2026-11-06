@@ -27,6 +27,17 @@
   height: calc(var(--services-pin-vh) * 1svh);
 }
 
+/* Menu target: the frame after the last project card, before the service cards rise. */
+.services-intro-anchor {
+  position: absolute;
+  top: 0;
+  inset-inline-start: 0;
+  width: 1px;
+  height: 1px;
+  scroll-margin: 0;
+  pointer-events: none;
+}
+
 .services-viewport {
   position: sticky;
   top: 0;
@@ -582,7 +593,7 @@ html[lang="ru"] .services-mosaic__ink {
     contain: none;
   }
 
-  /* Stacked projects have no peel overlap — don't pull this section under the last image. */
+  /* Phone without the curtain (reduced motion) sits below the projects. */
   .services-scroll {
     margin-top: 0;
   }
@@ -630,6 +641,15 @@ html[lang="ru"] .services-mosaic__ink {
 
   .services-headline__line {
     clip-path: inset(-0.2em -0.15em -0.55em -0.15em);
+  }
+
+  /* The line clip is taller than the text box so Hebrew glyphs aren't cut
+     while the sentence sits still. -120% only clears the box, so the bottoms
+     of the letters stay on screen as white bars. Travel past that clip, then
+     drop the last sliver so nothing white remains. */
+  .services-headline__line-exit {
+    transform: translate3d(0, calc(var(--line-exit) * -100% - var(--line-exit) * 1.25em), 0);
+    opacity: clamp(0, (1 - var(--line-exit)) * 8, 1);
   }
 
   .services-headline__final-line {
@@ -708,6 +728,13 @@ html[lang="ru"] .services-mosaic__ink {
 .work-services-run:has(.selected-work.is-stacked) .services-scroll,
 .services-scroll.is-static {
   margin-top: 0;
+}
+
+@media (max-width: 767px) {
+  /* Pull the finished services frame under the rising project sheet. */
+  .work-services-run:has(.selected-work.is-curtain) .services-scroll {
+    margin-top: calc(-1 * (1 + var(--work-peel, 1.08)) * var(--work-screen, var(--yo-lvh, 100svh)));
+  }
 }
 
 .services-scroll.is-static {

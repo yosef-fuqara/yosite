@@ -79,16 +79,13 @@ export default function HeroSection() {
       if (sideMarks.length) {
         sideAnim = gsap.fromTo(
           sideMarks,
+          { y: 16, opacity: 0 },
           {
-            x: (index, el) => (el === aside ? 34 : -34),
-            opacity: 0,
-          },
-          {
-            x: 0,
+            y: 0,
             opacity: 1,
-            duration: 0.78,
-            stagger: 0.08,
-            ease: "power3.out",
+            duration: 1.05,
+            stagger: 0.07,
+            ease: "power2.out",
             clearProps: "transform,opacity",
             overwrite: true,
           },
@@ -96,9 +93,9 @@ export default function HeroSection() {
       }
       anim = gsap.to(lines, {
         yPercent: 0,
-        duration: 1.1,
-        stagger: 0.16,
-        ease: "power4.out",
+        duration: 1.28,
+        stagger: 0.1,
+        ease: "power3.out",
         onComplete: finish,
       });
     });

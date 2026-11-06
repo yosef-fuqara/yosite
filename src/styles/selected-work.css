@@ -544,12 +544,74 @@ html[lang="ru"] .selected-work__heading {
     row-gap: 0.45rem;
     min-height: 0;
   }
+
+  .work-services-run:has(.selected-work.is-curtain),
+  .selected-work.is-curtain {
+    --work-peel: 1.08;
+  }
+
+  .selected-work.is-curtain {
+    background-color: transparent;
+  }
+
+  .selected-work.is-curtain .selected-work__lift {
+    display: block;
+    height: calc(var(--work-peel) * var(--work-screen));
+    pointer-events: none;
+  }
+
+  .selected-work.is-curtain.is-lift-hold {
+    pointer-events: none;
+  }
+
+  .selected-work.is-curtain.is-lift-hold::before {
+    content: "";
+    display: block;
+    height: var(--work-hold, 0px);
+  }
+
+  /* Viewport-sized window so the current projects rise as one sheet. */
+  .selected-work.is-curtain.is-lift-hold .selected-work__stage {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: var(--work-sheet-h, var(--work-screen));
+    overflow: hidden;
+    z-index: 40;
+    background-color: transparent;
+  }
+
+  .selected-work.is-curtain.is-lift-hold .selected-work__blanket {
+    flex: none;
+    height: auto;
+    align-self: flex-start;
+  }
+
+  .selected-work.is-curtain .selected-work__blanket {
+    background-color: var(--work-bg);
+  }
+
+  .selected-work.is-curtain.is-lift-hold .selected-work__blanket {
+    will-change: transform;
+  }
+
+  .selected-work.is-curtain .selected-work__stage.is-off {
+    visibility: hidden;
+    pointer-events: none;
+  }
 }
 
 .selected-work.is-stacked {
   height: auto;
   overflow: visible;
   background-color: var(--work-bg);
+}
+
+/* The sheet is the blanket. The section itself must stay clear so services show through. */
+.selected-work.is-stacked.is-curtain {
+  background-color: transparent;
 }
 
 .selected-work.is-stacked .selected-work__stage {
@@ -566,9 +628,16 @@ html[lang="ru"] .selected-work__heading {
   z-index: 1;
   order: 1;
   overflow: visible;
-  transform: none !important;
   box-shadow: none;
   will-change: auto;
+}
+
+.selected-work.is-stacked:not(.is-curtain) .selected-work__blanket {
+  transform: none !important;
+}
+
+.selected-work__lift {
+  display: none;
 }
 
 .selected-work.is-stacked .selected-work__underlayer {

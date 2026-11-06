@@ -18,6 +18,7 @@ function applyHeroExit(zone, progress, reducedMotion) {
     zone.style.removeProperty("--hero-exit-opacity");
     zone.dataset.transition = "idle";
     zone.dataset.transitionComplete = "true";
+    delete zone.dataset.rotateLineCovered;
     return;
   }
 
@@ -35,6 +36,12 @@ function applyHeroExit(zone, progress, reducedMotion) {
   const exitT = Math.max(0, Math.min(1, (travelled - 16) / Math.max(vh * 0.55, 240)));
 
   zone.style.setProperty("--hero-exit-t", exitT === 0 ? "0" : exitT.toFixed(4));
+  /* Same threshold as --line-exit on the rotating line: coverage starts
+     once scroll passes that line's exit delay. */
+  const rotateExit = zone.querySelector(".yo-hero__line--rotate .yo-hero__line-exit");
+  const rotateDelay = Number.parseFloat(rotateExit?.style.getPropertyValue("--hero-line-exit-delay") ?? "");
+  if (Number.isFinite(rotateDelay) && exitT > rotateDelay) zone.dataset.rotateLineCovered = "";
+  else delete zone.dataset.rotateLineCovered;
   zone.style.setProperty(
     "--hero-exit-opacity",
     exitT === 0 ? "1" : String(Math.max(0, 1 - exitT * 0.94)),
